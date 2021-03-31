@@ -40,4 +40,5 @@ vignettes/*.pdf
 
 /data_to_Clarity
 /rsconnect
+/random_data
 *.html

@@ -52,7 +52,7 @@ agency_from_export <- Organization %>%
          "added_date" = DateCreated,
          "last_updated" = DateUpdated
          ) %>%
-  filter(!is.na(name) & id != 1) # both records filtered out from this are not needed. GD
+  filter(!is.na(name) & id != 1) # records filtered out from this are not needed. GD
 
 # Getting Addresses of Organizations from RMisc ---------------------------
 

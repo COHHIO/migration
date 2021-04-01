@@ -98,9 +98,11 @@ same_zips_different_addresses <- naturally_unique_addresses %>%
   arrange(ZIP, Address1) %>%
   filter(!is.na(Address1))
 
+write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"))
+
 # used this to show duplicate addresses that need aligning in SP
 # takes a human to figure out what Project needs to be aligned
-# stopped at Fremont Front Street (didn't do that one yet) ^^
+# stopped at line 605, handing over to NB
 
 all_unique_addresses <- Addresses %>%
   select(Address1, Address2, City, State, ZIP) %>%

@@ -76,7 +76,7 @@ incl_addresses <- agency_from_export %>%
     geolocations.state = State,
     counties.id = ProjectCounty, # will need to be converted to a number from BF
     geolocations.zipcode = substr(ZIP, 1, 5),
-    geolocations.geocode = paste(Lat, Long),
+    geolocations.geocode = paste(Lat, Long), # should be HUD geocodes
     site.name = name
   ) %>%
   select(-Address1, -Address2, -City, -State, -ProjectCounty, -ZIP, -Lat, -Long)

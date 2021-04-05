@@ -45,15 +45,33 @@ write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"
 # assumes data in SP has been cleaned up
 
 all_unique_addresses <- Addresses %>%
-  select(Address1, Address2, City, State, ZIP) %>%
+  select(Address1, Address2, City, ProjectCounty, State, ZIP) %>%
   unique() %>%
   mutate(SiteID = rownames(.)) 
 
 # Remove all sites already associated to an Agency ------------------------
 
-sites <- incl_addresses %>%
-  semi-join(all_unique_addresses, by = c(
-    
+sites <- all_unique_addresses %>%
+  anti_join(agency_from_export %>%
+              left_join(Addresses[
+                c(
+                  "ProjectID",
+                  "Address1",
+                  "Address2",
+                  "City",
+                  "State",
+                  "ProjectCounty",
+                  "ZIP",
+                  "Lat",
+                  "Long"
+                )
+              ], by = c("id" = "ProjectID")), by = c(
+    "Address1",
+    "Address2",
+    "City",
+    "ProjectCounty",
+    "State",
+    "ZIP"
   ))
 
 

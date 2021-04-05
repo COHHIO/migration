@@ -39,6 +39,9 @@ Addresses <- read_xlsx(
   ) %>% 
   mutate(OrganizationName = str_remove(OrganizationName, "\\(.*\\)"))
 
+bf_counties <- read_csv(here("data_to_Clarity/BFCounties.csv")) %>%
+  rename("ProjectCounty" = 2) %>%
+  mutate(ProjectCounty = str_remove(ProjectCounty, " County"))
 
 # Adding in any data that can come from the HUD CSV Export ----------------
 
@@ -70,14 +73,16 @@ incl_addresses <- agency_from_export %>%
       "Long"
     )
   ], by = c("id" = "ProjectID")) %>%
+  left_join(bf_counties, by = "ProjectCounty") %>%
   mutate(
     geolocations.address = paste(Address1, Address2),
     geolocations.city = City,
     geolocations.state = State,
-    counties.id = ProjectCounty, # will need to be converted to a number from BF
+    counties.id = ID,
     geolocations.zipcode = substr(ZIP, 1, 5),
     geolocations.geocode = paste(Lat, Long), # should be HUD geocodes
-    site.name = name
+    site.name = name,
+    ID = NULL
   ) %>%
   select(-Address1, -Address2, -City, -State, -ProjectCounty, -ZIP, -Lat, -Long)
 

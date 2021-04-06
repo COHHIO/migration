@@ -120,7 +120,7 @@ incl_coc <- incl_addresses %>%
 Agencies <- incl_coc %>%
   mutate(
     status = 1,
-    navigation_profiles.id = 0,
+    navigation_profiles.id = 1,
     screens.name = 0,
     home_screen = 1,
     ref_looker_report_open_units = 0,

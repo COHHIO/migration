@@ -58,7 +58,7 @@ agency_from_export <- Organization %>%
   filter(!is.na(name) & id != 1) # records filtered out from this are not needed. GD
 
 hud_geocodes <- read_csv(here("random_data/hud_geocodes.csv")) %>%
-  mutate(NAME = str_remove(NAME, " County")) %>%
+  # mutate(NAME = str_remove(NAME, " County")) %>%
   select("Geocode" = 1, "Name" = NAME)
 
 # Getting Addresses of Organizations from RMisc ---------------------------
@@ -77,7 +77,10 @@ incl_addresses <- agency_from_export %>%
   ], by = c("id" = "ProjectID")) %>%
   left_join(bf_counties, by = "ProjectCounty") %>%
   left_join(hud_geocodes, by = c("City" = "Name")) %>%
-  left_join(hud_geocodes, by = c("ProjectCounty" = "Name")) %>%
+  left_join(hud_geocodes %>%
+              filter(str_detect(Name, " County") == TRUE) %>%
+              mutate(Name = str_remove(Name, " County")), 
+            by = c("ProjectCounty" = "Name")) %>%
   mutate(
     geolocations.address = if_else(is.na(Address2), Address1,
                                    paste(Address1, Address2)),
@@ -85,7 +88,8 @@ incl_addresses <- agency_from_export %>%
     geolocations.state = State,
     counties.id = ID,
     geolocations.zipcode = substr(ZIP, 1, 5),
-    geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),    site.name = name,
+    geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),    
+    site.name = name,
     ID = NULL
   ) %>%
   select(-Address1, -Address2, -City, -State, -ProjectCounty, -ZIP,

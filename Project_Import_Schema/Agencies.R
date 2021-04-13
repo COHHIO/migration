@@ -139,7 +139,6 @@ Agencies <- incl_coc %>%
   relocate(victim_service_provider, .after = ref_looker_report_open_units) %>%
   relocate(c(added_date, last_updated), .after = all_client_forms_enabled)
 
-
 # Writing it out to csv ---------------------------------------------------
 
 write_csv(Agencies, here("random_data/Agencies.csv"))

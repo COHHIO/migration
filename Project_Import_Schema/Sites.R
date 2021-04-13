@@ -34,6 +34,13 @@ same_zips_different_addresses <- naturally_unique_addresses %>%
   arrange(ZIP, Address1) %>%
   filter(!is.na(Address1))
 
+
+duplicates <- same_zips_different_addresses %>%
+  group_by(Address1, Address2, City, State, ZIP) %>%
+  summarise(total = n(),
+            ids = toString(ProjectID)) %>%
+  ungroup()
+
 write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"))
 
 # using this to show duplicate addresses that need aligning in SP
@@ -48,11 +55,11 @@ write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"
 all_unique_addresses <- Addresses %>%
   select(Address1, Address2, City, ProjectCounty, State, ZIP) %>%
   unique() %>%
-  mutate(SiteID = rownames(.)) 
+  mutate(SiteID = rownames(.))
 
 # Remove all sites already associated to an Agency ------------------------
 
-sites <- all_unique_addresses %>%
+Sites <- all_unique_addresses %>%
   anti_join(agency_from_export %>%
               left_join(Addresses[
                 c(

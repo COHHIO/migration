@@ -37,11 +37,11 @@ same_zips_different_addresses <- naturally_unique_addresses %>%
 
 duplicates <- same_zips_different_addresses %>%
   group_by(Address1, Address2, City, State, ZIP) %>%
-  summarise(total = n(),
-            ids = toString(ProjectID)) %>%
+  summarise(ProjectCount = n(),
+            ProjectIDs = toString(ProjectID)) %>%
   ungroup()
 
-write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"))
+write_csv(duplicates, here("random_data/sites_projects.csv"))
 
 # using this to show duplicate addresses that need aligning in SP
 # takes a human to figure out what Project needs to be aligned
@@ -53,13 +53,13 @@ write_csv(same_zips_different_addresses, here("random_data/same_zips_cities.csv"
 # assumes data in SP has been cleaned up
 
 all_unique_addresses <- Addresses %>%
-  select(Address1, Address2, City, ProjectCounty, State, ZIP) %>%
+  select(Address1, Address2, City, State, ZIP) %>%
   unique() %>%
-  mutate(SiteID = rownames(.))
+  mutate(SiteID = rownames(.)) 
 
 # Remove all sites already associated to an Agency ------------------------
 
-Sites <- all_unique_addresses %>%
+sites <- all_unique_addresses %>%
   anti_join(agency_from_export %>%
               left_join(Addresses[
                 c(
@@ -68,10 +68,7 @@ Sites <- all_unique_addresses %>%
                   "Address2",
                   "City",
                   "State",
-                  "ProjectCounty",
-                  "ZIP",
-                  "Lat",
-                  "Long"
+                  "ZIP"
                 )
               ], by = c("id" = "ProjectID")), by = c(
     "Address1",
@@ -80,8 +77,28 @@ Sites <- all_unique_addresses %>%
     "ProjectCounty",
     "State",
     "ZIP"
-  ))
-
+  )) %>%
+  mutate(geolocations.address = if_else(is.na(Address2), Address1,
+                                        paste(Address1, Address2)),
+         geolocations.city = City,
+         geolocations.state = State,
+         geolocations.zipcode = substr(ZIP, 1, 5)) %>%
+  select(-Address1, -Address2, -City, -State, -ZIP, -ProjectCounty) %>%
+  left_join(
+    Agencies[c(
+      "id",
+      "geolocations.address",
+      "geolocations.city",
+      "geolocations.state",
+      "geolocations.zipcode"
+    )],
+    by = c(
+      "geolocations.address",
+      "geolocations.city",
+      "geolocations.state",
+      "geolocations.zipcode"
+    )
+  )
 
 # Writing it out to csv ---------------------------------------------------
 

@@ -104,15 +104,40 @@ projects_orgs <- read_xlsx(
   filter(!is.na(OrganizationName) &
            OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
   mutate(
-    OrganizationID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    OrganizationID = str_remove(OrganizationID, "[(]"),
-    OrganizationID = str_remove(OrganizationID, "[)]")
+    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
+    AgencyID = str_remove(AgencyID, "[(]"),
+    AgencyID = str_remove(AgencyID, "[)]"),
+    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
     ) %>%
-  select(ProjectID, "AgencyID" = OrganizationID)
+  select(ProjectID, AgencyID, AgencyName)
 
 sites <- non_agency_sites %>%
   left_join(projects_orgs, by = "ProjectID") %>%
+  select(-ProjectID) %>% unique() %>%
   filter(!is.na(AgencyID))
+
+shaping_sites <- sites %>%
+  mutate(
+    name = if_else(is.na(Address2), Address1,
+                   paste(Address1, Address2)),
+    geolocations.address = name,
+    geolocations.city = City,
+    geolocations.state = State,
+    geolocations.zipcode = ZIP,
+    ref_geography_type = "not complete",
+    location = "not complete",
+    phone = "not complete",
+    geolocations.geocode = "not complete",
+    coc = "not complete",
+    status = 1,
+    information_date = format.Date(today(), "%Y-%m-%d"),
+    added_date = format.Date(today(), "%Y-%m-%d %T"),
+    last_updated = format.Date(today(), "%Y-%m-%d %T"),
+  ) %>%
+  rename(
+    "id" = SiteID,
+    "refagency" = AgencyID) %>%
+  select(-AgencyName, -Address1, -Address2, -City, -State, -ZIP)
 
 # Writing it out to csv ---------------------------------------------------
 

@@ -19,6 +19,12 @@ library(here)
 
 source(here("Project_Import_Schema/Agencies.R"))
 
+phones <- read_xlsx(here("data_to_Clarity/RMisc2.xlsx"),
+                    sheet = 18) %>%
+  filter(ProjectTelPrimary == "Yes") %>%
+  mutate(ProjectID = as.character(ProjectID)) %>%
+  select(ProjectID, "phone" = ProjectTelNo)
+
 # Find Orgs with multiple "sites" -----------------------------------------
 
 naturally_unique_addresses <- Addresses %>%
@@ -52,7 +58,7 @@ write_csv(duplicates, here("random_data/sites_projects.csv"))
 # assumes data in SP has been cleaned up
 
 all_unique_addresses <- Addresses %>%
-  select(Address1, Address2, City, State, ZIP) %>%
+  select(Address1, Address2, City, ProjectCounty, State, ZIP) %>%
   unique() %>%
   mutate(SiteID = rownames(.)) 
 
@@ -65,6 +71,7 @@ prep_agency_addresses <- agency_from_export %>%
                         "Address1",
                         "Address2",
                         "City",
+                        "ProjectCounty",
                         "State",
                         "ZIP")], by = c("id" = "ProjectID")) %>%
   rename("AgencyID" = "id")
@@ -117,6 +124,12 @@ sites <- non_agency_sites %>%
   filter(!is.na(AgencyID))
 
 shaping_sites <- sites %>%
+  left_join(hud_geocodes, by = c("City" = "Name")) %>%
+  left_join(hud_geocodes %>%
+              filter(str_detect(Name, " County") == TRUE) %>%
+              mutate(Name = str_remove(Name, " County")), 
+            by = c("ProjectCounty" = "Name")) %>%
+  left_join(phones, by = c("AgencyID" = "ProjectID")) %>%
   mutate(
     name = if_else(is.na(Address2), Address1,
                    paste(Address1, Address2)),
@@ -124,11 +137,10 @@ shaping_sites <- sites %>%
     geolocations.city = City,
     geolocations.state = State,
     geolocations.zipcode = ZIP,
-    ref_geography_type = "not complete",
-    location = "not complete",
-    phone = "not complete",
-    geolocations.geocode = "not complete",
-    coc = "not complete",
+    ref_geography_type = "asked question in PS",
+    location = "",
+    geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),    
+    coc = if_else(ProjectCounty != "Mahoning", "OH-507", "OH-504"),
     status = 1,
     information_date = format.Date(today(), "%Y-%m-%d"),
     added_date = format.Date(today(), "%Y-%m-%d %T"),
@@ -137,7 +149,9 @@ shaping_sites <- sites %>%
   rename(
     "id" = SiteID,
     "refagency" = AgencyID) %>%
-  select(-AgencyName, -Address1, -Address2, -City, -State, -ZIP)
+  select(-AgencyName, -Address1, -Address2, -City, -State, -ZIP, -ProjectCounty,
+         -starts_with("Geocode")) %>%
+  relocate(phone, .after = location)
 
 # Writing it out to csv ---------------------------------------------------
 

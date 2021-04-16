@@ -34,7 +34,6 @@ same_zips_different_addresses <- naturally_unique_addresses %>%
   arrange(ZIP, Address1) %>%
   filter(!is.na(Address1))
 
-
 duplicates <- same_zips_different_addresses %>%
   group_by(Address1, Address2, City, State, ZIP) %>%
   summarise(ProjectCount = n(),
@@ -59,46 +58,61 @@ all_unique_addresses <- Addresses %>%
 
 # Remove all sites already associated to an Agency ------------------------
 
-sites <- all_unique_addresses %>%
-  anti_join(agency_from_export %>%
-              left_join(Addresses[
-                c(
-                  "ProjectID",
-                  "Address1",
-                  "Address2",
-                  "City",
-                  "State",
-                  "ZIP"
-                )
-              ], by = c("id" = "ProjectID")), by = c(
-    "Address1",
-    "Address2",
-    "City",
-    "ProjectCounty",
-    "State",
-    "ZIP"
-  )) %>%
-  mutate(geolocations.address = if_else(is.na(Address2), Address1,
-                                        paste(Address1, Address2)),
-         geolocations.city = City,
-         geolocations.state = State,
-         geolocations.zipcode = substr(ZIP, 1, 5)) %>%
-  select(-Address1, -Address2, -City, -State, -ZIP, -ProjectCounty) %>%
+# need a df with SP-ish address columns along with projects considered "Agencies"
+# so we know what addresses need to be excluded
+prep_agency_addresses <- agency_from_export %>%
+  left_join(Addresses[c("ProjectID",
+                        "Address1",
+                        "Address2",
+                        "City",
+                        "State",
+                        "ZIP")], by = c("id" = "ProjectID")) %>%
+  rename("AgencyID" = "id")
+
+# first removing all addresses that are already in the Agencies df, then joining
+# that all the projects' addresses so we wind up with sites that are not 
+# represented in the Agencies df but are attached to other projects
+non_agency_sites <- all_unique_addresses %>%
+  anti_join(
+    prep_agency_addresses,
+    by = c("Address1",
+           "Address2",
+           "City",
+           "State",
+           "ZIP")
+  ) %>%
   left_join(
-    Agencies[c(
-      "id",
-      "geolocations.address",
-      "geolocations.city",
-      "geolocations.state",
-      "geolocations.zipcode"
-    )],
-    by = c(
-      "geolocations.address",
-      "geolocations.city",
-      "geolocations.state",
-      "geolocations.zipcode"
-    )
+    Addresses %>% 
+      select(
+      "ProjectID",
+      "Address1",
+      "Address2",
+      "City",
+      "State",
+      "ZIP"
+    ),
+    by = c("Address1", "Address2", "City", "State", "ZIP")
   )
+
+# Matching ProjectIDs up with AgencyIDs -----------------------------------
+
+projects_orgs <- read_xlsx(
+  here("data_to_Clarity/RMisc2.xlsx"),
+  sheet = 3,
+  col_types = c("numeric", replicate(16, "text"))
+) %>%
+  filter(!is.na(OrganizationName) &
+           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
+  mutate(
+    OrganizationID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
+    OrganizationID = str_remove(OrganizationID, "[(]"),
+    OrganizationID = str_remove(OrganizationID, "[)]")
+    ) %>%
+  select(ProjectID, "AgencyID" = OrganizationID)
+
+sites <- non_agency_sites %>%
+  left_join(projects_orgs, by = "ProjectID") %>%
+  filter(!is.na(AgencyID))
 
 # Writing it out to csv ---------------------------------------------------
 

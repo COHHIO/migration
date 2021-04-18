@@ -123,8 +123,8 @@ incl_coc <- incl_addresses %>%
 
 Agencies <- incl_coc %>%
   mutate(
-    status = 1,
-    navigation_profiles.id = 1,
+    status = 1, # active = 1, inactive = 2
+    navigation_profiles.id = 1, # asked this in meeting, they said to put 1, don't remember why
     screens.name = 0,
     home_screen = 1,
     ref_looker_report_open_units = 0,

@@ -51,36 +51,82 @@ eda_groups_providers <- read_xlsx("data_to_Clarity/RMisc2.xlsx",
 providers_users <- users_eda_groups %>%
   left_join(eda_groups_providers, by = c("EDAGroupName" = "EDAGroup")) %>%
   filter(!is.na(ProjectID) &
-           !UserID %in% c(COHHIO_admin_user_ids)) %>%
+           !UserID %in% c(COHHIO_admin_user_ids, 2169)) %>%
   select(-EDAGroupName)
 
+providers_users %>% 
+  filter(str_detect(UserName, ",", negate = TRUE)) %>% 
+  select(UserName) %>% 
+  unique()
+
 # Getting general shape of final file -------------------------------------
-# id	name	members.first_name	members.last_name	email	ref_user_group	user_agencies.ref_agency 	ref_user_status	members.auto_suggest	ref_profile_screen_name	users.ref_auth_option	members.force_password_change	password	Confirm Password	members.is_warning	members.warning_days	members.last_policy_updated_date	Last Visited	user_agencies	Activation Code	Access Role (Additional Agency)	members.home_screen	user_groups.ref_license	"date"	added_date	last_updated
 
 shaping_users <- providers_users %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   filter(!is.na(AgencyID)) %>%
   separate(UserName, into = c("Last", "First"), sep = "[,]") %>%
   mutate(
+    First = str_squish(First),
+    Last = str_squish(Last),
+    Last = case_when(
+      First == "Lindsey" & Last == "Smith" ~ "Smith2",
+      First == "Chris" & Last == "Myers" ~ "Myers2",
+      First == "Melissa" & Last == "Wright" ~ "Wright2",
+      TRUE ~ Last
+    ),
+    name = tolower(paste0(str_sub(First, start = 1L, end = 2L), Last)),
     members.first_name = First,
     members.last_name = Last,
     email = UserEmail,
-    ref_user_group = "",
-    user_agencies.ref_agency = "",
-    ref_user_status	 = "",
-    members.auto_suggest = "",
-    ref_profile_screen_name	 = "",
-    users.ref_auth_option = "",
-    members.force_password_change = "",
-    password = "",
-    members.is_warning = "",
-    members.warning_days = "",
-    members.last_policy_updated_date = "",
-    user_agencies = "",
-    members.home_screen = "",
-    user_groups.ref_license = "",
-    added_date = "",
-    last_updated = ""
-  )
+    ref_user_group = "", # asked this question but it wasn't really answered 
+    user_agencies.ref_agency = "", # same as above ^^
+    ref_user_status = 3, # it says the default is 3 but I don't know why
+    members.auto_suggest = 1,
+    ref_profile_screen_name	 = "Agency Default",
+    users.ref_auth_option = 0,
+    members.force_password_change = 0,
+    password = "changethislater", # surely we're not meant to clear-text over pws?
+    members.is_warning = 1,
+    members.warning_days = "", # not sure about this? 
+    members.last_policy_updated_date = "", # ?????
+    user_agencies = "", # no data type or format specified
+    members.home_screen = 1,
+    user_groups.ref_license = 1,
+    date = today(), # supposed to be like date effective
+    added_date = format.Date(today(), "%Y-%m-%d %T"), # YYYY-MM-DD HH:MM:SS is it important that we carry in the added dates from SP?
+    last_updated = format.Date(today(), "%Y-%m-%d %T") # is it important that we carry in the updated dates from SP
+  ) %>%
+  select(name:last_updated)
 
+
+# Data Quality Check ------------------------------------------------------
+
+if_else(shaping_users %>% mutate(username_len = nchar(name)) %>%
+  select(username_len) %>%
+  slice_min(username_len, n = 1, with_ties = FALSE) %>%
+  pull() >= 4, "all good", "there's a username that's less than 4 characters")
+
+duplicates <- shaping_users %>%
+  select(email, name) %>%
+  unique() %>%
+  group_by(name) %>% 
+  summarise(total = n()) %>%
+  filter(total > 1)
+
+duplicate_usernames <- duplicates %>%
+  nrow()
+
+if_else(duplicate_usernames == 0, "all good", 
+        paste("there are", duplicate_usernames, "duplicate usernames"))
+
+special_characters <- shaping_users %>%
+  filter(str_detect(name, "-") |
+           str_detect(name, "'") |
+           str_detect(name, ",")) %>% 
+  select(name) %>% unique() 
+
+if_else(special_characters %>% nrow() == 0, "all good",
+        paste("there are", 
+              special_characters %>% nrow(),
+              "usernames with special characters in them"))
 

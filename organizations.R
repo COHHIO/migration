@@ -1,90 +1,110 @@
-# COHHIO_HMIS
-# Copyright (C) 2021  Coalition on Homelessness and Housing in Ohio (COHHIO)
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details at
-# <https://www.gnu.org/licenses/>.
+
 
 library(tidyverse)
 library(lubridate)
 library(here)
 library(readxl)
+library(gt)
 
-art_data <- read_xlsx(here("random_data/OrganizationsBitFocus.xlsx"), 
-                      sheet = 4) %>%
-  filter(!is.na(ProjectID)) %>% # dropping deleted providers
-  mutate(MinEntry = as.Date(MinEntry, origin = "1899-12-30"),
-         MaxExit = as.Date(MaxExit, origin = "1899-12-30"),
-         OpenEEs = replace_na(OpenEEs, 0),
-         operating = if_else(operating == "Yes", 1, 0),
-         participating = if_else(participating == "Yes", 1, 0))
 
-# the warnings are ok
+## Migration to BitFocus
+
+art_data <-
+  read_xlsx(here("random_data/OrganizationsBitFocus.xlsx"),
+            sheet = 4) %>%
+  filter(!is.na(ProjectID) & ProjectID != 1) %>% # dropping deleted providers and Provider ID 1
+  mutate(
+    MinEntry = as.Date(MinEntry, origin = "1899-12-30"),
+    MaxExit = as.Date(MaxExit, origin = "1899-12-30"),
+    OpenEEs = replace_na(OpenEEs, 0),
+    operating = if_else(operating == "Yes", 1, 0),
+    participating = if_else(participating == "Yes", 1, 0),
+    ce_or_vash = if_else(
+      str_detect(Project, "VASH") | (
+        ptc == "Coordinated Entry (HUD)" &
+          !ProjectID %in% c(213, 1989, 2025, 2041, 2044) # DV APs
+      ),
+      1,
+      0
+    ),
+    
+    obsolete_ptc = if_else(
+      ptc %in% c(
+        "Family Homelessness Prevention Pilot (FHPP)",
+        "RETIRED (HUD)",
+        "Homelessness Prevention",
+        "Housing Stability Program (HSP)",
+        "Direct Housing"
+      ),
+      1,
+      0
+    )
+  )
+
+### Organizations
+
 org_level <- art_data %>%
+  mutate(MinEntry = if_else(is.na(MinEntry), ymd("20040101"), MinEntry),
+         MaxExit = if_else(is.na(MaxExit), ymd("20040101"), MaxExit),
+         ce_or_vash = if_else(is.na(ce_or_vash), 0, ce_or_vash)) %>%
   group_by(Org) %>%
-  summarise(minEntry = min(ymd(MinEntry), na.rm = TRUE),
-            maxExit = max(ymd(MaxExit), na.rm = TRUE),
-            openEEs = sum(OpenEEs),
-            maxOperating = max(operating),
-            maxParticipating = max(participating))
+  summarise(
+    minEntry = min(ymd(MinEntry)),
+    maxExit = max(ymd(MaxExit)),
+    openEEs = sum(OpenEEs),
+    maxOperating = max(operating),
+    maxParticipating = max(participating),
+    CEorVASH = max(ce_or_vash)
+  ) %>%
+  ungroup()
 
+### Not Migrating
 
-# Separating Out Orgs that are coming over --------------------------------
-
-# orgs that have providers with data in them that's newer than 2014-05-01 
-# definitely coming over
-orgs_data_7yrs <- org_level %>%
-  filter(ymd(maxExit) > ymd("20140501")) %>%
-  select(Org) %>%
-  unique()
-
-# orgs where the most recent data entered is before 2014-05-01
-# definitely not coming over
-orgs_data_old <- org_level %>%
-  filter(ymd(maxExit) <= ymd("20140501")) %>%
-  select(Org) %>%
+not_migrating <- org_level %>%
+  mutate(nodata = str_detect(minEntry, "/")) %>%
+  filter((ymd(maxExit) <= ymd("20140501") | is.na(nodata)) &
+           openEEs == 0 &
+           maxParticipating == 0 &
+           maxOperating == 0 &
+           CEorVASH == 0) %>%
   unique() 
 
-# Shell or Not-Shell ------------------------------------------------------
+### Migrating Inactive
+possibly_migrating <- org_level %>%
+  anti_join(not_migrating, by = "Org")
 
-# some provider in the org is HMIS participating
-# definitely coming over, all not-shell
-orgs_data_7yrs_participating <- orgs_data_7yrs %>%
-  left_join(org_level, by = "Org") %>%
-  filter(maxParticipating == 1)
+migrating_inactive <- possibly_migrating %>%
+  mutate(nodata = str_detect(minEntry, "/")) %>%
+  filter(maxParticipating == 0 &
+           CEorVASH == 0 &
+           openEEs == 0)
+
+### Migrating Active
+
+migrating_active <- possibly_migrating %>%
+  anti_join(migrating_inactive, by = "Org")
+
+### Migrating
+
+migrating <- rbind(migrating_active, migrating_inactive %>% select(-nodata))
+
+### Maybe Add to Migrating Inactive
+
+level2_providers <- art_data %>%
+  filter(Org == "Coalition on Homelessness and Housing in Ohio(1)" &
+           ptc == "Administrating Agency" &
+           str_starts(Project, "zz", negate = TRUE)) %>%
+  select("Org" = Project)
+
+referral_orgs <-
+  anti_join(level2_providers,
+            art_data,
+            by = "Org") %>%
+  arrange(Org)
 
 
 
-# no providers in the org are HMIS participating
-# maybe coming over
-orgs_data_7yrs_not_participating <- orgs_data_7yrs %>%
-  left_join(org_level, by = "Org") %>%
-  filter(maxParticipating == 0)
 
 
 
-VASH_only_orgs <- art_data %>%
-  mutate(VASH = if_else(str_detect(Project, "VASH"), 1, 0)) %>%
-  group_by(Org) %>%
-  summarise(total = n(),
-            vash = sum(VASH)) %>%
-  ungroup() %>%
-  filter(total - vash == 0) %>%
-  select(Org)
 
-non_participating_orgs <- art_data %>%
-  anti_join(orgs_data_7yrs, by = "Org") %>%
-  filter(str_starts(Project, "zz", negate = TRUE) &
-           participating == "No") %>%
-  # select(Org) %>%
-  unique()
-
-org_same_as_project <- art_data %>%
-  filter(Org == Project)

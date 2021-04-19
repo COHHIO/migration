@@ -24,9 +24,25 @@ Project <-
   read_csv(here("data_to_Clarity/Project.csv"),
            col_types = "nnccDDnnnnnnnnTTcTn") 
 
+provider_extras <- read_xlsx(
+  paste0("data_to_Clarity/RMisc2.xlsx"),
+  sheet = 3,
+  col_types = c("numeric", replicate(16, "text"))
+) %>% 
+  mutate(
+    OrganizationName = str_remove(OrganizationName, "\\(.*\\)")
+  )
+
+Project <- Project %>%
+  select(-ProjectName) %>%
+  left_join(provider_extras, by = "ProjectID")
+
 Organization <- 
   read_csv(here("data_to_Clarity/Organization.csv"),
-           col_types = "ncncTTnTn") 
+           col_types = "ncncTTnTn") %>%
+  left_join(provider_extras[c("ProjectID", "ProjectName")], 
+            by = c("OrganizationID" = "ProjectID")) %>%
+  mutate(OrganizationName = ProjectName, ProjectName = NULL)
 
 ProjectCoC <- 
   read_csv(here("data_to_Clarity/ProjectCoC.csv"),

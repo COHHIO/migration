@@ -41,7 +41,7 @@ same_zips_different_addresses <- naturally_unique_addresses %>%
   filter(!is.na(Address1))
 
 duplicates <- same_zips_different_addresses %>%
-  group_by(Address1, Address2, City, State, ZIP) %>%
+  group_by(City, State, ZIP, Address1, Address2) %>%
   summarise(ProjectCount = n(),
             ProjectIDs = toString(ProjectID)) %>%
   ungroup()

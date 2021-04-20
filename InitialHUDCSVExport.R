@@ -182,7 +182,94 @@ data.frame(
 ) %>%
   purrr::pwalk(remove_quotes)
 
+# Fixing Dates ------------------------------------------------------------
 
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
+           DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"))
+  
+  write_csv(x,
+            here(paste0("data_to_Clarity/", file, ".csv")),
+            append = FALSE,
+            na = "")
+}
 
+data.frame(
+  file = c(
+    "Client",
+    "CurrentLivingSituation",
+    "Disabilities",
+    "EmploymentEducation",
+    "Enrollment",
+    "EnrollmentCoC",
+    "Exit",
+    "HealthAndDV",
+    "IncomeBenefits",
+    "Services"
+  )
+) %>%
+  purrr::pwalk(fix_date_times)
 
-
+# Fix logicals ------------------------------------------------------------
+# 
+# fix_logicals <- function(file, variable) {
+#   cat(file, sep = "\n")
+#   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+#                 col_types = cols())
+#   
+#   write_csv(x,
+#             here(paste0("data_to_Clarity/", file, ".csv")),
+#             append = FALSE,
+#             na = "")
+# }
+# 
+# data.frame(
+#   file = c(
+#     "Disabilities",
+#     "Disabilities",
+#     "Disabilities",
+#     "Disabilities",
+#     "Disabilities",
+#     "EmploymentEducation",
+#     "Enrollment",
+#     "Enrollment",
+#     "Enrollment",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "Exit",
+#     "HealthAndDV",
+#     "HealthAndDV",
+#     "HealthAndDV",
+#     "IncomeBenefits",
+#     "IncomeBenefits",
+#     "IncomeBenefits"
+#   ),
+#   variable = c(
+#     "TCellCount",
+#     "TCellSource",
+#     "ViralLoadAvailable",
+#     "ViralLoadSource",
+#     "TCellCountAvailable",
+#     "LOSUnderThreshold",
+#     "ChildWelfareYears",
+#     "JuvenileJusticeYears"
+# 
+# 
+#     
+#   )
+# ) %>%
+#   purrr::pwalk(fix_logicals)
+# 
+# 
+# 
+# 

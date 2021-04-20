@@ -66,7 +66,7 @@ bf_counties <- read_csv(here("data_to_Clarity/BFCounties.csv")) %>%
 agency_from_export <- Organization %>%
   select("id" = OrganizationID,
          "name" = OrganizationName,
-         "default_site_name" = OrganizationName,
+         # "default_site_name" = OrganizationName,
          "victim_service_provider" = VictimServicesProvider,
          "added_date" = DateCreated,
          "last_updated" = DateUpdated
@@ -98,8 +98,9 @@ incl_addresses <- agency_from_export %>%
               mutate(Name = str_remove(Name, " County")), 
             by = c("ProjectCounty" = "Name")) %>%
   mutate(
-    geolocations.address = if_else(is.na(Address2), Address1,
-                                   paste(Address1, Address2)),
+    default_site_name = if_else(is.na(Address2), Address1,
+                                paste(Address1, Address2)),
+    geolocations.address = default_site_name,
     geolocations.city = City,
     geolocations.state = State,
     counties.id = ID,
@@ -140,17 +141,17 @@ incl_coc <- incl_addresses %>%
 Agencies <- incl_coc %>%
   mutate(
     status = 1, # active = 1, inactive = 2
-    navigation_profiles.id = 1, # asked this in meeting, they said to put 1, don't remember why
-    screens.name = 0,
-    home_screen = 1,
-    ref_looker_report_open_units = 0,
-    all_client_forms_enabled = 1,
-    department = 0,
-    clients = 2,
-    release_of_information = 1,
-    ref_coordinated_entry = 0,
-    ref_looker_report = 0,
-    send_referral_notifications = 1
+    navigation_profiles.id = 1, # default = 1, can edit in UI later
+    screens.name = 0, # not sure what goes here
+    home_screen = 1, # default = 1
+    ref_looker_report_open_units = 0, # may not be required
+    all_client_forms_enabled = 0, 
+    department = 0, # 0 = disabled, we can turn these on individually as the need arises
+    clients = 2, # system shared
+    release_of_information = 1, # 1 = defaults to system policy
+    ref_coordinated_entry = 0, # don't know what this means
+    ref_looker_report = 0, # don't know what this means
+    send_referral_notifications = 1 # default = 1
   ) %>%
   relocate(victim_service_provider, .after = ref_looker_report_open_units) %>%
   relocate(c(added_date, last_updated), .after = all_client_forms_enabled)

@@ -16,6 +16,7 @@
 
 library(janitor)
 library(here)
+library(data.table)
 
 source(here("Project_Import_Schema/Agencies.R"))
 
@@ -118,12 +119,12 @@ projects_orgs <- read_xlsx(
     ) %>%
   select(ProjectID, AgencyID, AgencyName)
 
-sites <- non_agency_sites %>%
+prep_sites <- non_agency_sites %>%
   left_join(projects_orgs, by = "ProjectID") %>%
-  select(-ProjectID) %>% unique() %>%
-  filter(!is.na(AgencyID))
+  filter(!is.na(AgencyID) & !is.na(City)) %>%
+  select(-ProjectID) %>% unique()
 
-shaping_sites <- sites %>%
+Sites <- prep_sites %>%
   left_join(hud_geocodes, by = c("City" = "Name")) %>%
   left_join(hud_geocodes %>%
               filter(str_detect(Name, " County") == TRUE) %>%
@@ -131,13 +132,16 @@ shaping_sites <- sites %>%
             by = c("ProjectCounty" = "Name")) %>%
   left_join(phones, by = c("AgencyID" = "ProjectID")) %>%
   mutate(
-    name = if_else(is.na(Address2), Address1,
-                   paste(Address1, Address2)),
+    name = case_when(is.na(Address2) & !is.na(Address1) ~ Address1,
+                     is.na(Address1) & !is.na(Address2) ~ Address2,
+                     !is.na(Address1) & !is.na(Address2) ~ paste(Address1, Address2),
+                     is.na(Address1) & is.na(Address2) ~ paste("Confidential-",
+                                                               AgencyName)),
     geolocations.address = name,
     geolocations.city = City,
     geolocations.state = State,
-    geolocations.zipcode = ZIP,
-    ref_geography_type = "asked question in PS",
+    geolocations.zipcode = substr(ZIP, 1, 5),
+    ref_geography_type = "",
     location = "",
     geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),    
     coc = if_else(ProjectCounty != "Mahoning", "OH-507", "OH-504"),
@@ -148,11 +152,27 @@ shaping_sites <- sites %>%
   ) %>%
   rename(
     "id" = SiteID,
-    "refagency" = AgencyID) %>%
+    "ref_agency" = AgencyID) %>%
   select(-AgencyName, -Address1, -Address2, -City, -State, -ZIP, -ProjectCounty,
          -starts_with("Geocode")) %>%
   relocate(phone, .after = location)
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(Sites, here("random_data/Sites.csv"))
+write_csv(Sites, here("data_to_Clarity/Sites.csv"))
+
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(added_date = format.Date(added_date, "%Y-%m-%d %T"),
+           last_updated = format.Date(last_updated, "%Y-%m-%d %T"),
+           information_date = format.Date(information_date, "%Y-%m-%d"))
+  
+  fwrite(x, 
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Sites")
+

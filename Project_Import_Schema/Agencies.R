@@ -17,6 +17,7 @@ library(lubridate)
 library(HMIS)
 library(here)
 library(readxl)
+library(data.table)
 
 # get necessary data ------------------------------------------------------
 
@@ -98,8 +99,11 @@ incl_addresses <- agency_from_export %>%
               mutate(Name = str_remove(Name, " County")), 
             by = c("ProjectCounty" = "Name")) %>%
   mutate(
-    default_site_name = if_else(is.na(Address2), Address1,
-                                paste(Address1, Address2)),
+    default_site_name = case_when(is.na(Address2) & !is.na(Address1) ~ Address1,
+                                  is.na(Address1) & !is.na(Address2) ~ Address2,
+                     !is.na(Address1) & !is.na(Address2) ~ paste(Address1, Address2),
+                     is.na(Address1) & is.na(Address2) ~ paste("Confidential-",
+                                                               name)),
     geolocations.address = default_site_name,
     geolocations.city = City,
     geolocations.state = State,
@@ -149,13 +153,27 @@ Agencies <- incl_coc %>%
     department = 0, # 0 = disabled, we can turn these on individually as the need arises
     clients = 2, # system shared
     release_of_information = 1, # 1 = defaults to system policy
-    ref_coordinated_entry = 0, # don't know what this means
-    ref_looker_report = 0, # don't know what this means
+    # ref_coordinated_entry = 0, # don't know what this means
+    # ref_looker_report = 0, # don't know what this means
     send_referral_notifications = 1 # default = 1
   ) %>%
   relocate(victim_service_provider, .after = ref_looker_report_open_units) %>%
   relocate(c(added_date, last_updated), .after = all_client_forms_enabled)
 
 # Writing it out to csv ---------------------------------------------------
+write_csv(Agencies, here("data_to_Clarity/Agencies.csv"))
 
-write_csv(Agencies, here("random_data/Agencies.csv"))
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(added_date = format.Date(added_date, "%Y-%m-%d %T"),
+           last_updated = format.Date(last_updated, "%Y-%m-%d %T"))
+  
+  fwrite(x, 
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Agencies")
+

@@ -63,7 +63,19 @@ providers_users %>%
 
 shaping_users <- providers_users %>%
   left_join(projects_orgs, by = "ProjectID") %>%
-  filter(!is.na(AgencyID)) %>%
+  filter(!is.na(AgencyID) & AgencyID != 1695) %>%
+  mutate(AgencyID = as.numeric(AgencyID)) %>%
+  select(-ProjectID) %>% unique() %>%
+  group_by(UserID, UserName, UserEmail) %>%
+  arrange(AgencyID) %>%
+  summarise(NoAgencies = n(),
+            SingleAgencyID = min(AgencyID),
+            SecondaryAgencyIDs = if(NoAgencies > 1){
+              toString(AgencyID[-1])
+            } else{
+              ""
+            }) %>%
+  ungroup() %>%
   separate(UserName, into = c("Last", "First"), sep = "[,]") %>%
   mutate(
     First = str_squish(First),
@@ -79,25 +91,24 @@ shaping_users <- providers_users %>%
     members.last_name = Last,
     email = UserEmail,
     ref_user_group = "", # asked this question but it wasn't really answered 
-    user_agencies.ref_agency = "", # same as above ^^
+    user_agencies.ref_agency = SingleAgencyID, # same as above ^^
     ref_user_status = 3, # it says the default is 3 but I don't know why
-    members.auto_suggest = 1,
-    ref_profile_screen_name	 = "Agency Default",
-    users.ref_auth_option = 0,
+    members.auto_suggest = 1, # don't know what this is about or why I have a 1
+    ref_profile_screen_name	 = "Agency Default", # what does this mean
+    users.ref_auth_option = 0, # what does this mean
     members.force_password_change = 0,
     password = "changethislater", # surely we're not meant to clear-text over pws?
-    members.is_warning = 1,
+    members.is_warning = 1, # what is this
     members.warning_days = "", # not sure about this? 
     members.last_policy_updated_date = "", # ?????
-    user_agencies = "", # no data type or format specified
+    user_agencies = SecondaryAgencyIDs, # no data type or format specified
     members.home_screen = 1,
     user_groups.ref_license = 1,
     date = today(), # supposed to be like date effective
-    added_date = format.Date(today(), "%Y-%m-%d %T"), # YYYY-MM-DD HH:MM:SS is it important that we carry in the added dates from SP?
-    last_updated = format.Date(today(), "%Y-%m-%d %T") # is it important that we carry in the updated dates from SP
+    added_date = format.Date(today(), "%Y-%m-%d %T"), 
+    last_updated = format.Date(today(), "%Y-%m-%d %T") 
   ) %>%
   select(name:last_updated)
-
 
 # Data Quality Check ------------------------------------------------------
 

@@ -102,7 +102,7 @@ incl_addresses <- agency_from_export %>%
     default_site_name = case_when(is.na(Address2) & !is.na(Address1) ~ Address1,
                                   is.na(Address1) & !is.na(Address2) ~ Address2,
                      !is.na(Address1) & !is.na(Address2) ~ paste(Address1, Address2),
-                     is.na(Address1) & is.na(Address2) ~ paste("Confidential-",
+                     is.na(Address1) & is.na(Address2) ~ paste("Confidential -",
                                                                name)),
     geolocations.address = default_site_name,
     geolocations.city = City,

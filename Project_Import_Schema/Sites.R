@@ -135,7 +135,7 @@ Sites <- prep_sites %>%
     name = case_when(is.na(Address2) & !is.na(Address1) ~ Address1,
                      is.na(Address1) & !is.na(Address2) ~ Address2,
                      !is.na(Address1) & !is.na(Address2) ~ paste(Address1, Address2),
-                     is.na(Address1) & is.na(Address2) ~ paste("Confidential-",
+                     is.na(Address1) & is.na(Address2) ~ paste("Confidential -",
                                                                AgencyName)),
     geolocations.address = name,
     geolocations.city = City,

@@ -69,7 +69,7 @@ BitfocusServices <- Services %>%
     service_items.default_tracking_minute = "",
     service_items.time_tracking_type = "",
     service_items.time_tracking_adjustable = "",
-    added_date = "",
+    added_date = "", # duplicated (?)
     last_updated = ""
 
   ) %>%
@@ -77,7 +77,7 @@ BitfocusServices <- Services %>%
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(BitfocusPrograms, here("data_to_Clarity/Programs.csv"))
+write_csv(BitfocusPrograms, here("data_to_Clarity/Services.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
@@ -91,5 +91,5 @@ fix_date_times <- function(file) {
          logical01 = TRUE)
 }
 
-fix_date_times("Programs")
+fix_date_times("Services")
 

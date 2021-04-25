@@ -78,7 +78,7 @@ BitfocusPrograms <- Project %>%
     enrollment_age_warning_threshold	= "",
     all_client_forms_enabled	= "",
     added_date	= "",	
-    last_updated	= "",
+    last_updated	= ""
   ) %>%
   select(id:last_updated)
 
@@ -91,8 +91,7 @@ fix_date_times <- function(file) {
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(added_date = format.Date(added_date, "%Y-%m-%d %T"),
-           last_updated = format.Date(last_updated, "%Y-%m-%d %T"),
-           information_date = format.Date(information_date, "%Y-%m-%d"))
+           last_updated = format.Date(last_updated, "%Y-%m-%d %T"))
   
   fwrite(x, 
          here(paste0("data_to_Clarity/", file, ".csv")),

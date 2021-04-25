@@ -20,15 +20,20 @@ library(data.table)
 
 source(here("Project_Import_Schema/Agencies.R"))
 
+project_geocodes <- ProjectCoC %>%
+  select(ProjectID, Geocode) %>%
+  unique()
+
 BitfocusPrograms <- Project %>%
+  left_join(project_geocodes, by = "ProjectID") %>%
   mutate(
     id = ProjectID,
     ref_agency = OrganizationID,
     name = ProjectName,
     description	= ProjectCommonName,
     ref_template = "", # ???
-    availability_starrt	= OperatingStart,
-    availability_end	= OperatingEnd,
+    availability_starrt	= OperatingStartDate,
+    availability_end	= OperatingEndDate,
     status = 1,
     cross_agency = "", # ???
     ref_funding_source = "", # what is the data type here? does this change the granularity of the dataset?
@@ -36,7 +41,7 @@ BitfocusPrograms <- Project %>%
     funding_source.amount	= "", # ??? ^^
     ref_category = ProjectType,
     aff_res_proj = ResidentialAffiliation,
-    aff_res_proj_ids	= "", # ???	
+    aff_res_proj_ids	= "", # ???	does this also change granularity of the dataset
     program_applicability	= "", # ???
     continuum_project	= ContinuumProject,
     geolocations.address = case_when(
@@ -46,12 +51,12 @@ BitfocusPrograms <- Project %>%
         !is.na(Address2) ~ paste(Address1, Address2),
       is.na(Address1) &
         is.na(Address2) ~ paste("Confidential -",
-                                AgencyName)
+                                OrganizationName)
     ),
     programs.ref_target_b	= TargetPopulation,
     tracking_method	= TrackingMethod,
     ref_housing_type = HousingType,
-    geocode = "from Sites?", # TODO
+    geocode = Geocode,
     hmis_participating_project = HMISParticipatingProject,
     public_listing = "", # ???
     allow_goals	= "",
@@ -74,7 +79,8 @@ BitfocusPrograms <- Project %>%
     all_client_forms_enabled	= "",
     added_date	= "",	
     last_updated	= "",
-  )
+  ) %>%
+  select(id:last_updated)
 
 # Writing it out to csv ---------------------------------------------------
 

@@ -12,8 +12,6 @@
 # GNU Affero General Public License for more details at
 # <https://www.gnu.org/licenses/>.
 
-# This script should return all secondary addresses associated with an Agency.
-
 library(janitor)
 library(here)
 
@@ -88,23 +86,23 @@ shaping_users <- providers_users %>%
     ),
     name = tolower(paste0(str_sub(First, start = 1L, end = 2L), Last)),
     members.first_name = First,
-    members.last_name = Last,
+    members.last_name = str_remove(Last, "2"),
     email = UserEmail,
-    ref_user_group = "", # asked this question but it wasn't really answered 
-    user_agencies.ref_agency = SingleAgencyID, # same as above ^^
-    ref_user_status = 3, # it says the default is 3 but I don't know why
-    members.auto_suggest = 1, # don't know what this is about or why I have a 1
-    ref_profile_screen_name	 = "Agency Default", # what does this mean
-    users.ref_auth_option = 0, # what does this mean
-    members.force_password_change = 0,
-    password = "changethislater", # surely we're not meant to clear-text over pws?
-    members.is_warning = 1, # what is this
-    members.warning_days = "", # not sure about this? 
-    members.last_policy_updated_date = "", # ?????
+    ref_user_group = "Agency Staff",  
+    user_agencies.ref_agency = SingleAgencyID,
+    ref_user_status = 1, 
+    members.auto_suggest = 1, 
+    ref_profile_screen_name	 = "Agency Default", 
+    users.ref_auth_option = 0, # 2FA
+    members.force_password_change = 1,
+    password = "changethislater", 
+    members.is_warning = 1, # assessment due warning
+    members.warning_days = "30 days", 
+    members.last_policy_updated_date = "", # leave blank
     user_agencies = SecondaryAgencyIDs, # no data type or format specified
     members.home_screen = 1,
     user_groups.ref_license = 1,
-    date = today(), # supposed to be like date effective
+    date = format.Date(today(), "%Y-%m-%d"), 
     added_date = format.Date(today(), "%Y-%m-%d %T"), 
     last_updated = format.Date(today(), "%Y-%m-%d %T") 
   ) %>%

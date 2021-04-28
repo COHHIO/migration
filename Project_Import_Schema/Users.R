@@ -14,6 +14,7 @@
 
 library(janitor)
 library(here)
+library(tm)
 
 source(here("Project_Import_Schema/Agencies.R"))
 
@@ -36,8 +37,8 @@ projects_orgs <- read_xlsx(
 
 # Getting each User-Project connection ------------------------------------
 
-COHHIO_admin_user_ids <- c(641, 835, 1041, 1239, 1563, 1624, 1628, 1868, 1698)
-
+COHHIO_admin_user_ids <- c(641, 835, 1041, 1624, 1545)
+# GD, MD, AW, CH, NB
 users_eda_groups <- read_xlsx("data_to_Clarity/RMisc2.xlsx", 
                               sheet = 15) %>%
   select(UserID, UserName, UserEmail, EDAGroupName)
@@ -84,7 +85,8 @@ shaping_users <- providers_users %>%
       First == "Melissa" & Last == "Wright" ~ "Wright2",
       TRUE ~ Last
     ),
-    name = tolower(paste0(str_sub(First, start = 1L, end = 2L), Last)),
+    name = tolower(paste0(str_sub(removePunctuation(First), start = 1L, end = 2L), 
+                          removePunctuation(Last))),
     members.first_name = First,
     members.last_name = str_remove(Last, "2"),
     email = UserEmail,
@@ -95,11 +97,11 @@ shaping_users <- providers_users %>%
     ref_profile_screen_name	 = "Agency Default", 
     users.ref_auth_option = 0, # 2FA
     members.force_password_change = 1,
-    password = "changethislater", 
+    password = "Welc0me!", 
     members.is_warning = 1, # assessment due warning
     members.warning_days = "30 days", 
     members.last_policy_updated_date = "", # leave blank
-    user_agencies = SecondaryAgencyIDs, # no data type or format specified
+    user_agencies = SecondaryAgencyIDs, # add columns TODO 
     members.home_screen = 1,
     user_groups.ref_license = 1,
     date = format.Date(today(), "%Y-%m-%d"), 

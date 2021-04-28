@@ -69,12 +69,12 @@ FundingSources <- Funder %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
     id = FunderID,
-    name= Description,
+    name= Description, # consider prefixing with ProjectName
     ref_agency = AgencyID,
-    status = 1,
+    status = 1, # if EndDate < today, 0
     funding_source = Funder,
-    funding_source_non_federal = OtherFunder,
-    amount = "",
+    funding_source_non_federal = OtherFunder, # will come from a link from GB
+    amount = 0,
     grant_identifier = GrantID,
     start_date = StartDate,
     end_date = EndDate,

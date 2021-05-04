@@ -69,11 +69,47 @@ shaping_users <- providers_users %>%
   arrange(AgencyID) %>%
   summarise(NoAgencies = n(),
             SingleAgencyID = min(AgencyID),
-            SecondaryAgencyIDs = if(NoAgencies > 1){
-              toString(AgencyID[-1])
+            user_agencies2 = if(NoAgencies > 1){
+              toString(AgencyID[2])
             } else{
               ""
-            }) %>%
+            },
+            user_agencies3 = if(NoAgencies > 2){
+              toString(AgencyID[3])
+            } else{
+              ""
+            },
+            user_agencies4 = if(NoAgencies > 3){
+              toString(AgencyID[4])
+            } else{
+              ""
+            },
+            user_agencies5 = if(NoAgencies > 4){
+              toString(AgencyID[5])
+            } else{
+              ""
+            },
+            user_agencies6 = if(NoAgencies > 5){
+              toString(AgencyID[6])
+            } else{
+              ""
+            },
+            user_agencies7 = if(NoAgencies > 6){
+              toString(AgencyID[7])
+            } else{
+              ""
+            },
+            user_agencies8 = if(NoAgencies > 7){
+              toString(AgencyID[8])
+            } else{
+              ""
+            },
+            user_agencies9 = if(NoAgencies > 8){
+              toString(AgencyID[9])
+            } else{
+              ""
+            }
+  ) %>%
   ungroup() %>%
   separate(UserName, into = c("Last", "First"), sep = "[,]") %>%
   mutate(
@@ -101,13 +137,14 @@ shaping_users <- providers_users %>%
     members.is_warning = 1, # assessment due warning
     members.warning_days = "30 days", 
     members.last_policy_updated_date = "", # leave blank
-    user_agencies = SecondaryAgencyIDs, # add columns TODO 
     members.home_screen = 1,
     user_groups.ref_license = 1,
     date = format.Date(today(), "%Y-%m-%d"), 
     added_date = format.Date(today(), "%Y-%m-%d %T"), 
     last_updated = format.Date(today(), "%Y-%m-%d %T") 
   ) %>%
+  relocate(user_agencies2:user_agencies9, 
+           .after = members.last_policy_updated_date) %>%
   select(name:last_updated)
 
 # Data Quality Check ------------------------------------------------------

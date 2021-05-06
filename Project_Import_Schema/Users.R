@@ -53,10 +53,10 @@ providers_users <- users_eda_groups %>%
            !UserID %in% c(COHHIO_admin_user_ids, 2169)) %>%
   select(-EDAGroupName)
 
-providers_users %>% 
+if_else(nrow(providers_users %>% 
   filter(str_detect(UserName, ",", negate = TRUE)) %>% 
   select(UserName) %>% 
-  unique()
+  unique()) == 0, "ok", "be sure all user names are LastName, FirstName in SP")
 
 # Getting general shape of final file -------------------------------------
 
@@ -121,7 +121,7 @@ shaping_users <- providers_users %>%
       First == "Melissa" & Last == "Wright" ~ "Wright2",
       TRUE ~ Last
     ),
-    name = tolower(paste0(str_sub(removePunctuation(First), start = 1L, end = 2L), 
+    name = tolower(paste0(str_sub(removePunctuation(First), start = 1L, end = 1L), 
                           removePunctuation(Last))),
     members.first_name = First,
     members.last_name = str_remove(Last, "2"),
@@ -177,4 +177,26 @@ if_else(special_characters %>% nrow() == 0, "all good",
         paste("there are", 
               special_characters %>% nrow(),
               "usernames with special characters in them"))
+
+# Writing it out to csv ---------------------------------------------------
+
+Users <- shaping_users
+
+write_csv(Users, here("data_to_Clarity/Users.csv"))
+
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(added_date = format.Date(added_date, "%Y-%m-%d %T"),
+           last_updated = format.Date(last_updated, "%Y-%m-%d %T"),
+           date = format.Date(date, "%Y-%m-%d"))
+  
+  fwrite(x, 
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Users")
+
 

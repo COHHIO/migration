@@ -107,9 +107,16 @@ incl_addresses <- agency_from_export %>%
     geolocations.address = default_site_name,
     geolocations.city = City,
     geolocations.state = State,
-    counties.id = ID,
+    counties.id = case_when(
+      is.na(ID) & id == 2455 ~ 0000, # Allegheny County, PA
+      TRUE ~ ID
+      ),
     geolocations.zipcode = substr(ZIP, 1, 5),
-    geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),    
+    geolocations.geocode = if_else(is.na(Geocode.x), Geocode.y, Geocode.x),  
+    geolocations.geocode = case_when(
+      is.na(geolocations.geocode) & id == 2455 ~ 429003,
+      TRUE ~ geolocations.geocode
+    ),
     site.name = name,
     ID = NULL
   ) %>%
@@ -153,8 +160,8 @@ Agencies <- incl_coc %>%
     department = 0, # 0 = disabled, we can turn these on individually as the need arises
     clients = 2, # system shared
     release_of_information = 1, # 1 = defaults to system policy
-    # ref_coordinated_entry = 0, # don't know what this means
-    # ref_looker_report = 0, # don't know what this means
+    ref_coordinated_entry = 0, # don't know what this means
+    ref_looker_report = 0, # don't know what this means
     send_referral_notifications = 1 # default = 1
   ) %>%
   relocate(victim_service_provider, .after = ref_looker_report_open_units) %>%

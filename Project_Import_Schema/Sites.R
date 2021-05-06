@@ -122,6 +122,9 @@ projects_orgs <- read_xlsx(
 prep_sites <- non_agency_sites %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   filter(!is.na(AgencyID) & !is.na(City)) %>%
+  semi_join(agency_from_export %>% 
+              mutate(AgencyID = as.character(id)) %>%
+              select(AgencyID), by = "AgencyID") %>%
   select(-ProjectID) %>% unique()
 
 Sites <- prep_sites %>%

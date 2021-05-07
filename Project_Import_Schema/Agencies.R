@@ -54,7 +54,12 @@ Addresses <- read_xlsx(
     sheet = 3,
     col_types = c("numeric", replicate(16, "text"))
   ) %>% 
-  mutate(OrganizationName = str_remove(OrganizationName, "\\(.*\\)"))
+  mutate(OrganizationName = str_remove(OrganizationName, "\\(.*\\)"),
+         Address1 = if_else(Address1 == "440 W. Nyack Rd.",
+                            "966 Main St", Address1),
+         City = if_else(City == "West Nyack", "Columbus", City),
+         State = if_else(State == "NY", "OH", State),
+         ZIP = if_else(ZIP == "10994", "43205", ZIP))
 
 bf_counties <- read_csv(here("data_to_Clarity/BFCounties.csv")) %>%
   rename("ProjectCounty" = 2) %>%

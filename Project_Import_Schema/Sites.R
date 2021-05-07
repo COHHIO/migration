@@ -135,6 +135,7 @@ Sites <- prep_sites %>%
             by = c("ProjectCounty" = "Name")) %>%
   left_join(phones, by = c("AgencyID" = "ProjectID")) %>%
   mutate(
+    SiteID = rownames(.),
     name = case_when(is.na(Address2) & !is.na(Address1) ~ Address1,
                      is.na(Address1) & !is.na(Address2) ~ Address2,
                      !is.na(Address1) & !is.na(Address2) ~ paste(Address1, Address2),

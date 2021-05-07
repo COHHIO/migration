@@ -103,11 +103,6 @@ shaping_users <- providers_users %>%
               toString(AgencyID[8])
             } else{
               ""
-            },
-            user_agencies9 = if(NoAgencies > 8){
-              toString(AgencyID[9])
-            } else{
-              ""
             }
   ) %>%
   ungroup() %>%
@@ -143,7 +138,7 @@ shaping_users <- providers_users %>%
     added_date = format.Date(today(), "%Y-%m-%d %T"), 
     last_updated = format.Date(today(), "%Y-%m-%d %T") 
   ) %>%
-  relocate(user_agencies2:user_agencies9, 
+  relocate(user_agencies2:user_agencies8, 
            .after = members.last_policy_updated_date) %>%
   select(name:last_updated)
 

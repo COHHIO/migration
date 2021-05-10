@@ -41,19 +41,19 @@ ProgramInventory <- Inventory %>%
       VetBedInventory > 0 & !is.na(VetBedInventory), 1, 0),	
     program_inventory.bed_other_veteran = replace_na(VetBedInventory, 0),	
     program_inventory.is_bed_other_youth = if_else(
-      YouthBedInventory & !is.na(YouthBedInventory) > 0, 1, 0),	
+      YouthBedInventory & !is.na(YouthBedInventory), 1, 0),	
     program_inventory.bed_other_youth = replace_na(YouthBedInventory, 0),	
     program_inventory.is_bed_non_dedicated = if_else(
-      OtherBedInventory > 0 & !is.na(OtherBedInventory) > 0, 1, 0),
+      OtherBedInventory > 0 & !is.na(OtherBedInventory), 1, 0),
     program_inventory.bed_non_dedicated = replace_na(OtherBedInventory, 0),
     program_inventory.is_bed_ch_veteran = if_else(
-      CHVetBedInventory > 0 & !is.na(CHVetBedInventory) > 0, 1, 0),
+      CHVetBedInventory > 0 & !is.na(CHVetBedInventory), 1, 0),
     program_inventory.bed_ch_veteran = replace_na(CHVetBedInventory, 0),
     program_inventory.is_bed_ch_youth = if_else(
-      CHYouthBedInventory > 0 & !is.na(CHYouthBedInventory) > 0, 1, 0),
+      CHYouthBedInventory > 0 & !is.na(CHYouthBedInventory), 1, 0),
     program_inventory.bed_ch_youth = replace_na(CHYouthBedInventory, 0),	
     program_inventory.is_bed_ch_other = if_else(
-      CHBedInventory > 0 & !is.na(CHBedInventory) > 0, 1, 0),	
+      CHBedInventory > 0 & !is.na(CHBedInventory), 1, 0),	
     program_inventory.bed_ch_other = replace_na(CHBedInventory, 0),	
     program_inventory.bed_inventory = BedInventory,
     everything_adds_up = program_inventory.bed_ch_other +

@@ -58,7 +58,7 @@ projects_orgs <- read_xlsx(
     AgencyID = str_remove(AgencyID, "[)]"),
     AgencyName = str_remove(OrganizationName, "\\(.*\\)")
   ) %>%
-  select(ProjectID, AgencyID, AgencyName)
+  select(ProjectID, ProjectName, AgencyID, AgencyName)
 
 hud_specs <- read_csv("random_data/HUDSpecs.csv", col_types = "cccc") %>%
   filter(DataElement == "FundingSource") %>%
@@ -69,7 +69,7 @@ FundingSources <- Funder %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
     id = FunderID,
-    name = paste(AgencyName, Description, sep = ": "), 
+    name = paste(ProjectName, Description, sep = ": "), 
     ref_agency = AgencyID,
     status = if_else(is.na(EndDate) | ymd(EndDate) > today(), 1, 0), 
     funding_source = Funder,

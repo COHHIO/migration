@@ -30,7 +30,8 @@ BitfocusPrograms <- Project %>%
     id = ProjectID,
     ref_agency = OrganizationID,
     name = ProjectName,
-    description	= ProjectCommonName,
+    alias = ProjectCommonName,
+    description	= "",
     ref_template = "", # will need discussion, decisions, setup
     availability_start	= OperatingStartDate,
     availability_end	= OperatingEndDate,
@@ -40,8 +41,8 @@ BitfocusPrograms <- Project %>%
     funding_source.funding_source_non_federal	= "", # ??? ^^
     funding_source.amount	= 0, # since we don't collect this in SP, setting to 0
     ref_category = ProjectType,
-    aff_res_proj = ResidentialAffiliation,
-    aff_res_proj_ids	= "", # ???	does this also change granularity of the dataset
+    aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
+    aff_res_proj_ids	= "", # should just be a single ProjectID anyway
     program_applicability	= ProjectType, 
     continuum_project	= ContinuumProject,
     geolocations.address = case_when(

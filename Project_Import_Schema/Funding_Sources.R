@@ -69,13 +69,31 @@ FundingSources <- Funder %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
     id = FunderID,
-    name= Description, # consider prefixing with ProjectName
+    name = paste(AgencyName, Description, sep = ": "), 
     ref_agency = AgencyID,
-    status = 1, # if EndDate < today, 0
+    status = if_else(is.na(EndDate) | ymd(EndDate) > today(), 1, 0), 
     funding_source = Funder,
-    funding_source_non_federal = OtherFunder, # will come from a link from GB
+    funding_source_non_federal = case_when(
+     	OtherFunder == "Bezos Day One" ~ 1,
+     	OtherFunder == "CDBG" ~ 2,
+     	OtherFunder == "church" ~ 3,
+     	OtherFunder == "community" ~ 4,
+     	OtherFunder == "ODH" ~ 5,
+     	OtherFunder == "ODSA" ~ 6,
+     	OtherFunder == "OHFA" ~ 7,
+     	OtherFunder == "Ohio Department of Health- Youth Initiative" ~ 8,
+     	OtherFunder == "OSDA" ~ 9,
+     	OtherFunder == "Pandemic Emergency Fund" ~ 10,
+     	OtherFunder == "TANF" ~ 11,
+     	OtherFunder == "Unknown" ~ 12,
+     	OtherFunder == "CSBG" ~ 13,
+     	OtherFunder == "Local" ~ 14,
+     	OtherFunder == "OHFA ERA" ~ 15,
+     	OtherFunder == "OVW Transitional Housing" ~ 16,
+     	OtherFunder == "United Way" ~ 17
+    ), # comes from https://docs.google.com/spreadsheets/d/1NZLRcv4m57HBKnME-Bcqy__zKD2q-WIPnEqYYesh88U/edit?usp=sharing
     amount = 0,
-    grant_identifier = GrantID,
+    grant_identifier = if_else(GrantID == "0", "N/A", GrantID),
     start_date = StartDate,
     end_date = EndDate,
     added_date = DateCreated,

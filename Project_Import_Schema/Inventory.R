@@ -89,6 +89,8 @@ everything_adds_up <- ProgramInventory %>%
            program_inventory.bed_non_dedicated !=
            program_inventory.bed_inventory)
 
+write_csv(everything_adds_up, "random_data/not_adding_up.csv")
+
 # Writing it out to csv ---------------------------------------------------
 
 write_csv(BitfocusPrograms, here("data_to_Clarity/ProgramInventory.csv"))

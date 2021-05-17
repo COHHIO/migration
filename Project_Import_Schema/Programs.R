@@ -33,22 +33,27 @@ BitfocusPrograms <- Project %>%
     alias = ProjectCommonName,
     description	= "",
     ref_template = "", # will need discussion, decisions, setup
-    availability_start	= OperatingStartDate,
-    availability_end	= OperatingEndDate,
+    availability_start = OperatingStartDate,
+    availability_end = OperatingEndDate,
     status = 1,
-    cross_agency = 0, # don't understand what this is for, so setting to no
-    ref_funding_source = "", # what is the data type here? does this change the granularity of the dataset?
+    cross_agency = 0, # will be rarely used, so if we need it, set up manually
+    ref_funding_source = "", 
     funding_source.funding_source_non_federal	= "", # ??? ^^
     funding_source.amount	= 0, # since we don't collect this in SP, setting to 0
     ref_category = ProjectType,
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
-    aff_res_proj_ids	= "", # should just be a single ProjectID anyway
+    aff_res_proj_ids	= case_when(
+      id == 1765 ~ "548, 774",
+      id == 2176 ~ "1693",
+      TRUE ~ ""
+    ), 
     program_applicability	= ProjectType, 
     continuum_project	= ContinuumProject,
     geolocations.address = case_when(
       is.na(Address2) & !is.na(Address1) ~ Address1,
       is.na(Address1) &
-        !is.na(Address2) ~ Address2,!is.na(Address1) &
+        !is.na(Address2) ~ Address2,
+      !is.na(Address1) &
         !is.na(Address2) ~ paste(Address1, Address2),
       is.na(Address1) &
         is.na(Address2) ~ paste("Confidential -",
@@ -61,20 +66,20 @@ BitfocusPrograms <- Project %>%
     hmis_participating_project = HMISParticipatingProject,
     public_listing = 2, # 2 = Public -> any agency can refer to this project
     allow_goals	= 1,
-    allow_autoservice_placement	= 0, # recommended default
-    eligibility_enabled	= 0, # recommended default	
-    allow_history_link	= 0, # recommended default
-    enable_assessments	= 0, # recommended default
-    enable_notes	= 0, # recommended default
-    prenable_files	= 0, # recommended default
-    enable_charts	= 0, # recommended default
-    enable_autoexit	= 0, # recommended default
+    allow_autoservice_placement	= 0, # default
+    eligibility_enabled	= 0, # default	
+    allow_history_link	= 0, # default
+    enable_assessments	= 0, # default
+    enable_notes	= 0, # default
+    prenable_files	= 0, # default
+    enable_charts	= 0, # default
+    enable_autoexit	= 0, # default
     autoexit_duration	= 0, # maybe this should be NULL?
-    enable_cascade	= 0, # recommended default
+    enable_cascade	= 0, # default
     cascade_threshold	= 0,
-    enable_assessment_cascade	= 0, # recommended default
-    assessment_cascade_threshold	= 0,
-    close_services	= 1, # recommended default
+    enable_assessment_cascade	= 0, # default
+    assessment_cascade_threshold = 0,
+    close_services = 1, # default
     enrollment_age_warning = 1,
     enrollment_age_warning_threshold = 17,
     all_client_forms_enabled = 1,

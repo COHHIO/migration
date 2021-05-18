@@ -77,7 +77,7 @@ FundingSources <- Funder %>%
      	OtherFunder == "Bezos Day One" ~ 1,
      	OtherFunder == "CDBG" ~ 2,
      	OtherFunder == "church" ~ 3,
-     	OtherFunder == "community" ~ 4,
+     	OtherFunder %in% c("Community", "community") ~ 4,
      	OtherFunder == "ODH" ~ 5,
      	OtherFunder == "ODSA" ~ 6,
      	OtherFunder == "OHFA" ~ 7,

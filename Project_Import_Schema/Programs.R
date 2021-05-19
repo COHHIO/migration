@@ -53,6 +53,11 @@ project_geocodes <- ProjectCoC %>%
 BitfocusPrograms <- Project %>%
   left_join(project_geocodes, by = "ProjectID") %>%
   left_join(funder_buckets, by = "ProjectID") %>%
+  left_join(Addresses %>% select(ProjectID, 
+                                 Address1, 
+                                 Address2,
+                                 OrganizationName), 
+            by = "ProjectID") %>%
   mutate(
     id = ProjectID,
     ref_agency = OrganizationID,
@@ -79,10 +84,8 @@ BitfocusPrograms <- Project %>%
     cross_agency = 0,
     # will be rarely used, so if we need it, set up manually
     ref_funding_source = "",
-    funding_source.funding_source_non_federal	= "",
-    # ??? ^^
-    funding_source.amount	= 0,
-    # since we don't collect this in SP, setting to 0
+    funding_source.funding_source_non_federal	= "", # ??? ^^
+    funding_source.amount	= 0, # since we don't collect this in SP, setting to 0
     ref_category = ProjectType,
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
     aff_res_proj_ids	= case_when(id == 1765 ~ "548, 774",

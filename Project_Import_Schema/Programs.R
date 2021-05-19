@@ -46,6 +46,39 @@ funder_buckets <- Funder %>%
   ) %>%
   select(ProjectID, bucket) %>% unique()
 
+funder_columns <- Funder %>%
+  left_join(hud_specs, by = c("Funder" = "ReferenceNo")) %>%
+  left_join(projects_orgs, by = "ProjectID") %>%
+  mutate(
+    ref_agency = AgencyID,
+    funding_source = Funder,
+    funding_source_non_federal = case_when(
+      OtherFunder == "Bezos Day One" ~ 1,
+      OtherFunder == "CDBG" ~ 2,
+      OtherFunder == "church" ~ 3,
+      OtherFunder %in% c("Community", "community") ~ 4,
+      OtherFunder == "ODH" ~ 5,
+      OtherFunder == "ODSA" ~ 6,
+      OtherFunder == "OHFA" ~ 7,
+      OtherFunder == "Ohio Department of Health- Youth Initiative" ~ 8,
+      OtherFunder == "OSDA" ~ 9,
+      OtherFunder == "Pandemic Emergency Fund" ~ 10,
+      OtherFunder == "TANF" ~ 11,
+      OtherFunder == "Unknown" ~ 12,
+      OtherFunder == "CSBG" ~ 13,
+      OtherFunder == "Local" ~ 14,
+      OtherFunder == "OHFA ERA" ~ 15,
+      OtherFunder == "OVW Transitional Housing" ~ 16,
+      OtherFunder == "United Way" ~ 17
+    ), # comes from https://docs.google.com/spreadsheets/d/1NZLRcv4m57HBKnME-Bcqy__zKD2q-WIPnEqYYesh88U/edit?usp=sharing
+    amount = 0) %>%
+  select(ProjectID, funding_source, funding_source_non_federal, amount) %>%
+  group_by(ProjectID) %>%
+  mutate(n = row_number()) %>%
+  ungroup() %>%
+  pivot_wider(names_from = n,
+              values_from = c(funding_source, funding_source_non_federal, amount))
+
 project_geocodes <- ProjectCoC %>%
   select(ProjectID, Geocode) %>%
   unique()
@@ -58,6 +91,7 @@ BitfocusPrograms <- Project %>%
                                  Address2,
                                  OrganizationName), 
             by = "ProjectID") %>%
+  left_join(funder_columns, by = "ProjectID") %>%
   mutate(
     id = ProjectID,
     ref_agency = OrganizationID,
@@ -83,9 +117,6 @@ BitfocusPrograms <- Project %>%
     status = 1,
     cross_agency = 0,
     # will be rarely used, so if we need it, set up manually
-    ref_funding_source = "",
-    funding_source.funding_source_non_federal	= "", # ??? ^^
-    funding_source.amount	= 0, # since we don't collect this in SP, setting to 0
     ref_category = ProjectType,
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
     aff_res_proj_ids	= case_when(id == 1765 ~ "548, 774",
@@ -107,41 +138,29 @@ BitfocusPrograms <- Project %>%
     ref_housing_type = HousingType,
     geocode = Geocode,
     hmis_participating_project = HMISParticipatingProject,
-    public_listing = 2,
-    # 2 = Public -> any agency can refer to this project
+    public_listing = 2, # 2 = Public -> any agency can refer to this project
     allow_goals	= 1,
-    allow_autoservice_placement	= 0,
-    # default
-    eligibility_enabled	= 0,
-    # default
-    allow_history_link	= 0,
-    # default
-    enable_assessments	= 0,
-    # default
-    enable_notes	= 0,
-    # default
-    prenable_files	= 0,
-    # default
-    enable_charts	= 0,
-    # default
-    enable_autoexit	= 0,
-    # default
-    autoexit_duration	= 0,
-    # maybe this should be NULL?
-    enable_cascade	= 0,
-    # default
-    cascade_threshold	= 0,
-    enable_assessment_cascade	= 0,
-    # default
-    assessment_cascade_threshold = 0,
-    close_services = 1,
-    # default
-    enrollment_age_warning = 1,
-    enrollment_age_warning_threshold = 17,
-    all_client_forms_enabled = 1,
+    allow_autoservice_placement	= 0, # default
+    eligibility_enabled	= 1, # from C009
+    allow_history_link = 0, # default, not sure what this is
+    enable_assessments = 1, # from C009
+    enable_notes = 1, # from C009
+    prenable_files = 1, # from C009
+    enable_charts	= 1, # from C009
+    enable_autoexit	= 0, # suggested that this is off until after migration
+    autoexit_duration	= 0, # maybe this should be NULL?
+    enable_cascade = 1, # from C009 ("Cascade Enrollment data")
+    cascade_threshold	= 0, # needs decisions
+    enable_assessment_cascade	= 1, # from C009
+    assessment_cascade_threshold = 45, # choices: 1,2,3,4,5,6,7,14,21,30,60,90,120,180,365
+    close_services = 1, # from C009
+    enrollment_age_warning = 1, # from C009
+    enrollment_age_warning_threshold = 17, # recommended (by BF) value
+    all_client_forms_enabled = 0, # from C009
     added_date = today(),
     last_updated = today()
   ) %>%
+  relocate(funding_source_1:amount_3, .after = cross_agency) %>%
   select(id:last_updated)
 
 # Writing it out to csv ---------------------------------------------------

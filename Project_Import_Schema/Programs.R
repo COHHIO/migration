@@ -99,7 +99,7 @@ BitfocusPrograms <- Project %>%
     alias = ProjectCommonName,
     description	= "",
     ref_template = case_when(
-      ProjectType == 14 ~ 27,
+      ProjectType == 14 ~ 27, # CE
       bucket == "SSVF" ~ 21,
       bucket == "YHDP" ~ 24,
       bucket == "PATH" ~ 18,
@@ -121,7 +121,7 @@ BitfocusPrograms <- Project %>%
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
     aff_res_proj_ids	= case_when(id == 1765 ~ "548, 774",
                                  id == 2176 ~ "1693",
-                                 TRUE ~ ""),
+                                 TRUE ~ ""), # hard coded since we have so few
     program_applicability	= ProjectType,
     continuum_project	= ContinuumProject,
     geolocations.address = case_when(
@@ -139,10 +139,10 @@ BitfocusPrograms <- Project %>%
     geocode = Geocode,
     hmis_participating_project = HMISParticipatingProject,
     public_listing = 2, # 2 = Public -> any agency can refer to this project
-    allow_goals	= 1,
+    allow_goals	= 1, # asking for further info
     allow_autoservice_placement	= 0, # default
     eligibility_enabled	= 1, # from C009
-    allow_history_link = 0, # default, not sure what this is
+    allow_history_link = 0, # not needed bc there can't be stray srvcs anyway
     enable_assessments = 1, # from C009
     enable_notes = 1, # from C009
     prenable_files = 1, # from C009
@@ -150,7 +150,7 @@ BitfocusPrograms <- Project %>%
     enable_autoexit	= 0, # suggested that this is off until after migration
     autoexit_duration	= 0, # maybe this should be NULL?
     enable_cascade = 1, # from C009 ("Cascade Enrollment data")
-    cascade_threshold	= 0, # needs decisions
+    cascade_threshold	= 90, # needs decisions
     enable_assessment_cascade	= 1, # from C009
     assessment_cascade_threshold = 45, # choices: 1,2,3,4,5,6,7,14,21,30,60,90,120,180,365
     close_services = 1, # from C009

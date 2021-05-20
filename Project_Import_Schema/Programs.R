@@ -115,8 +115,7 @@ BitfocusPrograms <- Project %>%
     availability_start = OperatingStartDate,
     availability_end = OperatingEndDate,
     status = 1,
-    cross_agency = 0,
-    # will be rarely used, so if we need it, set up manually
+    cross_agency = 0, # will be rarely used, so if we need it, set up manually
     ref_category = ProjectType,
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
     aff_res_proj_ids	= case_when(id == 1765 ~ "548, 774",
@@ -139,20 +138,28 @@ BitfocusPrograms <- Project %>%
     geocode = Geocode,
     hmis_participating_project = HMISParticipatingProject,
     public_listing = 2, # 2 = Public -> any agency can refer to this project
-    allow_goals	= 1, # asking for further info
+    allow_goals	= 0, # based on GB's answer, seems like this should be off
     allow_autoservice_placement	= 0, # default
     eligibility_enabled	= 1, # from C009
     allow_history_link = 0, # not needed bc there can't be stray srvcs anyway
-    enable_assessments = 1, # from C009
+    enable_assessments = 0, # based on GB's answer, seems like this should be off
     enable_notes = 1, # from C009
     prenable_files = 1, # from C009
     enable_charts	= 1, # from C009
     enable_autoexit	= 0, # suggested that this is off until after migration
     autoexit_duration	= 0, # maybe this should be NULL?
     enable_cascade = 1, # from C009 ("Cascade Enrollment data")
-    cascade_threshold	= 90, # needs decisions
+    cascade_threshold	= case_when(
+      ProjectType %in% c(3, 9) ~ 365, # PSH
+      ProjectType %in% c(1, 8, 13, 14, 12) ~ 30,  # ES, SH, RRH, CE, HP
+      ProjectType == 2 ~ 120 # TH
+    ), # needs decisions
     enable_assessment_cascade	= 1, # from C009
-    assessment_cascade_threshold = 45, # choices: 1,2,3,4,5,6,7,14,21,30,60,90,120,180,365
+    assessment_cascade_threshold = case_when(
+      ProjectType %in% c(3, 9) ~ 365, # PSH
+      ProjectType %in% c(1, 8, 13, 14, 12) ~ 30,  # ES, SH, RRH, CE, HP
+      ProjectType == 2 ~ 120
+    ), # choices: 1,2,3,4,5,6,7,14,21,30,60,90,120,180,365
     close_services = 1, # from C009
     enrollment_age_warning = 1, # from C009
     enrollment_age_warning_threshold = 17, # recommended (by BF) value

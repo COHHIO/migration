@@ -142,12 +142,12 @@ BitfocusPrograms <- Project %>%
     allow_autoservice_placement	= 0, # default
     eligibility_enabled	= 1, # from C009
     allow_history_link = 0, # not needed bc there can't be stray srvcs anyway
-    enable_assessments = 0, # based on GB's answer, seems like this should be off
+    enable_assessments = 1, # based on GB's answer, seems like this should be off
     enable_notes = 1, # from C009
     prenable_files = 1, # from C009
     enable_charts	= 1, # from C009
     enable_autoexit	= 0, # suggested that this is off until after migration
-    autoexit_duration	= 0, # maybe this should be NULL?
+    autoexit_duration	= "", # maybe this should be NULL?
     enable_cascade = 1, # from C009 ("Cascade Enrollment data")
     cascade_threshold	= case_when(
       ProjectType %in% c(3, 9) ~ 365, # PSH

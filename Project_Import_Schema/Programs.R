@@ -46,6 +46,8 @@ funder_buckets <- Funder %>%
   ) %>%
   select(ProjectID, bucket) %>% unique()
 
+project_descriptions <- read_csv("data_to_Clarity/project_descriptions.csv")
+
 funder_columns <- Funder %>%
   left_join(hud_specs, by = c("Funder" = "ReferenceNo")) %>%
   left_join(projects_orgs, by = "ProjectID") %>%
@@ -92,12 +94,16 @@ BitfocusPrograms <- Project %>%
                                  OrganizationName), 
             by = "ProjectID") %>%
   left_join(funder_columns, by = "ProjectID") %>%
+  left_join(project_descriptions, by = "ProjectID") %>%
+  left_join(provider_extras %>%
+              select(ProjectID, "longProjectName" = ProjectName,
+                     "longProjectAKA" = ProjectAKA), by = "ProjectID") %>%
   mutate(
     id = ProjectID,
     ref_agency = OrganizationID,
-    name = ProjectName,
-    alias = ProjectCommonName,
-    description	= "",
+    name = longProjectName,
+    alias = longProjectAKA,
+    description	= Description,
     ref_template = case_when(
       ProjectType == 14 ~ 27, # CE
       bucket == "SSVF" ~ 21,
@@ -151,7 +157,7 @@ BitfocusPrograms <- Project %>%
     enable_cascade = 1, # from C009 ("Cascade Enrollment data")
     cascade_threshold	= case_when(
       ProjectType %in% c(3, 9) ~ 365, # PSH
-      ProjectType %in% c(1, 8, 13, 14, 12) ~ 30,  # ES, SH, RRH, CE, HP
+      ProjectType %in% c(1, 4, 8, 13, 14, 12) ~ 60,  # ES, SH, RRH, CE, HP
       ProjectType == 2 ~ 120 # TH
     ), # needs decisions
     enable_assessment_cascade	= 1, # from C009

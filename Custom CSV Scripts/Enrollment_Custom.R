@@ -21,12 +21,19 @@ if(!exists("da_answer")) {
   source(here("reading_severance.R"))
 }
 
+
+# get ees together --------------------------------------------------------
+
+ees <- sp_entry_exit %>%
+  left_join(entry_exit_answer_link, by = "entry_exit_id") %>%
+  select(entry_exit_id, client_id, answer_id, point_in_time_type)
+
 # County Served -----------------------------------------------------------
 
 county_served <- da_answer %>% 
   filter(question_code == "COUNTY" & active == TRUE) %>%
   rename("date_answer_added" = date_added) %>%
-  left_join(entry_exit_answer_link, by = "answer_id") %>%
+  left_join(ees, by = c("client_id", "answer_id")) %>%
   filter(!is.na(entry_exit_id)) %>%
   select("EnrollmentID" = entry_exit_id,
          "PersonalID" = client_id,
@@ -45,7 +52,7 @@ county_served <- da_answer %>%
 county_prior <- da_answer %>% 
   filter(question_code == "COUNTYOFRESIDENCEPRIOR" & active == TRUE) %>%
   rename("date_answer_added" = date_added) %>%
-  left_join(entry_exit_answer_link, by = "answer_id") %>%
+  left_join(ees, by = c("client_id", "answer_id")) %>%
   filter(!is.na(entry_exit_id)) %>%
   select("EnrollmentID" = entry_exit_id,
          "PersonalID" = client_id,

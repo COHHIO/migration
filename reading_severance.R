@@ -11,16 +11,10 @@ files <- list.files(path = "random_data/initial_severance/", pattern = ".csv")
 
 make_dfs <- function(file) {
   cat(file, sep = "\n")
-  x <-
-    read_csv(here(paste0("random_data/initial_severance/", file)),
-    col_types = cols())
-  
+  x <- read_csv(here(paste0("random_data/initial_severance/", file)), 
+                col_types = cols())
   x <- data.frame(x)
-  
-  assign(str_remove(file, ".csv"),
-         x,
-         envir = .GlobalEnv)
-  
+  assign(str_remove(file, ".csv"), x, envir = .GlobalEnv)
 }
 
 data.frame(file = files) %>%

@@ -93,14 +93,22 @@ write_csv(everything_adds_up, "random_data/not_adding_up.csv")
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(BitfocusPrograms, here("data_to_Clarity/ProgramInventory.csv"))
+write_csv(ProgramInventory, here("data_to_Clarity/ProgramInventory.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
-    mutate(added_date = format.Date(added_date, "%Y-%m-%d %T"),
-           last_updated = format.Date(last_updated, "%Y-%m-%d %T"))
+    mutate(program_inventory.start_date = 
+             format.Date(program_inventory.start_date, "%Y-%m-%d"),
+           program_inventory.end_date = 
+             format.Date(program_inventory.end_date, "%Y-%m-%d"),
+           program_inventory.information_date = 
+             format.Date(program_inventory.information_date, "%Y-%m-%d %T"),
+           added_date = 
+             format.Date(added_date, "%Y-%m-%d %T"),
+           last_updated = 
+             format.Date(last_updated, "%Y-%m-%d %T"))
   
   fwrite(x, 
          here(paste0("data_to_Clarity/", file, ".csv")),

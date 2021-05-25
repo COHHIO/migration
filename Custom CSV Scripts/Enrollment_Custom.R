@@ -18,15 +18,16 @@ library(readxl)
 library(lubridate)
 
 from_ART1 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
-  mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30")) %>%
-  rename("county_served" = CountyServed, "county_prior" = CountyPrior)
+  mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
 
 from_ART2 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 2) %>%
-  mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30")) %>%
-  rename("county_served" = CountyServed, "county_prior" = CountyPrior)
+  mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
 
 from_ART <- rbind(from_ART1, from_ART2) %>%
-  mutate(ExportID = as.numeric(today()))
+  rename("county_served" = CountyServed, "county_prior" = CountyPrior) %>%
+  mutate(ExportID = as.numeric(today()),
+         EnrollmentCustomID = row_number()) %>%
+  relocate(EnrollmentCustomID, .before = "PersonalID")
 
 # Writing it out to csv ---------------------------------------------------
 

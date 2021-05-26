@@ -34,13 +34,21 @@ sp_question_codes <- c(
 client_level <- da_answer %>%
   filter(question_code %in% c(sp_question_codes) &
            active == TRUE) %>%
-  pivot_wider(id_cols = c(client_id, date_effective, user_id), 
-              names_from = question_code,
-              values_from = val) %>%
-  mutate(DATEVETERANIDENTIFIED = format.Date(DATEVETERANIDENTIFIED, "%Y-%m-%d"),
-         EXPECTEDPERMANENTHOUS = format.Date(EXPECTEDPERMANENTHOUS, "%Y-%m-%d"),
-         ClientCustomID = row_number(),
+  group_by(client_id, question_code) %>%
+  slice_max(date_effective) %>%
+  slice_max(date_added) %>%
+  ungroup() %>%
+  pivot_wider(
+    id_cols = c(client_id, date_effective, user_id),
+    names_from = question_code,
+    values_from = val
+  ) %>%
+  mutate(
+    DATEVETERANIDENTIFIED = format.Date(DATEVETERANIDENTIFIED, "%Y-%m-%d"),
+    EXPECTEDPERMANENTHOUS = format.Date(EXPECTEDPERMANENTHOUS, "%Y-%m-%d"),
+    ClientCustomID = row_number(),
          ExportID = as.numeric(format.Date(today(), "%Y%m%d"))) %>%
+  
   rename(
     "PersonalID" = client_id,
     "DateUpdated" = date_effective,

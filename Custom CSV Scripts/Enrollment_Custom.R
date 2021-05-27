@@ -16,6 +16,7 @@ library(here)
 library(tidyverse)
 library(readxl)
 library(lubridate)
+library(data.table)
 
 from_ART1 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
   mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))

@@ -21,6 +21,8 @@ library(data.table)
 source(here("Project_Import_Schema/Agencies.R"))
 source(here("Project_Import_Schema/Funding_Sources.R"))
 
+agencies <- Agencies$id
+
 funder_buckets <- Funder %>%
   mutate(
     bucket = case_when(
@@ -93,11 +95,13 @@ BitfocusPrograms <- Project %>%
                                  Address2,
                                  OrganizationName), 
             by = "ProjectID") %>%
+  filter(OrganizationID %in% c(agencies)) %>%
   left_join(funder_columns, by = "ProjectID") %>%
   left_join(project_descriptions, by = "ProjectID") %>%
   left_join(provider_extras %>%
               select(ProjectID, "longProjectName" = ProjectName,
                      "longProjectAKA" = ProjectAKA), by = "ProjectID") %>%
+  filter(!is.na(longProjectName)) %>%
   mutate(
     id = ProjectID,
     ref_agency = OrganizationID,

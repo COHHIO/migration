@@ -30,6 +30,8 @@ from_ART <- rbind(from_ART1, from_ART2) %>%
          EnrollmentCustomID = row_number()) %>%
   relocate(EnrollmentCustomID, .before = "PersonalID")
 
+# there's no duplicate combinations of EnrollmentID & DataCollectionStage - GD
+
 # Writing it out to csv ---------------------------------------------------
 
 write_csv(from_ART, here("data_to_Clarity/Enrollment_Custom.csv"))

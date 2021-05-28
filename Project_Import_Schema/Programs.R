@@ -21,7 +21,8 @@ library(data.table)
 source(here("Project_Import_Schema/Agencies.R"))
 source(here("Project_Import_Schema/Funding_Sources.R"))
 
-agencies <- Agencies$id
+agencies <- read_csv("frozen/Agencies.csv") %>%
+  pull(id)
 
 funder_buckets <- Funder %>%
   mutate(
@@ -68,7 +69,7 @@ funder_columns <- Funder %>%
       OtherFunder == "OSDA" ~ 9,
       OtherFunder == "Pandemic Emergency Fund" ~ 10,
       OtherFunder == "TANF" ~ 11,
-      OtherFunder == "Unknown" ~ 12,
+      OtherFunder %in% c("Unknown", "unknown") ~ 12,
       OtherFunder == "CSBG" ~ 13,
       OtherFunder == "Local" ~ 14,
       OtherFunder == "OHFA ERA" ~ 15,

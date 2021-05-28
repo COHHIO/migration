@@ -38,6 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+/frozen
 /data_to_Clarity
 /rsconnect
 /random_data

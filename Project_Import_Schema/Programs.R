@@ -21,8 +21,9 @@ library(data.table)
 source(here("Project_Import_Schema/Agencies.R"))
 source(here("Project_Import_Schema/Funding_Sources.R"))
 
-agencies <- read_csv("frozen/Agencies.csv") %>%
-  pull(id)
+agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
+
+funding_sources <- read_csv("frozen/FundingSources.csv") %>% pull(id)
 
 funder_buckets <- Funder %>%
   mutate(
@@ -147,7 +148,7 @@ BitfocusPrograms <- Project %>%
     programs.ref_target_b	= if_else(is.na(TargetPopulation),
                                     4, TargetPopulation),
     tracking_method	= TrackingMethod,
-    ref_housing_type = HousingType,
+    ref_housing_type = if_else(is.na(HousingType), 1, HousingType),
     geocode = Geocode,
     hmis_participating_project = HMISParticipatingProject,
     public_listing = 2, # 2 = Public -> any agency can refer to this project
@@ -164,8 +165,8 @@ BitfocusPrograms <- Project %>%
     enable_cascade = 1, # from C009 ("Cascade Enrollment data")
     cascade_threshold	= case_when(
       ProjectType %in% c(3, 9) ~ 365, # PSH
-      ProjectType %in% c(1, 4, 8, 13, 14, 12) ~ 60,  # ES, SH, RRH, CE, HP
-      ProjectType == 2 ~ 120 # TH
+      ProjectType == 2 ~ 120, # TH
+      TRUE ~ 30
     ), # needs decisions
     enable_assessment_cascade	= 1, # from C009
     assessment_cascade_threshold = case_when(

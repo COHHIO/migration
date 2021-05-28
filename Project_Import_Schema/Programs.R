@@ -127,6 +127,7 @@ BitfocusPrograms <- Project %>%
     availability_end = OperatingEndDate,
     status = 1,
     cross_agency = 0, # will be rarely used, so if we need it, set up manually
+    funding_source_1 = if_else(is.na(funding_source_1), 34, funding_source_1),
     ref_category = ProjectType,
     aff_res_proj = if_else(ProjectType != 6, 0, ResidentialAffiliation),
     aff_res_proj_ids	= case_when(id == 1765 ~ "548, 774",
@@ -143,7 +144,8 @@ BitfocusPrograms <- Project %>%
         is.na(Address2) ~ paste("Confidential -",
                                 OrganizationName)
     ),
-    programs.ref_target_b	= TargetPopulation,
+    programs.ref_target_b	= if_else(is.na(TargetPopulation),
+                                    4, TargetPopulation),
     tracking_method	= TrackingMethod,
     ref_housing_type = HousingType,
     geocode = Geocode,
@@ -168,8 +170,8 @@ BitfocusPrograms <- Project %>%
     enable_assessment_cascade	= 1, # from C009
     assessment_cascade_threshold = case_when(
       ProjectType %in% c(3, 9) ~ 365, # PSH
-      ProjectType %in% c(1, 8, 13, 14, 12) ~ 30,  # ES, SH, RRH, CE, HP
-      ProjectType == 2 ~ 120
+      ProjectType == 2 ~ 120,
+      TRUE ~ 30
     ), # choices: 1,2,3,4,5,6,7,14,21,30,60,90,120,180,365
     close_services = 1, # from C009
     enrollment_age_warning = 1, # from C009

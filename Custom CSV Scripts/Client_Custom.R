@@ -39,7 +39,7 @@ client_level <- da_answer %>%
   slice_max(date_added) %>%
   ungroup() %>%
   pivot_wider(
-    id_cols = c(client_id, date_effective, user_id),
+    id_cols = c(client_id),
     names_from = question_code,
     values_from = val
   ) %>%
@@ -51,8 +51,6 @@ client_level <- da_answer %>%
   
   rename(
     "PersonalID" = client_id,
-    "DateUpdated" = date_effective,
-    "UserID" = user_id,
     "ph_track" = PERMANENTHOUSINGTRACK,
     "expected_ph_date" =	EXPECTEDPERMANENTHOUS,
     "covid19_consent_to_vaccine" =	WOULDTHECLIENTCONSENT,
@@ -64,7 +62,7 @@ client_level <- da_answer %>%
     "date_veteran_identified" =	DATEVETERANIDENTIFIED
   ) %>%
   relocate(ClientCustomID, .before = "PersonalID") %>%
-  relocate(ExportID, .after = "UserID")
+  relocate(ExportID, .after = "PersonalID")
 
 # Writing it out to csv ---------------------------------------------------
 
@@ -75,7 +73,6 @@ fix_date_times <- function(file) {
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(
-      DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"),
       date_veteran_identified = format.Date(date_veteran_identified, "%Y-%m-%d"),
       expected_ph_date = format.Date(expected_ph_date, "%Y-%m-%d")
     )

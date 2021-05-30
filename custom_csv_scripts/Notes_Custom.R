@@ -76,7 +76,7 @@ notes_client <- raw_notes_client %>%
 
 # Notes attached to Services ----------------------------------------------
 
-service_notes <- sp_need_service %>% 
+notes_services <- sp_need_service %>% 
   filter(!is.na(service_note) & active == TRUE) %>% 
   mutate(Title = "imported from ServicePoint Service") %>%
   left_join(projects_orgs %>%
@@ -92,7 +92,7 @@ service_notes <- sp_need_service %>%
 
 # Notes attached to Needs -------------------------------------------------
 
-need_notes <- sp_need %>% 
+notes_needs <- sp_need %>% 
   filter(!is.na(note) & active == TRUE) %>% 
   mutate(Title = "imported from ServicePoint Need",
          note = paste("Note:", note, 
@@ -111,15 +111,17 @@ need_notes <- sp_need %>%
 
 # Exit Notes --------------------------------------------------------------
 
-exit_notes <- sp_entry_exit %>%
-  filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601") &
-           AgencyID %in% c()) %>%
+agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
+
+notes_exits <- sp_entry_exit %>%
+  filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601")) %>%
   mutate(Title = paste("Exit note: Exited Project ID", 
                        provider_id, 
                        "on", 
                        format.Date(exit_date, "%m-%d-%Y"))) %>%
   left_join(projects_orgs %>% 
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
+  filter(AgencyID %in% c(agencies)) %>%
   select("PersonalID" = client_id, 
          AgencyID,
          "EnrollmentID" = entry_exit_id, 
@@ -130,22 +132,51 @@ exit_notes <- sp_entry_exit %>%
          "DateUpdated" = date_updated)
 
 # All together ------------------------------------------------------------
-agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 All_Notes <- notes_client %>%
   full_join(notes_goals) %>%
-  full_join(service_notes) %>%
-  full_join(need_notes) %>%
-  full_join(exit_notes) %>%
-  filter(AgencyID %in% c(agencies)) %>%
+  full_join(notes_services) %>%
+  full_join(notes_needs) %>%
+  full_join(notes_exits) %>%
+  filter(AgencyID %in% c(agencies)) %>% # edit this for final run
   mutate(NoteID = row_number()) %>%
-  relocate(NoteID, .before = PersonalID)
+  select(
+    NoteID,
+    PersonalID,
+    AgencyID,
+    EnrollmentID,
+    ServicesID,
+    Title,
+    Date,
+    Note,
+    DateCreated,
+    DateUpdated
+  )
 
 # WARNING: this excludes data from any agencies not already in Clarity. On your
-# final run, edit line 140 so you're pulling from all agencies you want to come
+# final run, edit line 141 so you're pulling from all agencies you want to come
 # over.
 
+# Writing it out to csv ---------------------------------------------------
 
+write_csv(All_Notes, here("data_to_Clarity/Notes_Custom.csv"))
+
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(
+      Date = format.Date(Date, "%Y-%m-%d %T"),
+      DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
+      DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")
+    )
+  
+  fwrite(x,
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Notes_Custom")
 
 
 

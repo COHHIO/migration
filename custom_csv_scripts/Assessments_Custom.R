@@ -60,8 +60,10 @@ fspdat_data <- da_recordset %>%
          "provider_creating" = provider_creating_id.x, 
          "InformationDate" = date_effective,
          question_name, val) %>%
-  pivot_wider(id_cols = c(PersonalID, provider_creating, InformationDate), 
-              names_from = question_name, 
+  group_by(PersonalID, provider_creating, InformationDate) %>%
+  mutate(group_id = cur_group_id()) %>%
+  ungroup() %>%
+  pivot_wider(names_from = question_name, 
               values_from = val) %>%  
   mutate(
     AssessmentID = "87",

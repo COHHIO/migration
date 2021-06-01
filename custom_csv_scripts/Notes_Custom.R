@@ -52,7 +52,9 @@ notes_goals <- sp_goal_casenote %>%
          "ProjectID" = provider_id) %>%
   left_join(projects_orgs %>%
               select(ProjectID, AgencyID), by = "ProjectID") %>%
-  mutate(Title = "imported from Goals") %>%
+  mutate(Title = "imported from Goals",
+         EnrollmentID = "",
+         ServicesID = "") %>%
   select(-ProjectID)
 
 # Client Notes ------------------------------------------------------------
@@ -69,7 +71,9 @@ raw_notes_client <- read_xlsx("random_data/Notes.xlsx", sheet = 2) %>%
 notes_client <- raw_notes_client %>%
   mutate(Title = "imported from Clients",
          ProjectID = str_extract(ProjectID, "[0-9]+"),
-         ProjectID = as.numeric(ProjectID)) %>%
+         ProjectID = as.numeric(ProjectID),
+         EnrollmentID = "",
+         ServicesID = "") %>%
   left_join(projects_orgs %>%
               select(ProjectID, AgencyID), by = "ProjectID") %>%
   select(-ProjectID)
@@ -78,11 +82,14 @@ notes_client <- raw_notes_client %>%
 
 notes_services <- sp_need_service %>% 
   filter(!is.na(service_note) & active == TRUE) %>% 
-  mutate(Title = "imported from ServicePoint Service") %>%
+  mutate(Title = "imported from ServicePoint Service",
+         ProjectID = as.numeric(provide_provider_id),
+         EnrollmentID = "") %>%
   left_join(projects_orgs %>%
               select(ProjectID, AgencyID), by = c("provide_provider_id" = "ProjectID")) %>%
   select("PersonalID" = client_id,
          AgencyID,
+         EnrollmentID,
          "ServicesID" = need_service_id,
          Title,
          "Date" = provide_start_date,
@@ -98,11 +105,16 @@ notes_needs <- sp_need %>%
          note = paste("Note:", note, 
                       "\nStatus:", status, 
                       "\nOutcome:", outcome, 
-                      "\nReason Unmet:", reason_unmet)) %>%
+                      "\nReason Unmet:", reason_unmet),
+         ProjectID = as.numeric(provider_id),
+         EnrollmentID = "",
+         ServicesID = "") %>%
   left_join(projects_orgs %>%
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
   select("PersonalID" = client_id, 
          AgencyID, 
+         EnrollmentID,
+         ServicesID,
          Title,
          "Date" = date_set,
          "Note" = note,
@@ -118,13 +130,16 @@ notes_exits <- sp_entry_exit %>%
   mutate(Title = paste("Exit note: Exited Project ID", 
                        provider_id, 
                        "on", 
-                       format.Date(exit_date, "%m-%d-%Y"))) %>%
+                       format.Date(exit_date, "%m-%d-%Y")),
+         ProjectID = as.numeric(provider_id),
+         ServicesID = "") %>%
   left_join(projects_orgs %>% 
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
   filter(AgencyID %in% c(agencies)) %>%
   select("PersonalID" = client_id, 
          AgencyID,
-         "EnrollmentID" = entry_exit_id, 
+         ServicesID,
+         "EnrollmentID" = entry_exit_id, # some are null
          Title,
          "Date" = exit_date, 
          "Note" = notes,
@@ -133,11 +148,13 @@ notes_exits <- sp_entry_exit %>%
 
 # All together ------------------------------------------------------------
 
-All_Notes <- notes_client %>%
-  full_join(notes_goals) %>%
-  full_join(notes_services) %>%
-  full_join(notes_needs) %>%
-  full_join(notes_exits) %>%
+All_Notes <- rbind(
+  notes_client,
+  notes_exits,
+  notes_goals,
+  notes_needs,
+  notes_services
+) %>%
   filter(AgencyID %in% c(agencies)) %>% # edit this for final run
   mutate(NoteID = row_number()) %>%
   select(
@@ -151,7 +168,8 @@ All_Notes <- notes_client %>%
     Note,
     DateCreated,
     DateUpdated
-  )
+  ) %>%
+  arrange(AgencyID)
 
 # WARNING: this excludes data from any agencies not already in Clarity. On your
 # final run, edit line 141 so you're pulling from all agencies you want to come
@@ -166,7 +184,7 @@ fix_date_times <- function(file) {
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(
-      Date = format.Date(Date, "%Y-%m-%d %T"),
+      Date = format.Date(Date, "%Y-%m-%d"),
       DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
       DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")
     )

@@ -39,7 +39,10 @@ what_are_the_questions <- da_recordset %>%
   )
 
 deduplicated_subs <- da_recordset %>%
-  filter(active == TRUE) %>%
+  filter(
+    active == TRUE &
+      question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0")
+  ) %>% 
   rename("subassessment_name" = question,
          "sub_is_active" = active,
          "sub_date_added" = date_added,
@@ -58,10 +61,7 @@ deduplicated_answers <- da_recordset_answer %>%
          "answer_date_added" = date_added,
          "answer_provider_created" = provider_creating_id,
          "answer_user_created" = user_creating_id) %>%
-  semi_join(deduplicated_subs %>%
-               filter(
-                 subassessment_name %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0")
-               ),
+  semi_join(deduplicated_subs,
              by = "recordset_id") %>%
   mutate(
     question_name = str_trunc(question_name, 65),

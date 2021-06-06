@@ -17,6 +17,25 @@ library(tidyverse)
 library(readxl)
 library(lubridate)
 library(data.table)
+library(tidycensus)
+
+
+# Getting Geocodes --------------------------------------------------------
+
+census2010 <- load_variables(2010, "sf1", cache = TRUE)
+
+ohio <- get_decennial(geography = "county", 
+                      year = 2010, 
+                      state = 39,
+                      variables = c("P005003", "P005004", "P005005", "P005006",
+                                    "P005007", "P005008", "P005009", "P005011",
+                                    "P005012", "P005013", "P005014", "P005015",
+                                    "P005016", "P005017")) %>%
+  mutate(County = str_remove(NAME, " County, Ohio")) %>%
+  select("Geocode" = GEOID, County) %>%
+  unique()
+
+# Getting HMIS data -------------------------------------------------------
 
 from_ART1 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
   mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
@@ -29,12 +48,27 @@ from_ART <- rbind(from_ART1, from_ART2) %>%
   mutate(ExportID = as.numeric(format.Date(today(), "%Y%m%d")),
          EnrollmentCustomID = row_number()) %>%
   relocate(EnrollmentCustomID, .before = "PersonalID")
-
 # there's no duplicate combinations of EnrollmentID & DataCollectionStage - GD
+
+enrollment_custom <- from_ART %>%
+  left_join(ohio, by = c("county_prior" = "County")) %>%
+  mutate(c_county_prior = if_else(county_prior == "--Outside of Ohio--", "0", Geocode)) %>%
+  left_join(ohio, by = c("county_served" = "County")) %>%
+  mutate(c_county_served = if_else(county_served == "--Outside of Ohio--", "0", Geocode.y)) %>%
+  select(
+    EnrollmentCustomID,
+    PersonalID,
+    EnrollmentID,
+    InformationDate,
+    DataCollectionStage,
+    ExportID,
+    c_county_served,
+    c_county_prior
+  )
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(from_ART, here("data_to_Clarity/Enrollment_Custom.csv"))
+write_csv(enrollment_custom, here("data_to_Clarity/Enrollment_Custom.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")

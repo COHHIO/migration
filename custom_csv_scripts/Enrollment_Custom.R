@@ -27,10 +27,7 @@ census2010 <- load_variables(2010, "sf1", cache = TRUE)
 ohio <- get_decennial(geography = "county", 
                       year = 2010, 
                       state = 39,
-                      variables = c("P005003", "P005004", "P005005", "P005006",
-                                    "P005007", "P005008", "P005009", "P005011",
-                                    "P005012", "P005013", "P005014", "P005015",
-                                    "P005016", "P005017")) %>%
+                      variables = c("P005001")) %>%
   mutate(County = str_remove(NAME, " County, Ohio")) %>%
   select("Geocode" = GEOID, County) %>%
   unique()

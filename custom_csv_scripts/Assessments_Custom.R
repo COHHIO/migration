@@ -16,6 +16,7 @@ library(here)
 library(tidyverse)
 library(readxl)
 library(lubridate)
+library(janitor)
 
 source(here("reading_severance.R"))
 
@@ -38,6 +39,8 @@ what_are_the_questions <- da_recordset %>%
     )
   )
 
+# Removing old subs and old answers ---------------------------------------
+
 deduplicated_subs <- da_recordset %>%
   filter(
     active == TRUE &
@@ -51,8 +54,9 @@ deduplicated_subs <- da_recordset %>%
   mutate(sub_date_added = as.Date(format.Date(sub_date_added, "%Y-%m-%d")),
          date_effective = as.Date(format.Date(date_effective, "%Y-%m-%d"))) %>%
   group_by(client_id, date_effective, subassessment_name) %>%
-  mutate(group_id = cur_group_id()) %>%
-  slice_max(ymd(sub_date_added))
+  slice_max(ymd(sub_date_added)) %>%
+  slice(1L) %>% # this isn't good or right but necessary until severance file is ok
+  ungroup()
 
 deduplicated_answers <- da_recordset_answer %>%
   filter(active == TRUE) %>%
@@ -63,35 +67,14 @@ deduplicated_answers <- da_recordset_answer %>%
          "answer_user_created" = user_creating_id) %>%
   semi_join(deduplicated_subs,
              by = "recordset_id") %>%
-  mutate(
-    question_name = str_trunc(question_name, 65),
-    question_name = make_clean_names(question_name)) %>%
   group_by(recordset_id, question_name) %>%
-  slice_max(ymd_hms(answer_date_added)) %>% 
+  slice_max(answer_date_added) %>% 
   ungroup()
-  
-  # left_join(da_recordset_answer %>%
-  #             filter(active == TRUE), by = "recordset_id") %>% 
-  # mutate(question_name = if_else(question_name == "Start Date", 
-  #                                "StartDate",
-  #                                question_name)) %>%
-  # filter(question_name == "StartDate") %>%
-  # pivot_wider(names_from = question_name, values_from = val) %>%
-  # mutate(StartDate = as.Date(format.Date(StartDate, "%Y-%m-%d"))) %>%
-  # group_by(client_id, date_effective, sub_provider_created, StartDate, subassessment_name) %>%
-  # slice_max(ymd_hms(sub_date_added)) %>%
-  # ungroup() 
-  
-  
-  # question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0") &
 
-  
-  
-  
-  # select(client_id, date_effective, StartDate, "provider_creating_id" = sub_provider_created,
-  #        subassessment_name, question_name, val) 
-  
-    
+deduplicated <- deduplicated_answers %>%
+  left_join(deduplicated_subs, by = "recordset_id")
+
+# building vi-fspdat ------------------------------------------------------
 
 fspdat_data <- deduplicated %>%
   filter(
@@ -106,9 +89,8 @@ fspdat_data <- deduplicated %>%
         "GRAND TOTAL"
       )
   ) %>% 
-
   select("PersonalID" = client_id,
-         provider_creating_id, 
+         sub_provider_created, 
          "InformationDate" = date_effective,
          question_name, 
          val) %>%

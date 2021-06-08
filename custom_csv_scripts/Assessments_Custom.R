@@ -41,7 +41,7 @@ what_are_the_questions <- da_recordset %>%
 
 # Removing old subs and old answers ---------------------------------------
 
-deduplicated_subs <- da_recordset %>%
+vispdat_subs <- da_recordset %>%
   filter(
     active == TRUE &
       question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0")
@@ -50,40 +50,37 @@ deduplicated_subs <- da_recordset %>%
          "sub_is_active" = active,
          "sub_date_added" = date_added,
          "sub_provider_created" = provider_creating_id,
-         "sub_user_created" = user_creating_id) %>%
-  mutate(sub_date_added = as.Date(format.Date(sub_date_added, "%Y-%m-%d")),
-         date_effective = as.Date(format.Date(date_effective, "%Y-%m-%d")))
+         "sub_user_created" = user_creating_id) 
 
-deduplicated_answers <- da_recordset_answer %>%
+vispdat_answers <- da_recordset_answer %>%
   filter(active == TRUE) %>%
   rename("question_name" = question,
          "answer_active" = active,
          "answer_date_added" = date_added,
          "answer_provider_created" = provider_creating_id,
          "answer_user_created" = user_creating_id) %>%
-  semi_join(deduplicated_subs,
-             by = "recordset_id") %>%
+  semi_join(vispdat_subs,
+            by = "recordset_id") %>%
   mutate(corrected_date_effective = if_else(question_name == "Start Date",
-                                            val, NULL)) %>%
-  group_by(recordset_id, question_name) %>%
-  slice_max(answer_date_added) %>% 
-  ungroup()
+                                            val, NULL))
 
-
-get_start_dates <- deduplicated_answers %>%
-  left_join(deduplicated_subs, by = "recordset_id") %>%
+get_start_dates <- vispdat_answers %>%
+  left_join(vispdat_subs, by = "recordset_id") %>%
   select(recordset_id, date_effective, corrected_date_effective) %>%
   filter(!is.na(corrected_date_effective)) %>%
-  mutate(corrected_date_effective = format.Date(corrected_date_effective, "%Y-%m-%d")) 
+  mutate(corrected_date_effective = corrected_date_effective) %>%
+  select(-date_effective) %>% unique()
 
-corrected_subs <- deduplicated_subs %>%
+corrected_subs <- vispdat_subs %>%
   left_join(get_start_dates, by = "recordset_id") %>%
+  mutate(date_effective = format.Date(corrected_date_effective, "%Y-%m-%d")) %>%
   group_by(client_id, date_effective, subassessment_name) %>%
-  slice_max(ymd(sub_date_added)) %>%
-  ungroup()
+  slice_max(sub_date_added) %>%
+  ungroup() %>%
+  select(-corrected_date_effective) %>% unique()
 
-deduplicated <- deduplicated_answers %>%
-  left_join(deduplicated_subs, by = "recordset_id") %>%
+deduplicated <- corrected_subs %>%
+  left_join(vispdat_answers, by = "recordset_id") %>%
   filter(
     !question_name %in% c(
       "PRE-SURVEY",
@@ -95,9 +92,9 @@ deduplicated <- deduplicated_answers %>%
       "GRAND TOTAL"
     )
   ) %>%
-  left_join(get_start_dates, by = "recordset_id")
-
-
+  group_by(recordset_id, question_name) %>%
+  slice_max(answer_date_added) %>% 
+  ungroup()
 
 # building vi-fspdat ------------------------------------------------------
 

@@ -52,11 +52,7 @@ deduplicated_subs <- da_recordset %>%
          "sub_provider_created" = provider_creating_id,
          "sub_user_created" = user_creating_id) %>%
   mutate(sub_date_added = as.Date(format.Date(sub_date_added, "%Y-%m-%d")),
-         date_effective = as.Date(format.Date(date_effective, "%Y-%m-%d"))) %>%
-  group_by(client_id, date_effective, subassessment_name) %>%
-  slice_max(ymd(sub_date_added)) %>%
-  slice(1L) %>% # this isn't good or right but necessary until severance file is ok
-  ungroup()
+         date_effective = as.Date(format.Date(date_effective, "%Y-%m-%d")))
 
 deduplicated_answers <- da_recordset_answer %>%
   filter(active == TRUE) %>%
@@ -67,12 +63,41 @@ deduplicated_answers <- da_recordset_answer %>%
          "answer_user_created" = user_creating_id) %>%
   semi_join(deduplicated_subs,
              by = "recordset_id") %>%
+  mutate(corrected_date_effective = if_else(question_name == "Start Date",
+                                            val, NULL)) %>%
   group_by(recordset_id, question_name) %>%
   slice_max(answer_date_added) %>% 
   ungroup()
 
+
+get_start_dates <- deduplicated_answers %>%
+  left_join(deduplicated_subs, by = "recordset_id") %>%
+  select(recordset_id, date_effective, corrected_date_effective) %>%
+  filter(!is.na(corrected_date_effective)) %>%
+  mutate(corrected_date_effective = format.Date(corrected_date_effective, "%Y-%m-%d")) 
+
+corrected_subs <- deduplicated_subs %>%
+  left_join(get_start_dates, by = "recordset_id") %>%
+  group_by(client_id, date_effective, subassessment_name) %>%
+  slice_max(ymd(sub_date_added)) %>%
+  ungroup()
+
 deduplicated <- deduplicated_answers %>%
-  left_join(deduplicated_subs, by = "recordset_id")
+  left_join(deduplicated_subs, by = "recordset_id") %>%
+  filter(
+    !question_name %in% c(
+      "PRE-SURVEY",
+      "A. HISTORY OF HOUSING AND HOMELESSNESS",
+      "B. RISKS",
+      "C. SOCIALIZATION & DAILY FUNCTIONS",
+      "D. WELLNESS",
+      "E. FAMILY UNIT",
+      "GRAND TOTAL"
+    )
+  ) %>%
+  left_join(get_start_dates, by = "recordset_id")
+
+
 
 # building vi-fspdat ------------------------------------------------------
 
@@ -102,7 +127,6 @@ fspdat_data <- deduplicated %>%
     AssessmentName = "VI-F-SPDAT Prescreen for Families [V2]",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d")
   )
-
 
 # VI-SPDAT Prescreen for Single Adults [V2] (86)
 

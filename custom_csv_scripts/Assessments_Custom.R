@@ -82,9 +82,66 @@ deduplicated <- corrected_subs %>%
   slice_max(answer_date_added) %>% 
   ungroup()
 
+
+# Translators -------------------------------------------------------------
+
+translator_yn_dkr <- tibble(
+  ReferenceNo = c(0, 1, 8, 9, 9, 9),
+  Value = c(
+    "No",
+    "Yes",
+    "Client doesn't know",
+    "Client refused",
+    "N/A or Refused",
+    "Refused"
+  )
+)
+
+translator_where <- tibble(
+  ReferenceNo = c(1, 2, 3, 4, 5, 9),
+  Value = c(
+    "Shelters",
+    "Transitional Housing",
+    "Safe Haven",
+    "Outdoors",
+    "Other (Specify)",
+    "Refused"
+  )
+)
+
+translator_when <- tibble(
+  ReferenceNo = c(3, 5, 8, 9),
+  Value = c(
+    "Less than 1 year",
+    "One year or more",
+    "Currently in stable housing",
+    "Refused"
+  )
+)
+
+translator_times <-
+  tibble(
+    ReferenceNo = c(0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 9),
+    Vaue = c(
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "Greater than 10",
+      "Refused"
+    )
+  )
+
 # building vi-fspdat ------------------------------------------------------
 
-fspdat_translator <- tibble(
+translator_fspdat_qs <- tibble(
   sp = c(
     "1. How many children under the age of 18 are currently with you?",
     "1. Is either head of household 60 years of age or older?",
@@ -219,13 +276,12 @@ fspdat_data <- deduplicated %>%
          "InformationDate" = date_effective,
          question_name, 
          val) %>%
-  left_join(fspdat_translator, by = c("question_name" = "sp")) %>%
+  left_join(translator_fspdat_qs, by = c("question_name" = "sp")) %>%
   mutate(question = bf,
          question_name = NULL,
          bf = NULL) %>%
-  pivot_wider(
-    names_from = question,
-    values_from = val) %>%  
+  pivot_wider(names_from = question,
+              values_from = val) %>%
   mutate(
     client_assessment_demographics.vi_f_spdat_children_num =
       case_when(
@@ -234,7 +290,7 @@ fspdat_data <- deduplicated %>%
           is.na(client_assessment_demographics.vi_f_spdat_children_num) ~ "0",
         TRUE ~ client_assessment_demographics.vi_f_spdat_children_num
       ),
-    client_assessment_demographics.vi_f_spdat_children_num = 
+    client_assessment_demographics.vi_f_spdat_children_num =
       as.numeric(client_assessment_demographics.vi_f_spdat_children_num),
     wrong_younger_than_18 = case_when(
       wrong_younger_than_18 == "3 or more" ~ "4",
@@ -244,10 +300,17 @@ fspdat_data <- deduplicated %>%
     ),
     wrong_younger_than_18 = as.numeric(wrong_younger_than_18),
     client_assessment_demographics.vi_f_spdat_children_num =
-     wrong_younger_than_18 + client_assessment_demographics.vi_f_spdat_children_num,
+      wrong_younger_than_18 + client_assessment_demographics.vi_f_spdat_children_num,
     AssessmentID = "87",
     AssessmentName = "VI-F-SPDAT Prescreen for Families [V2]",
-    InformationDate = format.Date(InformationDate, "%Y-%m-%d")
+    InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
+    across(
+      c(client_assessment_demographics.vi_spdat_q9,
+        client_assessment_demographics.vi_spdat_q10,
+        client_assessment_demographics.vi_spdat_q11,
+        client_assessment_demographics.vi_spdat_q12),
+      ~ recode(.x, Yes = 1, No = 0, Refused = 9)
+    )
   )
 
 # VI-SPDAT Prescreen for Single Adults [V2] (86)

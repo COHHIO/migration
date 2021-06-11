@@ -130,26 +130,59 @@ translator_times <-
     )
   )
 
+
+
+# Projects to Organizations -----------------------------------------------
+
+projects_orgs <- read_xlsx(
+  here("data_to_Clarity/RMisc2.xlsx"),
+  sheet = 3,
+  col_types = c("numeric", replicate(16, "text"))
+) %>%
+  filter(!is.na(OrganizationName) &
+           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
+  mutate(
+    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
+    AgencyID = str_remove(AgencyID, "[(]"),
+    AgencyID = str_remove(AgencyID, "[)]"),
+    AgencyID = as.numeric(AgencyID),
+    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
+  ) %>%
+  select(ProjectID, ProjectName, AgencyID, AgencyName)
+
+
 # building vi-spdat -------------------------------------------------------
+
+agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 spdat_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "xProjectIDx" = sub_provider_created, # have to translate to Agency
+         "xProjectIDx" = sub_provider_created, # waiting on new severance file
          "InformationDate" = date_effective,
          "c_vispdat_score" = Score, 
-         "c_vispdat_date" = date_effective,
+         "assessment_date" = date_effective,
          "c_vispdat_type" = subassessment_name,
-         "c_vispdat_project" = sub_provider_created) %>%
+         "c_vispdat_program_name" = sub_provider_created) %>%
   mutate(
-    AssessmentID = case_when(
-      c_vispdat_type == "VI-FSPDAT v2.0" ~ "87",
-      c_vispdat_type == "TAY-VI-SPDAT v1.0" ~ "103",
-      c_vispdat_type == "VI-SPDAT v2.0" ~ "86"),
-    AssessmentName = case_when(
-      c_vispdat_type == "VI-FSPDAT v2.0" ~ "VI-F-SPDAT Prescreen for Families [V2]",
-      c_vispdat_type == "TAY-VI-SPDAT v1.0" ~ "VI-Y-SPDAT Prescreen for Transition Age Youth",
-      c_vispdat_type == "VI-SPDAT v2.0" ~ "VI-SPDAT Prescreen for Single Adults [V2]"),
-    InformationDate = format.Date(InformationDate, "%Y-%m-%d")
-  )
+    AssessmentID = 193,
+    AssessmentName = "ServicePoint VI-SPDAT Assessment",
+    InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
+    assessment_type = 1,
+    assessment_level = 2,
+    assessment_location = 0,
+    c_vispdat_type = recode(
+      c_vispdat_type,
+      'VI-SPDAT v2.0' = 1,
+      'VI-FSPDAT v2.0' = 2,
+      'TAY-VI-SPDAT v1.0' = 3
+    )
+  ) %>%
+  left_join(projects_orgs, by = c("c_vispdat_program_name" = "ProjectID")) %>%
+  mutate(AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
+                              TRUE ~ AgencyID),
+         c_vispdat_program_name = ProjectName) %>% 
+  filter(!is.na(ProjectName) & (AgencyID %in% c(agencies) |
+                                  AgencyID == 2372)) %>%
+  select(-xProjectIDx, -ProjectName, -AgencyName) 
 
 

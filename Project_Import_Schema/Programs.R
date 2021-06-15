@@ -179,7 +179,7 @@ BitfocusPrograms <- Project %>%
     allow_history_link = 0, # not needed bc there can't be stray srvcs anyway
     enable_assessments = 1, # based on GB's answer, seems like this should be off
     enable_notes = 1, # from C009
-    prenable_files = 1, # from C009
+    enable_files = 1, # from C009
     enable_charts	= 1, # from C009
     enable_autoexit	= 0, # suggested that this is off until after migration
     autoexit_duration	= "", # maybe this should be NULL?
@@ -188,7 +188,7 @@ BitfocusPrograms <- Project %>%
       ProjectType %in% c(3, 9) ~ 365, # PSH
       ProjectType == 2 ~ 120, # TH
       TRUE ~ 30
-    ), # needs decisions
+    ), 
     enable_assessment_cascade	= 1, # from C009
     assessment_cascade_threshold = case_when(
       ProjectType %in% c(3, 9) ~ 365, # PSH

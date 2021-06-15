@@ -52,7 +52,6 @@ get_start_dates <- vispdat_answers %>%
   left_join(vispdat_subs, by = "recordset_id") %>%
   select(recordset_id, date_effective, corrected_date_effective) %>%
   filter(!is.na(corrected_date_effective)) %>%
-  mutate(corrected_date_effective = corrected_date_effective) %>%
   select(-date_effective) %>% unique()
 
 corrected_subs <- vispdat_subs %>%
@@ -75,60 +74,6 @@ deduplicated <- corrected_subs %>%
   select(-question_name, -corrected_date_effective)
 
 # Translators -------------------------------------------------------------
-
-translator_yn_dkr <- tibble(
-  ReferenceNo = c(0, 1, 8, 9, 9, 9),
-  Value = c(
-    "No",
-    "Yes",
-    "Client doesn't know",
-    "Client refused",
-    "N/A or Refused",
-    "Refused"
-  )
-)
-
-translator_where <- tibble(
-  ReferenceNo = c(1, 2, 3, 4, 5, 9),
-  Value = c(
-    "Shelters",
-    "Transitional Housing",
-    "Safe Haven",
-    "Outdoors",
-    "Other (Specify)",
-    "Refused"
-  )
-)
-
-translator_when <- tibble(
-  ReferenceNo = c(3, 5, 8, 9),
-  Value = c(
-    "Less than 1 year",
-    "One year or more",
-    "Currently in stable housing",
-    "Refused"
-  )
-)
-
-translator_times <-
-  tibble(
-    ReferenceNo = c(0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 9),
-    Vaue = c(
-      "0",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "Greater than 10",
-      "Refused"
-    )
-  )
 
 
 
@@ -180,9 +125,31 @@ spdat_data <- deduplicated %>%
   left_join(projects_orgs, by = c("c_vispdat_program_name" = "ProjectID")) %>%
   mutate(AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
                               TRUE ~ AgencyID),
-         c_vispdat_program_name = ProjectName) %>% 
+         c_vispdat_program_name = ProjectName, 
+         AssessmentCustomID = row_number()) %>% 
   filter(!is.na(ProjectName) & (AgencyID %in% c(agencies) |
                                   AgencyID == 2372)) %>%
-  select(-xProjectIDx, -ProjectName, -AgencyName) 
+  select(AssessmentCustomID,
+         AssessmentID,
+         AssessmentName,
+         PersonalID,
+         AgencyID,
+         InformationDate,
+         assessment_date,
+         assessment_type,
+         assessment_level,
+         assessment_location,
+         c_vispdat_type,
+         c_vispdat_program_name,
+         c_vispdat_score) 
 
+# Offers ------------------------------------------------------------------
+
+offers_subs <- da_recordset %>%
+  filter(question == "Offers of Permanent Housing" & active == TRUE)
+
+offers_answers <- da_recordset_answer %>%
+  filter(active == TRUE) %>%
+  semi_join(offers_subs, by = "recordset_id") %>%
+  pivot_wider(names_from = question, values_from = val)
 

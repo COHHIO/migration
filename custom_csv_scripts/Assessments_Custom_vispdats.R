@@ -143,13 +143,23 @@ spdat_data <- deduplicated %>%
          c_vispdat_program_name,
          c_vispdat_score) 
 
-# Offers ------------------------------------------------------------------
+# Writing it out to csv ---------------------------------------------------
 
-offers_subs <- da_recordset %>%
-  filter(question == "Offers of Permanent Housing" & active == TRUE)
+write_csv(spdat_data, here("data_to_Clarity/Assessment_Custom_spdats.csv"))
 
-offers_answers <- da_recordset_answer %>%
-  filter(active == TRUE) %>%
-  semi_join(offers_subs, by = "recordset_id") %>%
-  pivot_wider(names_from = question, values_from = val)
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(InformationDate = 
+             format.Date(InformationDate, "%Y-%m-%d"),
+           assessment_date = 
+             format.Date(assessment_date, "%Y-%m-%d"))
+  
+  fwrite(x, 
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Assessment_Custom_spdats")
 

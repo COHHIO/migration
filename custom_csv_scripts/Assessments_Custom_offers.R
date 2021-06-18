@@ -57,11 +57,12 @@ deduplicated <- offer_subs %>%
   left_join(offer_answers, by = "recordset_id") %>%
   group_by(recordset_id, question_name) %>%
   slice_max(answer_date_added) %>% 
-  ungroup() 
-
-# Translators -------------------------------------------------------------
-
-
+  ungroup() %>%
+  pivot_wider(names_from = question_name, values_from = val) %>%
+  rename("offer_accept_decline_date" = 15,
+         "offer_date" = 16,
+         "offer_accepted" = 17,
+         "offer_type" = 18)
 
 # Projects to Organizations -----------------------------------------------
 
@@ -80,11 +81,6 @@ projects_orgs <- read_xlsx(
     AgencyName = str_remove(OrganizationName, "\\(.*\\)")
   ) %>%
   select(ProjectID, ProjectName, AgencyID, AgencyName)
-
-
-# building vi-spdat -------------------------------------------------------
-
-agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 offer_data <- deduplicated %>%
   select("PersonalID" = client_id,

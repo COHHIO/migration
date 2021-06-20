@@ -58,7 +58,7 @@ deduplicated <- offer_subs %>%
   group_by(recordset_id, question_name) %>%
   slice_max(answer_date_added) %>% 
   ungroup() %>%
-  pivot_wider(names_from = question_name, values_from = val) %>%
+  pivot_wider(names_from = question_name, values_from = val) %>% # problems start here
   rename("offer_accept_decline_date" = 15,
          "offer_date" = 16,
          "offer_accepted" = 17,
@@ -97,34 +97,31 @@ offer_data <- deduplicated %>%
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
     offer_accepted = recode(
       offer_accepted,
-      'answer 1' = 1,
-      'answer 2' = 2,
-      'answer 3' = 3
+      'N' = "0",
+      'Y' = "1"
     ),
     offer_type = recode(
       offer_type,
-      'answer 1' = 1
+      "HUD VASH" = "1",
+      "Other PH" = "2",
+      "Other RRH" = "3",
+      "SSVF RRH" = "4"
     )
   ) %>%
-  left_join(projects_orgs, by = c("xProjectIDx" = "ProjectID")) %>%
-  mutate(AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
-                              TRUE ~ AgencyID),
+  # left_join(projects_orgs, by = c("xProjectIDx" = "ProjectID")) %>%
+  mutate(#AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
+                              #TRUE ~ AgencyID),
          AssessmentCustomID = row_number()) %>% 
-  filter(!is.na(ProjectName) & (AgencyID %in% c(agencies) |
-                                  AgencyID == 2372)) %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
          PersonalID,
-         AgencyID,
+         # AgencyID,
          InformationDate,
-         assessment_date,
-         assessment_type,
-         assessment_level,
-         assessment_location,
-         c_vispdat_type,
-         c_vispdat_program_name,
-         c_vispdat_score) 
+         "assessment_date" = offer_date,
+         "c_offer_type" = offer_type,
+         "c_offer_accepted" = offer_accepted,
+         "c_offer_accept_decline_date" = offer_accept_decline_date) 
 
 # Offers ------------------------------------------------------------------
 

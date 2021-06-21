@@ -13,10 +13,10 @@
 # <https://www.gnu.org/licenses/>.
 
 library(here)
+library(data.table)
 library(tidyverse)
 library(readxl)
 library(lubridate)
-library(data.table)
 library(tidycensus)
 
 
@@ -34,20 +34,20 @@ ohio <- get_decennial(geography = "county",
 
 # Getting HMIS data -------------------------------------------------------
 
-from_ART1 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
+at_entry <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
   mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
 
-from_ART2 <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 2) %>%
+at_exit <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 2) %>%
   mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
 
-from_ART <- rbind(from_ART1, from_ART2) %>%
+counties_all <- rbind(at_entry, at_exit) %>%
   rename("county_served" = CountyServed, "county_prior" = CountyPrior) %>%
   mutate(ExportID = as.numeric(format.Date(today(), "%Y%m%d")),
          EnrollmentCustomID = row_number()) %>%
   relocate(EnrollmentCustomID, .before = "PersonalID")
 # there's no duplicate combinations of EnrollmentID & DataCollectionStage - GD
 
-enrollment_custom <- from_ART %>%
+enrollment_custom <- counties_all %>%
   left_join(ohio, by = c("county_prior" = "County")) %>%
   mutate(c_county_prior = if_else(county_prior == "--Outside of Ohio--", "0", Geocode)) %>%
   left_join(ohio, by = c("county_served" = "County")) %>%

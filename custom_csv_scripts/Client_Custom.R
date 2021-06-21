@@ -123,8 +123,8 @@ fix_date_times <- function(file) {
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(
-      date_veteran_identified = format.Date(c_date_veteran_identified, "%Y-%m-%d"),
-      expected_ph_date = format.Date(c_expected_ph_date, "%Y-%m-%d")
+      c_date_veteran_identified = format.Date(c_date_veteran_identified, "%Y-%m-%d"),
+      c_expected_ph_date = format.Date(c_expected_ph_date, "%Y-%m-%d")
     )
   
   fwrite(x,

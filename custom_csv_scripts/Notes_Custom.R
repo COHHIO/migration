@@ -19,24 +19,13 @@ library(lubridate)
 
 source(here("reading_severance.R"))
 
-# can't find where OrganizationID is in the severance file (they have parent 
-# provider) so pulling from RMisc2 like we do in Funding_Sources.R
-
-projects_orgs <- read_xlsx(
-  here("data_to_Clarity/RMisc2.xlsx"),
-  sheet = 3,
-  col_types = c("numeric", replicate(16, "text"))
-) %>%
-  filter(!is.na(OrganizationName) &
-           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
-  mutate(
-    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    AgencyID = str_remove(AgencyID, "[(]"),
-    AgencyID = str_remove(AgencyID, "[)]"),
-    AgencyID = as.numeric(AgencyID),
-    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
-  ) %>%
-  select(ProjectID, ProjectName, AgencyID, AgencyName)
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
 
 # Notes.xlsx comes from an ART report in public > Sys Admin > Clarity > Notes
 
@@ -59,24 +48,25 @@ notes_goals <- sp_goal_casenote %>%
 
 # Client Notes ------------------------------------------------------------
 
-# not currently in severance file, but this should be fixed soon. til then,
-# getting it from ART
-
-raw_notes_client <- read_xlsx("random_data/Notes.xlsx", sheet = 2) %>%
-  select(-NoteID, -UserID) %>% rename("ProjectID" = Program) %>%
-  mutate(Date = ymd(as.Date(Date, origin = "1899-12-30")),
-         DateCreated = ymd(as.Date(DateCreated, origin = "1899-12-30")),
-         DateUpdated = ymd(as.Date(DateUpdated, origin = "1899-12-30")))
-
-notes_client <- raw_notes_client %>%
-  mutate(Title = "imported from Clients",
-         ProjectID = str_extract(ProjectID, "[0-9]+"),
-         ProjectID = as.numeric(ProjectID),
+notes_clients <- sp_client_note %>%
+  filter(active == TRUE) %>%
+  select("PersonalID" = client_id,
+         "DateCreated" = date_added,
+         "DateUpdated" = date_updated,
+         "Note" = note,
+         "Date" = note_date,
+         provider_creating_id) %>%
+  left_join(
+    projects_orgs %>%
+      select(ProjectID, AgencyID),
+    by = c("provider_creating_id" = "ProjectID")
+  ) %>%
+  mutate(Title = "imported from Client",
          EnrollmentID = "",
          ServicesID = "") %>%
-  left_join(projects_orgs %>%
-              select(ProjectID, AgencyID), by = "ProjectID") %>%
-  select(-ProjectID)
+  select(-provider_creating_id)
+
+
 
 # Notes attached to Services ----------------------------------------------
 
@@ -123,7 +113,7 @@ notes_needs <- sp_need %>%
 
 # Exit Notes --------------------------------------------------------------
 
-agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
+# agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 notes_exits <- sp_entry_exit %>%
   filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601")) %>%
@@ -135,7 +125,7 @@ notes_exits <- sp_entry_exit %>%
          ServicesID = "") %>%
   left_join(projects_orgs %>% 
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
-  filter(AgencyID %in% c(agencies)) %>%
+  # filter(AgencyID %in% c(agencies)) %>%
   select("PersonalID" = client_id, 
          AgencyID,
          ServicesID,
@@ -149,13 +139,13 @@ notes_exits <- sp_entry_exit %>%
 # All together ------------------------------------------------------------
 
 All_Notes <- rbind(
-  notes_client,
+  notes_clients,
   notes_exits,
   notes_goals,
   notes_needs,
   notes_services
 ) %>%
-  filter(AgencyID %in% c(agencies)) %>% # edit this for final run
+  # filter(AgencyID %in% c(agencies)) %>% # edit this for final run
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,

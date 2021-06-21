@@ -60,7 +60,7 @@ deduplicated <- offer_subs %>%
   ungroup() %>%
   select(-recordset_answer_id, -sub_date_added, -answer_date_added) %>% 
   unique() %>%
-  pivot_wider(names_from = question_name, values_from = val) %>% # problems start here
+  pivot_wider(names_from = question_name, values_from = val) %>% 
   rename("offer_accept_decline_date" = 12,
          "offer_date" = 13,
          "offer_accepted" = 14,
@@ -78,52 +78,65 @@ projects_orgs <- sp_provider %>%
 
 offer_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "xProjectIDx" = sub_provider_created, # waiting on new severance file
+         "ProjectID" = sub_provider_created, 
          "InformationDate" = date_effective,
          offer_accept_decline_date,
          offer_date,
          offer_accepted,
          offer_type
   ) %>%
+  filter(!PersonalID %in% c(5, 4216) &
+           !is.na(offer_date)) %>%
+  left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
     AssessmentID = 194,
     AssessmentName = "Offers of Permanent Housing",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
-    offer_accepted = recode(
-      offer_accepted,
-      'N' = "0",
-      'Y' = "1"
-    ),
+    offer_accepted = recode(offer_accepted,
+                            'N' = 0,
+                            'Y' = 1),
     offer_type = recode(
       offer_type,
-      "HUD VASH" = "1",
-      "Other PH" = "2",
-      "Other RRH" = "3",
-      "SSVF RRH" = "4"
-    )
-  ) %>%
-  # left_join(projects_orgs, by = c("xProjectIDx" = "ProjectID")) %>%
-  mutate(#AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
-                              #TRUE ~ AgencyID),
-         AssessmentCustomID = row_number()) %>% 
+      "HUD VASH" = 1,
+      "Other PH" = 2,
+      "Other RRH" = 3,
+      "SSVF RRH" = 4
+    ),
+    AgencyID = case_when(ProjectID %in% c(2372, 1695) ~ ProjectID,
+                         TRUE ~ AgencyID),
+    AssessmentCustomID = row_number()
+  ) %>% 
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
          PersonalID,
-         # AgencyID,
+         AgencyID,
          InformationDate,
          "assessment_date" = offer_date,
          "c_offer_type" = offer_type,
          "c_offer_accepted" = offer_accepted,
          "c_offer_accept_decline_date" = offer_accept_decline_date) 
 
-# Offers ------------------------------------------------------------------
+# Writing it out to csv ---------------------------------------------------
 
-offers_subs <- da_recordset %>%
-  filter(question == "Offers of Permanent Housing" & active == TRUE)
+write_csv(offer_data, here("data_to_Clarity/Assessment_Custom_offers.csv"))
 
-offers_answers <- da_recordset_answer %>%
-  filter(active == TRUE) %>%
-  semi_join(offers_subs, by = "recordset_id") %>%
-  pivot_wider(names_from = question, values_from = val)
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(InformationDate = 
+             format.Date(InformationDate, "%Y-%m-%d"),
+           assessment_date = 
+             format.Date(assessment_date, "%Y-%m-%d"),
+           c_offer_accept_decline_date = 
+             format.Date(c_offer_accept_decline_date, "%Y-%m-%d"))
+  
+  fwrite(x, 
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
+
+fix_date_times("Assessment_Custom_offers")
+
 

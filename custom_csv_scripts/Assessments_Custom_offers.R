@@ -58,29 +58,23 @@ deduplicated <- offer_subs %>%
   group_by(recordset_id, question_name) %>%
   slice_max(answer_date_added) %>% 
   ungroup() %>%
+  select(-recordset_answer_id, -sub_date_added, -answer_date_added) %>% 
+  unique() %>%
   pivot_wider(names_from = question_name, values_from = val) %>% # problems start here
-  rename("offer_accept_decline_date" = 15,
-         "offer_date" = 16,
-         "offer_accepted" = 17,
-         "offer_type" = 18)
+  rename("offer_accept_decline_date" = 12,
+         "offer_date" = 13,
+         "offer_accepted" = 14,
+         "offer_type" = 15)
 
 # Projects to Organizations -----------------------------------------------
 
-projects_orgs <- read_xlsx(
-  here("data_to_Clarity/RMisc2.xlsx"),
-  sheet = 3,
-  col_types = c("numeric", replicate(16, "text"))
-) %>%
-  filter(!is.na(OrganizationName) &
-           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
-  mutate(
-    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    AgencyID = str_remove(AgencyID, "[(]"),
-    AgencyID = str_remove(AgencyID, "[)]"),
-    AgencyID = as.numeric(AgencyID),
-    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
-  ) %>%
-  select(ProjectID, ProjectName, AgencyID, AgencyName)
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
 
 offer_data <- deduplicated %>%
   select("PersonalID" = client_id,

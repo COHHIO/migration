@@ -79,21 +79,13 @@ deduplicated <- corrected_subs %>%
 
 # Projects to Organizations -----------------------------------------------
 
-projects_orgs <- read_xlsx(
-  here("data_to_Clarity/RMisc2.xlsx"),
-  sheet = 3,
-  col_types = c("numeric", replicate(16, "text"))
-) %>%
-  filter(!is.na(OrganizationName) &
-           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
-  mutate(
-    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    AgencyID = str_remove(AgencyID, "[(]"),
-    AgencyID = str_remove(AgencyID, "[)]"),
-    AgencyID = as.numeric(AgencyID),
-    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
-  ) %>%
-  select(ProjectID, ProjectName, AgencyID, AgencyName)
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
 
 
 # building vi-spdat -------------------------------------------------------

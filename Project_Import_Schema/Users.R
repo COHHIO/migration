@@ -16,24 +16,18 @@ library(janitor)
 library(here)
 library(tm)
 
+source(here("reading_severance.R"))
 source(here("Project_Import_Schema/Agencies.R"))
 
 # To help associate Project-level data to AgencyIDs -----------------------
 
-projects_orgs <- read_xlsx(
-  here("data_to_Clarity/RMisc2.xlsx"),
-  sheet = 3,
-  col_types = c("numeric", replicate(16, "text"))
-) %>%
-  filter(!is.na(OrganizationName) &
-           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
-  mutate(
-    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    AgencyID = str_remove(AgencyID, "[(]"),
-    AgencyID = str_remove(AgencyID, "[)]"),
-    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
-  ) %>%
-  select(ProjectID, AgencyID, AgencyName)
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
 
 # Getting each User-Project connection ------------------------------------
 

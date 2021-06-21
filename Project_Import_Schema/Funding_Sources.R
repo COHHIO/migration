@@ -21,6 +21,8 @@ library(data.table)
 
 # get necessary data ------------------------------------------------------
 
+source(here("reading_severance.R"))
+
 Project <- 
   read_csv(here("data_to_Clarity/Project.csv"),
            col_types = "nnccDDnnnnnnnnTTcTn") 
@@ -45,20 +47,13 @@ Funder <-
   read_csv("data_to_Clarity/Funder.csv",
            col_types = "nnnccDDTTcTn")
 
-projects_orgs <- read_xlsx(
-  here("data_to_Clarity/RMisc2.xlsx"),
-  sheet = 3,
-  col_types = c("numeric", replicate(16, "text"))
-) %>%
-  filter(!is.na(OrganizationName) &
-           OrganizationName != "Coalition on Homelessness and Housing in Ohio(1)") %>%
-  mutate(
-    AgencyID = str_extract(OrganizationName, "\\(?[0-9]+\\)?"),
-    AgencyID = str_remove(AgencyID, "[(]"),
-    AgencyID = str_remove(AgencyID, "[)]"),
-    AgencyName = str_remove(OrganizationName, "\\(.*\\)")
-  ) %>%
-  select(ProjectID, ProjectName, AgencyID, AgencyName)
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
 
 hud_specs <- read_csv("random_data/HUDSpecs.csv", col_types = "cccc") %>%
   filter(DataElement == "FundingSource") %>%

@@ -88,20 +88,20 @@ dose_data <- deduplicated %>%
   filter(!PersonalID %in% c(5, 4216)) %>%
   left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
-    AssessmentID = 666,
+    AssessmentID = 195,
     AssessmentName = "COVID-19 Vaccine Doses",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
     c_covid19_vaccine_manufacturer = recode(
       c_covid19_vaccine_manufacturer,
-      "Client doesn't know and data could not be obtained from other source" = 99,
+      "Client doesn't know and data could not be obtained from other source" = 4,
       "Johnson & Johnson" = 1,
-      "Pfizer" = 2,
-      "Moderna" = 3
+      "Pfizer" = 3,
+      "Moderna" = 2
     ), 
     c_covid19_vaccine_documentation = recode(
       c_covid19_vaccine_documentation,
-      "Self-report" = 1,
-      "Healthcare provider" = 2,
+      "Self-report" = 2,
+      "Healthcare provider" = 1,
       "Vaccine card" = 3
     ),
     AgencyID = case_when(ProjectID %in% c(2372, 1695) ~ ProjectID,

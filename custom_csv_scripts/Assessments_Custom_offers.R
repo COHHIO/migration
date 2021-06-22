@@ -24,7 +24,9 @@ source(here("reading_severance.R"))
 # Getting filtered data sets ----------------------------------------------
 
 offer_subs <- da_recordset %>%
-  filter(active == TRUE & question == "Offers of Permanent Housing") %>% 
+  filter(active == TRUE & 
+           question == "Offers of Permanent Housing" &
+           client_id %in% c(client_cohort)) %>% 
   rename("subassessment_name" = question,
          "sub_is_active" = active,
          "sub_date_added" = date_added,

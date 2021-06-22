@@ -24,7 +24,9 @@ source(here("reading_severance.R"))
 # Getting filtered data sets ----------------------------------------------
 
 dose_subs <- da_recordset %>%
-  filter(active == TRUE & question == "COVID-19 Vaccine Doses") %>% 
+  filter(active == TRUE & 
+           question == "COVID-19 Vaccine Doses" &
+           client_id %in% c(client_cohort)) %>% 
   rename("subassessment_name" = question,
          "sub_is_active" = active,
          "sub_date_added" = date_added,

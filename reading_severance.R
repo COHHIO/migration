@@ -20,4 +20,17 @@ make_dfs <- function(file) {
 data.frame(file = files) %>%
   purrr::pwalk(make_dfs)
 
+client_cohort <- sp_entry_exit %>%
+  filter(active == TRUE &
+           !client_id %in% c(5, 4216) &
+           (ymd_hms(exit_date) > ymd("20140601") |
+              is.na(exit_date))) %>%
+  pull(client_id) %>% unique()
 
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")

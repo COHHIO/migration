@@ -145,7 +145,7 @@ All_Notes <- rbind(
   notes_needs,
   notes_services
 ) %>%
-  # filter(AgencyID %in% c(agencies)) %>% # edit this for final run
+  filter(PersonalID %in% c(client_cohort)) %>% # edit this for final run
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,

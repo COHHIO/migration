@@ -23,7 +23,7 @@ data.frame(file = files) %>%
 client_cohort <- sp_entry_exit %>%
   filter(active == TRUE &
            !client_id %in% c(5, 4216) &
-           (ymd_hms(exit_date) > ymd("20140601") |
+           (ymd_hms(exit_date) >= ymd("20140601") |
               is.na(exit_date))) %>%
   pull(client_id) %>% unique()
 

@@ -145,7 +145,8 @@ All_Notes <- rbind(
   notes_needs,
   notes_services
 ) %>%
-  filter(PersonalID %in% c(client_cohort)) %>% # edit this for final run
+  filter(PersonalID %in% c(client_cohort) & 
+           !is.na(Note)) %>%
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,
@@ -160,10 +161,6 @@ All_Notes <- rbind(
     DateUpdated
   ) %>%
   arrange(AgencyID)
-
-# WARNING: this excludes data from any agencies not already in Clarity. On your
-# final run, edit line 141 so you're pulling from all agencies you want to come
-# over.
 
 # Writing it out to csv ---------------------------------------------------
 

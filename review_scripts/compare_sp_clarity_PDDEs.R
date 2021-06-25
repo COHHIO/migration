@@ -18,6 +18,8 @@ library(lubridate)
 library(readxl)
 library(writexl)
 
+source(here("review_scripts/user_compare.R"))
+
 # From Clarity ------------------------------------------------------------
 
 agencies_programs_participating <- 
@@ -51,14 +53,18 @@ not_in_Clarity <- orgs_providers %>%
   select(FullName) %>%
   anti_join(agencies_programs_participating %>% select(FullName), 
             by = "FullName") %>%
-  left_join(orgs_providers, by = "FullName")
+  left_join(orgs_providers, by = "FullName") %>% select(-FullName)
 
 different_in_SP <- agencies_programs_participating %>%
   select(FullName) %>%
   anti_join(orgs_providers %>% select(FullName), by = "FullName") %>%
-  left_join(agencies_programs_participating, by = "FullName")
+  left_join(agencies_programs_participating, by = "FullName") %>%
+  select(-FullName)
 
 write_xlsx(list(not_in_Clarity = not_in_Clarity,
-                different_in_SP = different_in_SP), path = "random_data/diffs.xlsx")
+                different_in_SP = different_in_SP,
+                users_not_in_Clarity = users_not_in_Clarity,
+                users_not_in_SP = users_not_in_ServicePoint),
+           path = "random_data/diffs2.xlsx")
 
 

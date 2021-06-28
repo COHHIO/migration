@@ -19,14 +19,15 @@ library(lubridate)
 library(janitor)
 
 source(here("reading_severance.R"))
-
+id_cross <- read_csv(here("id_crosswalk.csv"))
 
 # Getting filtered data sets ----------------------------------------------
 
 vispdat_subs <- da_recordset %>%
   filter(
     active == TRUE &
-      question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0")
+      question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0") &
+      !client_id %in% c(5, 4216)
   ) %>% 
   rename("subassessment_name" = question,
          "sub_is_active" = active,
@@ -79,14 +80,27 @@ deduplicated <- corrected_subs %>%
 
 # Projects to Organizations -----------------------------------------------
 
-projects_orgs <- sp_provider %>%
+sp_projects_orgs <- sp_provider %>%
   filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
+  select("SP_ProjectID" = provider_id, 
+         "SP_ProjectName" = name, 
+         "SP_AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
+            by = "SP_AgencyID")
 
+clarity_projects_orgs <- sp_projects_orgs %>%
+  left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
+  filter(!is.na(Clarity_program_ID)) %>%
+  select(
+    SP_ProjectID,
+    SP_ProjectName,
+    SP_AgencyID,
+    "SP_AgencyName" = AgencyName,
+    "Clarity_ProjectID" = Clarity_program_ID,
+    "Clarity_ProjectName" = Clarity_program_name,
+    "Clarity_AgencyID" = Clarity_Agency_ID,
+    "Clarity_AgencyName" = Clarity_Agency_name
+  )
 
 # building vi-spdat -------------------------------------------------------
 
@@ -94,7 +108,7 @@ agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 spdat_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "xProjectIDx" = sub_provider_created, # waiting on new severance file
+         "SP_ProjectID" = sub_provider_created, 
          "InformationDate" = date_effective,
          "c_vispdat_score" = Score, 
          "assessment_date" = date_effective,
@@ -114,18 +128,18 @@ spdat_data <- deduplicated %>%
       'TAY-VI-SPDAT v1.0' = 3
     )
   ) %>%
-  left_join(projects_orgs, by = c("c_vispdat_program_name" = "ProjectID")) %>%
-  mutate(AgencyID = case_when(xProjectIDx %in% c(2372, 1695) ~ xProjectIDx,
-                              TRUE ~ AgencyID),
-         c_vispdat_program_name = ProjectName, 
+  left_join(clarity_projects_orgs, by = c("c_vispdat_program_name" = "SP_ProjectID")) %>%
+  mutate(SP_AgencyID = case_when(SP_ProjectID %in% c(2372, 1695) ~ SP_ProjectID,
+                              TRUE ~ SP_AgencyID),
+         c_vispdat_program_name = SP_ProjectName, 
          AssessmentCustomID = row_number()) %>% 
-  filter(!is.na(ProjectName) & (AgencyID %in% c(agencies) |
-                                  AgencyID == 2372)) %>%
+  filter((SP_AgencyID %in% c(agencies) |
+                                  SP_AgencyID == 2372)) %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
          PersonalID,
-         AgencyID,
+         "AgencyID" = Clarity_AgencyID,
          InformationDate,
          assessment_date,
          assessment_type,

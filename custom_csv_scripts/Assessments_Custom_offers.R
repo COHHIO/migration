@@ -68,16 +68,6 @@ deduplicated <- offer_subs %>%
          "offer_accepted" = 14,
          "offer_type" = 15)
 
-# Projects to Organizations -----------------------------------------------
-
-projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
-
 offer_data <- deduplicated %>%
   select("PersonalID" = client_id,
          "ProjectID" = sub_provider_created, 
@@ -104,15 +94,18 @@ offer_data <- deduplicated %>%
       "Other RRH" = 3,
       "SSVF RRH" = 4
     ),
-    AgencyID = case_when(ProjectID %in% c(2372, 1695) ~ ProjectID,
-                         TRUE ~ AgencyID),
     AssessmentCustomID = row_number()
   ) %>% 
+  left_join(clarity_projects_orgs %>%
+              select(SP_AgencyID, Clarity_AgencyID) %>%
+              unique(), 
+            by = c("AgencyID" = "SP_AgencyID")) %>%
+  filter(!is.na(Clarity_AgencyID)) %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
          PersonalID,
-         AgencyID,
+         "AgencyID" = Clarity_AgencyID,
          InformationDate,
          "assessment_date" = offer_date,
          "c_offer_type" = offer_type,

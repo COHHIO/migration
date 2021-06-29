@@ -68,16 +68,6 @@ deduplicated <- dose_subs %>%
          "c_covid19_date_vaccine_administered" = "Date Received Vaccine Dose",
          "c_covid19_vaccine_documentation" = "Vaccine Documentation")
 
-# Projects to Organizations -----------------------------------------------
-
-projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
-
 dose_data <- deduplicated %>%
   select("PersonalID" = client_id,
          "ProjectID" = sub_provider_created, 
@@ -106,15 +96,17 @@ dose_data <- deduplicated %>%
       "Healthcare provider" = 1,
       "Vaccine card" = 3
     ),
-    AgencyID = case_when(ProjectID %in% c(2372, 1695) ~ ProjectID,
-                         TRUE ~ AgencyID),
     AssessmentCustomID = row_number()
   ) %>% 
+  left_join(clarity_projects_orgs %>%
+              select(SP_AgencyID, Clarity_AgencyID) %>%
+              unique(), 
+            by = c("AgencyID" = "SP_AgencyID")) %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
          PersonalID,
-         AgencyID,
+         "AgencyID" = Clarity_AgencyID,
          InformationDate,
          "assessment_date" = c_covid19_date_vaccine_administered,
          c_covid19_client_contact_info,

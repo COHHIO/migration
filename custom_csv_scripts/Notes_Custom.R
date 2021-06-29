@@ -19,16 +19,6 @@ library(lubridate)
 
 source(here("reading_severance.R"))
 
-projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
-
-# Notes.xlsx comes from an ART report in public > Sys Admin > Clarity > Notes
-
 # Notes attached to Goals -------------------------------------------------
 
 notes_goals <- sp_goal_casenote %>%
@@ -66,8 +56,6 @@ notes_clients <- sp_client_note %>%
          ServicesID = "") %>%
   select(-provider_creating_id)
 
-
-
 # Notes attached to Services ----------------------------------------------
 
 notes_services <- sp_need_service %>% 
@@ -76,7 +64,8 @@ notes_services <- sp_need_service %>%
          ProjectID = as.numeric(provide_provider_id),
          EnrollmentID = "") %>%
   left_join(projects_orgs %>%
-              select(ProjectID, AgencyID), by = c("provide_provider_id" = "ProjectID")) %>%
+              select(ProjectID, AgencyID), 
+            by = c("provide_provider_id" = "ProjectID")) %>%
   select("PersonalID" = client_id,
          AgencyID,
          EnrollmentID,
@@ -116,9 +105,10 @@ notes_needs <- sp_need %>%
 # agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 notes_exits <- sp_entry_exit %>%
+  left_join(sp_provider %>% select(provider_id, name), by = "provider_id") %>%
   filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601")) %>%
-  mutate(Title = paste("Exit note: Exited Project ID", 
-                       provider_id, 
+  mutate(Title = paste("Exit note: Exited", 
+                       name, 
                        "on", 
                        format.Date(exit_date, "%m-%d-%Y")),
          ProjectID = as.numeric(provider_id),
@@ -147,11 +137,14 @@ All_Notes <- rbind(
 ) %>%
   filter(PersonalID %in% c(client_cohort) & 
            !is.na(Note)) %>%
+  left_join(clarity_projects_orgs %>%
+              select(SP_AgencyID, Clarity_AgencyID) %>%
+              unique(), by = c("AgencyID" = "SP_AgencyID")) %>%
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,
     PersonalID,
-    AgencyID,
+    "AgencyID" = Clarity_AgencyID,
     EnrollmentID,
     ServicesID,
     Title,

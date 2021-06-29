@@ -19,7 +19,6 @@ library(lubridate)
 library(janitor)
 
 source(here("reading_severance.R"))
-id_cross <- read_csv(here("id_crosswalk.csv"))
 
 # Getting filtered data sets ----------------------------------------------
 

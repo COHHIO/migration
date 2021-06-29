@@ -42,12 +42,11 @@ files_client <- sp_file_attachment %>%
     OtherName = file_name,
     ExportID = as.numeric(format.Date(today(), "%Y%m%d"))
   ) %>%
-  left_join(projects_orgs %>% select(ProjectID, AgencyID), 
-            by = "ProjectID") %>%
+  left_join(clarity_projects_orgs, by = c("ProjectID" = "SP_ProjectID")) %>%
   select(
     FileID,
     PersonalID,
-    AgencyID,
+    "AgencyID" = Clarity_AgencyID,
     Category,
     FileName,
     OtherName,

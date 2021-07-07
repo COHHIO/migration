@@ -336,4 +336,75 @@ bos_missing_clients <- missing_clients %>%
               select(PersonalID, CoCCode), by = "PersonalID") %>%
   filter(CoCCode == "OH-507")
 
+# Enrollment Custom Reports Compare ---------------------------------------
+
+# Their export is not right so switching to ART vs Looker
+
+enrollment_check_sp <- read_xlsx("random_data/EnrollmentsCheckSP.xlsx") %>%
+  mutate(EnrollmentDateCreated = as.Date(EnrollmentDateCreated, origin = "1899-12-30"),
+         EntryDate = as.Date(EntryDate, origin = "1899-12-30"),
+         ExitDate = as.Date(ExitDate, origin = "1899-12-30"),
+         EnrollmentDateCreated = format.Date(EnrollmentDateCreated, "%Y%m%d"),
+         EntryDate = format.Date(EntryDate, "%Y%m%d"),
+         ExitDate = format.Date(ExitDate, "%Y%m%d")) %>%
+  select(-EnrollmentID, -ProjectName)
+
+enrollment_check_clarity <- 
+  read_csv("data_from_Clarity/EnrollmentsCheck_Clarity.csv") %>%
+  clean_names() %>%
+  filter(!is.na(alias)) %>%
+  select(
+    "EnrollmentDateCreated" = 2,
+    "EntryDate" = 4,
+    "ExitDate" = 5,
+    "PersonalID" = 6,
+    # "ProjectName" = 7,
+    "Destination" = 8
+  ) %>%
+  mutate(Destination = if_else(is.na(Destination), Destination,
+                               paste(Destination, "(HUD)")), 
+         EnrollmentDateCreated = format.Date(EnrollmentDateCreated, "%Y%m%d"),
+         EntryDate = format.Date(EntryDate, "%Y%m%d"),
+         ExitDate = format.Date(ExitDate, "%Y%m%d"))
+
+# comparing clients represented, only finding client merges that happened after
+
+sp_ee_clients <- enrollment_check_sp$PersonalID
+clarity_ee_clients <- enrollment_check_clarity$PersonalID
+setdiff(sp_ee_clients, clarity_ee_clients)
+
+# Clarity words their Destinations differently than SP does in 5 places, so I
+# just filtered those Destinations out and voila, no missing EEs
+not_in_clarity <- enrollment_check_sp %>%
+  anti_join(enrollment_check_clarity) %>%
+  filter(
+    Destination %in% c(
+      "Emergency shelter, including hotel or motel paid for with emergency shelter voucher, or RHY-funded Host Home shelter (HUD)",
+      "Staying or living with friends, temporary tenure (e.g. room, apartment or house) (HUD)",
+      "Staying or living with family, temporary tenure (e.g. room, apartment or house) (HUD)",
+      "Place not meant for habitation (e.g., a vehicle, an abandoned building, bus/train/subway station/airport or anywhere outside) (HUD)",
+      "Moved from one HOPWA  funded project to HOPWA TH (HUD)"
+    )
+  )
+
+
+# HUD Questions -----------------------------------------------------------
+
+
+# Services ----------------------------------------------------------------
+
+
+# Inventory ---------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -321,7 +321,6 @@ duplications_clarity <- clarity_example %>%
 # Export Comparison -------------------------------------------------------
 
 SP_Export$ExportStartDate == Clarity_Export$ExportStartDate
-SP_Export$ExportEndDate == Clarity_Export$ExportEndDate
 
 # all clients in the SP export that are NOT in the Clarity export
 missing_clients <- anti_join(SP_Client, Clarity_Client, 
@@ -388,13 +387,6 @@ not_in_clarity <- enrollment_check_sp %>%
   )
 
 
-# HUD Questions -----------------------------------------------------------
-
-
-# Services ----------------------------------------------------------------
-
-
-# Inventory ---------------------------------------------------------------
 
 
 

@@ -89,16 +89,16 @@ sp_projects_orgs <- sp_provider %>%
 
 clarity_projects_orgs <- sp_projects_orgs %>%
   left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
-  filter(!is.na(Clarity_program_ID)) %>%
+  filter(!is.na(Clarity_ProgramID)) %>%
   select(
     SP_ProjectID,
     SP_ProjectName,
     SP_AgencyID,
     "SP_AgencyName" = AgencyName,
-    "Clarity_ProjectID" = Clarity_program_ID,
-    "Clarity_ProjectName" = Clarity_program_name,
-    "Clarity_AgencyID" = Clarity_Agency_ID,
-    "Clarity_AgencyName" = Clarity_Agency_name
+    "Clarity_ProjectID" = Clarity_ProgramID,
+    "Clarity_ProjectName" = Clarity_ProgramName,
+    "Clarity_AgencyID" = Clarity_AgencyID,
+    "Clarity_AgencyName" = Clarity_AgencyName
   )
 
 # building vi-spdat -------------------------------------------------------
@@ -133,7 +133,8 @@ spdat_data <- deduplicated %>%
          c_vispdat_program_name = SP_ProjectName, 
          AssessmentCustomID = row_number()) %>% 
   filter((SP_AgencyID %in% c(agencies) |
-                                  SP_AgencyID == 2372)) %>%
+                                  SP_AgencyID == 2372) &
+           !is.na(InformationDate)) %>% # servicepoint bug
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,

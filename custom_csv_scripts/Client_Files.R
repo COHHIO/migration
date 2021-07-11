@@ -20,7 +20,7 @@ library(janitor)
 
 source(here("reading_severance.R"))
 
-files_client <- sp_file_attachment %>%
+prep_files <- sp_file_attachment %>%
   filter(entity_name != "ROI" & 
            client_id %in% c(client_cohort) &
            active == TRUE) %>%
@@ -42,7 +42,10 @@ files_client <- sp_file_attachment %>%
     OtherName = file_name,
     ExportID = as.numeric(format.Date(today(), "%Y%m%d"))
   ) %>%
-  left_join(clarity_projects_orgs, by = c("ProjectID" = "SP_ProjectID")) %>%
+  left_join(clarity_projects_orgs, by = c("ProjectID" = "SP_ProjectID")) 
+
+all_good_files <- prep_files %>%
+  filter(!is.na(Clarity_AgencyID)) %>%
   select(
     FileID,
     PersonalID,
@@ -55,6 +58,43 @@ files_client <- sp_file_attachment %>%
     UserID,
     ExportID
   )
+
+missing_agency_files <- prep_files %>%
+  filter(is.na(Clarity_AgencyID)) %>%
+  select(
+    "FileID",
+    "PersonalID",
+    "ProjectID",
+    "DateCreated",
+    "DateUpdated",
+    "UserID",
+    "file_name",
+    "Category",
+    "FileName",
+    "OtherName",
+    "ExportID"
+  ) %>%
+  left_join(
+    clarity_projects_orgs %>%
+      select(SP_AgencyID, Clarity_AgencyID),
+    by = c("ProjectID" = "SP_AgencyID")
+  ) %>%
+  unique() %>%
+  filter(!is.na(Clarity_AgencyID)) %>%
+  select(
+    FileID,
+    PersonalID,
+    "AgencyID" = Clarity_AgencyID,
+    Category,
+    FileName,
+    OtherName,
+    DateCreated,
+    DateUpdated,
+    UserID,
+    ExportID
+  )
+
+files_client <- rbind(missing_agency_files, all_good_files)
 
 # Writing it out to csv ---------------------------------------------------
 

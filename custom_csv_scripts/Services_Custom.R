@@ -66,7 +66,8 @@ projects_orgs <- sp_provider %>%
   select("ProjectID" = provider_id, 
          "ProjectName" = name, 
          "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+  left_join(sp_provider %>%
+              select("AgencyID" = provider_id, "AgencyName" = name),
             by = "AgencyID")
 
 prep <- cohort_services %>%
@@ -81,10 +82,30 @@ prep <- cohort_services %>%
     code
   ) %>%
   left_join(projects_orgs %>% select(ProjectID, AgencyID),
-            by = "ProjectID")
+            by = "ProjectID") %>%
+  select(-ProjectID) %>%
+  relocate(AgencyID, .after = PersonalID) %>%
+  left_join(sp_entry_exit %>%
+              filter(active == TRUE) %>%
+              select(client_id, entry_exit_id, entry_date, exit_date),
+            by = c("PersonalID" = "client_id")) %>%
+  mutate(
+    exit_adjust = if_else(is.na(exit_date), now(), exit_date),
+    enrollment_interval = interval(ymd_hms(entry_date), ymd_hms(exit_adjust))
+  ) %>%
+  filter(DateProvided %within% enrollment_interval) %>%
+  rename("EnrollmentID" = entry_exit_id) %>%
+  relocate(EnrollmentID, .after = AgencyID)
 
-# work out a way to eliminate stray services from the dataset and connect each
-# Service to an EnrollmentID.
+fund_amounts <- sp_need_service_group_fund %>%
+  filter(active == TRUE &
+           last_action %in% c("Modified", "Submitted")) %>%
+  select(need_service_group_id, cost, source) %>%
+  left_join(sp_need_service %>%
+              select(need_service_group_id,
+                     need_service_id), by = "need_service_group_id")
+
+
 
 # get list of ServiceItemIDs from Clarity (once that exists) and connect these
 # Services to them based on Funding Source

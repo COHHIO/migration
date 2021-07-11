@@ -33,8 +33,7 @@ notes_goals <- sp_goal_casenote %>%
               select(ProjectID, AgencyID), by = "ProjectID") %>%
   mutate(Title = "imported from Goals",
          EnrollmentID = "",
-         ServicesID = "") %>%
-  select(-ProjectID)
+         ServicesID = "") 
 
 # Client Notes ------------------------------------------------------------
 
@@ -54,7 +53,7 @@ notes_clients <- sp_client_note %>%
   mutate(Title = "imported from Client",
          EnrollmentID = "",
          ServicesID = "") %>%
-  select(-provider_creating_id)
+  rename("ProjectID" = provider_creating_id)
 
 # Notes attached to Services ----------------------------------------------
 
@@ -68,6 +67,7 @@ notes_services <- sp_need_service %>%
             by = c("provide_provider_id" = "ProjectID")) %>%
   select("PersonalID" = client_id,
          AgencyID,
+         ProjectID,
          EnrollmentID,
          "ServicesID" = need_service_id,
          Title,
@@ -92,6 +92,7 @@ notes_needs <- sp_need %>%
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
   select("PersonalID" = client_id, 
          AgencyID, 
+         ProjectID,
          EnrollmentID,
          ServicesID,
          Title,
@@ -117,6 +118,7 @@ notes_exits <- sp_entry_exit %>%
               select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
   # filter(AgencyID %in% c(agencies)) %>%
   select("PersonalID" = client_id, 
+         ProjectID,
          AgencyID,
          ServicesID,
          "EnrollmentID" = entry_exit_id, # some are null
@@ -128,7 +130,7 @@ notes_exits <- sp_entry_exit %>%
 
 # All together ------------------------------------------------------------
 
-All_Notes <- rbind(
+All_Notes_prep <- rbind(
   notes_clients,
   notes_exits,
   notes_goals,
@@ -139,7 +141,23 @@ All_Notes <- rbind(
            !is.na(Note)) %>%
   left_join(clarity_projects_orgs %>%
               select(SP_AgencyID, Clarity_AgencyID) %>%
-              unique(), by = c("AgencyID" = "SP_AgencyID")) %>%
+              unique(), by = c("AgencyID" = "SP_AgencyID"))
+
+notes_proper_agency <- All_Notes_prep %>%
+  filter(!is.na(Clarity_AgencyID))
+
+
+notes_missing_agency <- All_Notes_prep %>%
+  filter(is.na(Clarity_AgencyID)) %>%
+  select(-Clarity_AgencyID) %>%
+  left_join(
+    clarity_projects_orgs %>%
+      select(SP_AgencyID, Clarity_AgencyID),
+    by = c("ProjectID" = "SP_AgencyID")
+  ) %>% unique() %>%
+  filter(!is.na(Clarity_AgencyID))
+
+All_Notes <- rbind(notes_proper_agency, notes_missing_agency) %>%
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,

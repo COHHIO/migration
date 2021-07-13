@@ -18,10 +18,10 @@ library(here)
 
 source(here("reading_severance.R"))
 
-clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv"))
+clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
+  filter(!is.na(ServiceID))
 
 all_service_items <- clarity_service_items %>%
-  filter(!is.na(ServiceID)) %>%
   select(ServiceItemName) %>%
   unique()
 
@@ -85,6 +85,7 @@ cohort_services <- sp_need_service %>%
     by = c("provide_provider_id" = "provider_id")
   ) %>%
   filter(active == TRUE &
+           client_id %in% client_cohort &
            ((
              program_type_code == "Homelessness Prevention (HUD)" &
                code %in% c(
@@ -144,7 +145,6 @@ prep <- cohort_services %>%
   ) %>%
   left_join(projects_orgs %>% select(ProjectID, AgencyID),
             by = "ProjectID") %>%
-  select(-ProjectID) %>%
   relocate(AgencyID, .after = PersonalID) %>%
   left_join(sp_entry_exit %>%
               filter(active == TRUE) %>%
@@ -156,7 +156,17 @@ prep <- cohort_services %>%
   ) %>%
   filter(DateProvided %within% enrollment_interval) %>%
   rename("EnrollmentID" = entry_exit_id) %>%
-  relocate(EnrollmentID, .after = AgencyID)
+  relocate(EnrollmentID, .after = AgencyID) %>%
+  left_join(
+    id_cross %>%
+      rename("AgencyID" = Legacy_OrganizationID,
+             "ProjectID" = Legacy_ProgramID),
+    by = c("AgencyID", "ProjectID")
+  ) %>%
+  select(-entry_date, -exit_date, -enrollment_interval, -exit_adjust)
+
+service_items <- prep %>%
+  left_join(service_translator, by = "sp_code")
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &

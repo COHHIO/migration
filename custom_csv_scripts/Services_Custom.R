@@ -19,11 +19,26 @@ library(here)
 source(here("reading_severance.R"))
 
 clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
-  filter(!is.na(ServiceID))
+  filter(!is.na(ServiceID)) %>%
+  mutate(
+    ServiceItemName = case_when(
+      ServiceItemName %in% c("Case management", "Case management services") ~
+        "Case Management",
+      ServiceItemName == "Moving costs" ~ "Moving Cost Assistance",
+      ServiceItemName == "Utility payments" ~ "Utility Payments",
+      ServiceItemName %in% c("Security deposit", "Security deposits") ~
+        "Security Deposit",
+      ServiceItemName %in% c("Utility deposit", "Utility deposits") ~
+        "Utility Deposit",
+      TRUE ~ ServiceItemName
+    )
+  )
 
 all_service_items <- clarity_service_items %>%
   select(ServiceItemName) %>%
   unique()
+
+nrow(all_service_items) == 121 # YOU WANT TRUE! If FALSE, adjust service_translator
 
 service_translator <- tibble(
   sp_code = c(
@@ -33,15 +48,7 @@ service_translator <- tibble(
     "BV-8900.9300",
     "BV-8900.9150",
     "BH-1800.8500-300",
-    "BH-3800.5150",
-    "PH-1000",
-    "PH-1000",
-    "BH-3800.5150",
-    "BH-3800.7250",
-    "BH-3800.7250",
-    "BV-8900.9150",
-    "BV-8900.9150",
-    "BV-8900.9300"
+    "BH-3800.5150"
   ),
   sp_desc = c(
     "Case/Care Management",
@@ -50,15 +57,7 @@ service_translator <- tibble(
     "Utility Service Payment Assistance",
     "Utility Deposit Assistance",
     "Homeless Motel Vouchers",
-    "Moving Expense Assistance",
-    "Case/Care Management",
-    "Case/Care Management",
-    "Moving Expense Assistance",
-    "Rental Deposit Assistance",
-    "Rental Deposit Assistance",
-    "Utility Deposit Assistance",
-    "Utility Deposit Assistance",
-    "Utility Service Payment Assistance"
+    "Moving Expense Assistance"
   ),
   clarity_desc = c(
     "Case Management",
@@ -67,15 +66,7 @@ service_translator <- tibble(
     "Utility Payments",
     "Utility Deposit",
     "Motel and Hotel Vouchers",
-    "Moving Cost Assistance",
-    "Case management",
-    "Case management services",
-    "Moving costs",
-    "Security deposit",
-    "Security deposits",
-    "Utility deposit",
-    "Utility deposits",
-    "Utility payments"
+    "Moving Cost Assistance"
   )
 )
 
@@ -148,13 +139,14 @@ prep <- cohort_services %>%
   relocate(AgencyID, .after = PersonalID) %>%
   left_join(sp_entry_exit %>%
               filter(active == TRUE) %>%
-              select(client_id, entry_exit_id, entry_date, exit_date),
+              select(client_id, entry_exit_id, entry_date, exit_date, provider_id),
             by = c("PersonalID" = "client_id")) %>%
   mutate(
     exit_adjust = if_else(is.na(exit_date), now(), exit_date),
     enrollment_interval = interval(ymd_hms(entry_date), ymd_hms(exit_adjust))
   ) %>%
-  filter(DateProvided %within% enrollment_interval) %>%
+  filter(DateProvided %within% enrollment_interval &
+           provider_id == ProjectID) %>%
   rename("EnrollmentID" = entry_exit_id) %>%
   relocate(EnrollmentID, .after = AgencyID) %>%
   left_join(
@@ -163,10 +155,12 @@ prep <- cohort_services %>%
              "ProjectID" = Legacy_ProgramID),
     by = c("AgencyID", "ProjectID")
   ) %>%
-  select(-entry_date, -exit_date, -enrollment_interval, -exit_adjust)
+  select(-entry_date, -exit_date, -enrollment_interval, -exit_adjust, -provider_id)
 
 service_items <- prep %>%
-  left_join(service_translator, by = "sp_code")
+  left_join(service_translator, by = "sp_code") %>%
+  left_join(clarity_service_items, by = c("clarity_desc" = "ServiceItemName",
+                                          "ProjectID"))
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &
@@ -174,17 +168,23 @@ fund_amounts <- sp_need_service_group_fund %>%
   select(need_service_group_id, cost, source) %>%
   left_join(sp_need_service %>%
               select(need_service_group_id,
-                     need_service_id), by = "need_service_group_id")
+                     need_service_id), by = "need_service_group_id") %>%
+  select("ServicesID" = need_service_id, source, "FAAmount" = cost)
+
+sp_service_fund_types <- fund_amounts$FundingSource %>% unique()
+
+fund_translator <- tibble(
+  SPServiceFundingSource = c(sp_service_fund_types),
+  funding_source = c()
+)
 
 # some of these ^^ should have multiple Service Items in Clarity bc they have 
 # multiple Funding Sources in SP
 
-
-
-# get list of ServiceItemIDs from Clarity (once that exists) and connect these
-# Services to them based on Funding Source
-
-# Also pull in the amounts
-
-
+service_items_w_funding <- service_items %>%
+  left_join(fund_amounts, by = "ServicesID")
+  
+  
+  
+  
 

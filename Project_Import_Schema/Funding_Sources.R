@@ -85,7 +85,9 @@ FundingSources <- Funder %>%
      	OtherFunder == "Local" ~ 14,
      	OtherFunder == "OHFA ERA" ~ 15,
      	OtherFunder == "OVW Transitional Housing" ~ 16,
-     	OtherFunder == "United Way" ~ 17
+     	OtherFunder == "United Way" ~ 17,
+     	OtherFunder == "COVID-19 Deconcentration" ~ 18,
+     	OtherFunder == "Risk Mitigation" ~ 19
     ), # comes from https://docs.google.com/spreadsheets/d/1NZLRcv4m57HBKnME-Bcqy__zKD2q-WIPnEqYYesh88U/edit?usp=sharing
     amount = 0,
     grant_identifier = if_else(GrantID == "0", "N/A", GrantID),

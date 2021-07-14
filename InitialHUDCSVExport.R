@@ -31,7 +31,7 @@ project_names <- read_xlsx(
 # Overwrite Project Names -------------------------------------------------
 
 Project <- 
-  read_csv(here("data_to_Clarity/Project.csv"),
+  read_csv(here("data_to_Clarity/final_csv/Project.csv"),
            col_types = "nnccDDnnnnnnnnTTcTn") 
 
 Project_improved <- 
@@ -43,7 +43,7 @@ Project_improved <-
          "ProjectCommonName" = ProjectAKA,
          OperatingStartDate:ExportID)
 
-write_csv(Project_improved, here("data_to_Clarity/Project.csv"), 
+write_csv(Project_improved, here("data_to_Clarity/final_csv/Project.csv"), 
           append = FALSE,
           na = "")
 
@@ -51,7 +51,7 @@ write_csv(Project_improved, here("data_to_Clarity/Project.csv"),
 # Overwrite Organization Names --------------------------------------------
 
 Organization <- 
-  read_csv(here("data_to_Clarity/Organization.csv"),
+  read_csv(here("data_to_Clarity/final_csv/Organization.csv"),
            col_types = "ncncTTnTn")
   
 Organization_improved <- 
@@ -61,19 +61,19 @@ Organization_improved <-
                 "OrganizationName" = ProjectName,
                 VictimServicesProvider:ExportID)
 
-write_csv(Organization_improved, here("data_to_Clarity/Organization.csv"), 
+write_csv(Organization_improved, here("data_to_Clarity/final_csv/Organization.csv"), 
           append = FALSE,
           na = "")
 
 # Move-In Date Madness ----------------------------------------------------
 
 Enrollment <-
-  read_csv(here("data_to_Clarity/Enrollment.csv"),
+  read_csv(here("data_to_Clarity/final_csv/Enrollment.csv"),
            col_types =
              "nnnDcnnnlnDnnnDDDnnnncccnnDnnnncnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnTTnTn")
 
 Exit <-
-  read_csv(here("data_to_Clarity/Exit.csv"),
+  read_csv(here("data_to_Clarity/final_csv/Exit.csv"),
            col_types = "nnnDncnnnnnnnnnnnnnnnnnnnnnnnnnDnnnnnnTTnTn")
 
 small_exit <- Exit %>% dplyr::select(EnrollmentID, 

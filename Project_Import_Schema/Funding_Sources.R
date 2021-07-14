@@ -24,11 +24,11 @@ library(data.table)
 source(here("reading_severance.R"))
 
 Project <- 
-  read_csv(here("data_to_Clarity/Project.csv"),
+  read_csv(here("data_to_Clarity/initial_csv/Project.csv"),
            col_types = "nnccDDnnnnnnnnTTcTn") 
 
 provider_extras <- read_xlsx(
-  paste0("data_to_Clarity/RMisc2.xlsx"),
+  paste0("data_to_Clarity/initial_csv/RMisc2.xlsx"),
   sheet = 3,
   col_types = c("numeric", replicate(16, "text"))
 ) %>% 
@@ -37,14 +37,14 @@ provider_extras <- read_xlsx(
   )
 
 Organization <- 
-  read_csv(here("data_to_Clarity/Organization.csv"),
+  read_csv(here("data_to_Clarity/initial_csv/Organization.csv"),
            col_types = "ncncTTnTn") %>%
   left_join(provider_extras[c("ProjectID", "ProjectName")], 
             by = c("OrganizationID" = "ProjectID")) %>%
   mutate(OrganizationName = ProjectName, ProjectName = NULL)
 
 Funder <- 
-  read_csv("data_to_Clarity/Funder.csv",
+  read_csv("data_to_Clarity/initial_csv/Funder.csv",
            col_types = "nnnccDDTTcTn")
 
 projects_orgs <- sp_provider %>%

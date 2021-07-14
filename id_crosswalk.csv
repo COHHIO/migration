@@ -819,8 +819,8 @@ Catholic Charities Diocese of Toledo,79,Richland - Catholic Charities Diocese of
 "Clermont County Community Services, Inc.",289,Clermont - Clermont County Community Services - James Sauls - AP,1991,67,"Clermont County Community Services, Inc.",663,Clermont - Clermont County Community Services - James Sauls - AP
 Columbiana County Mental Health Clinic,5,Columbiana - Columbiana County MHC - AP,1933,3,Columbiana County Mental Health Clinic,611,Columbiana - Columbiana County MHC - AP
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - AP,1934,13,Community Action Agency of Columbiana County,612,Columbiana - Community Action Agency of Columbiana - AP
-Community Action Commission of Fayette County,8,Ross - Ross County CAC - AP,2002,6,Community Action Commission of Fayette County,674,Ross - Ross County CAC - AP
-Community Action Commission of Fayette County,8,Clinton - Clinton County Services for the Homeless - AP,1997,6,Community Action Commission of Fayette County,670,Clinton - Clinton County Services for the Homeless - AP
+Ross County Community Action Commission,370,Ross - Ross County CAC - AP,2002,78,Ross County Community Action Commission,674,Ross - Ross County CAC - AP
+Community Action Commission of Fayette County,370,Clinton - Clinton County Services for the Homeless - AP,1997,6,Community Action Commission of Fayette County,670,Clinton - Clinton County Services for the Homeless - AP
 Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - Fayette Landing - AP,1999,6,Community Action Commission of Fayette County,669,Fayette - CAC of Fayette County - Fayette Landing - AP
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - Lancaster Fairfield CAA Family Shelter - AP,2009,59,Community Action Program Commission of the Lancaster Fairfield County Area,679,Fairfield - Lancaster Fairfield CAA - Lancaster Fairfield CAA Family Shelter - AP
 "Extended Housing, Inc.",196,"Lake - Extended Housing, Inc. - PATH Grant",1363,48,"Extended Housing, Inc.",0,"Lake - Extended Housing, Inc. - PATH Grant"
@@ -868,3 +868,9 @@ OhioGuidestone,353,zzCarroll - OhioGuideStone - AP,1937,76,OhioGuidestone,0,zzCa
 zzGuernsey Monroe Noble Churches,1820,zzGuernsey - Guernsey Monroe Noble Churches - ES Overflow,1821,241,zzGuernsey Monroe Noble Churches,0,zzGuernsey - Guernsey Monroe Noble Churches - ES Overflow
 zzGuernsey - Salvation Army,1340,zzGuernsey - Salvation Army - ES Overflow,1408,184,zzGuernsey - Salvation Army,0,zzGuernsey - Salvation Army - ES Overflow
 Wood Salvation Army,1299,zzWood - Salvation Army - AP,1943,182,Wood Salvation Army,620,Wood - Salvation Army - AP
+"Clinton County Services for the Homeless, Inc.",182,Clinton - Clinton County Services for the Homeless - ESG-CV HP,2265,42,"Clinton County Services for the Homeless, Inc.",1073,Clinton - Clinton County Services for the Homeless - ESG-CV HP
+"Clinton County Services for the Homeless, Inc.",182,Clinton - Clinton County Services for the Homeless - ESG-CV RRH,2266,42,"Clinton County Services for the Homeless, Inc.",1074,Clinton - Clinton County Services for the Homeless - ESG-CV RRH
+Ross County Community Action Commission,370,Ross County CAC - ESG-CV HP,2269,78,Ross County Community Action Commission,886,Ross - Ross County CAC - ESG-CV HP
+Ross County Community Action Commission,370,Ross County CAC - ESG-CV RRH,2270,78,Ross County Community Action Commission,887,Ross - Ross County CAC - ESG-CV HP
+"Pickaway County Community Action Organization, Inc.",63,Pickaway - Pickaway County CAO - ESG-CV HP,2267,17,"Pickaway County Community Action Organization, Inc.",884,Pickaway - Pickaway County CAO - ESG-CV HP
+"Pickaway County Community Action Organization, Inc.",63,Pickaway - Pickaway County CAO - ESG-CV RRH,2268,17,"Pickaway County Community Action Organization, Inc.",885,Pickaway - Pickaway County CAO - ESG-CV RRH

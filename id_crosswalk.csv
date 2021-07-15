@@ -739,7 +739,7 @@ HM Housing Development Corp.,86,Trumbull - Humility of Mary Housing - TANF RRH,2
 HM Housing Development Corp.,86,Lorain - HM Housing Development Corp - Faith House II - PSH,392,26,HM Housing Development Corp.,98,Lorain - HM Housing Development Corp - Faith House II - PSH
 HM Housing Development Corp.,86,Trumbull - Humility of Mary Housing - HCRP RRH,875,26,HM Housing Development Corp.,190,Trumbull - Humility of Mary Housing - HCRP RRH
 HM Housing Development Corp.,86,Trumbull - Humility of Mary Housing - HCRP HP,976,26,HM Housing Development Corp.,265,Trumbull - Humility of Mary Housing - HCRP HP
-Beatitude House,862,Trumbull - Humility of Mary Housing - SO,1765,101,Beatitude House,519,Trumbull - Humility of Mary Housing - SO
+Beatitude House,862,Trumbull - Humility of Mary Housing - SO,1765,26,HM Housing Development Corp.,519,Trumbull - Humility of Mary Housing - SO
 Beatitude House,862,"zzMahoning - Beatitude House - A House of Blessing, Youngstown - TH",2329,101,Beatitude House,928,"zzMahoning - Beatitude House - A House of Blessing, Youngstown - TH"
 Beatitude House,862,zzMahoning - Beatitude Permanent Supportive Housing Program II,2343,101,Beatitude House,932,zzMahoning - Beatitude Permanent Supportive Housing Program II
 Beatitude House,862,Mahoning - Beatitude House - Permanent Supportive Housing Program - PSH,2348,101,Beatitude House,934,Mahoning - Beatitude House - Permanent Supportive Housing Program - PSH
@@ -798,7 +798,6 @@ Great Lakes Community Action Partnership,12,Sandusky - GLCAP - AP,1829,9,Great L
 Licking County Coalition for Housing,9,Licking - LCCH AP,1875,7,Licking County Coalition for Housing,571,Licking - LCCH AP
 Volunteers of America Ohio and Indiana,111,Erie - VOA of Ohio and Indiana - Crossroads - AP,1945,35,Volunteers of America Ohio and Indiana,622,Erie - VOA of Ohio and Indiana - Crossroads - AP
 Integrated Services for Behavioral Health,789,Gallia - Integrated Services - AP,2012,98,Integrated Services for Behavioral Health,682,Gallia - Integrated Services - AP
-Salvation Army Kroc Center,1792,Ashland - Salvation Army Kroc Center - AP,1793,234,Ashland - Salvation Army Kroc Center - AP,0,Ashland - Salvation Army Kroc Center - AP
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - The PATH Center - AP,1938,11,"Northwestern Ohio Community Action Commission, Inc.",615,Defiance - Northwestern Ohio CAC - The PATH Center - AP
 LSS Faith Mission of Fairfield County,6,Fairfield - LSS of Fairfield County - AP,2027,4,LSS Faith Mission of Fairfield County,1064,Fairfield - LSS of Fairfield County - AP
 Miami Valley Community Action Partnership,365,Greene - Miami Valley Community Action Partnership - AP,1996,77,Miami Valley Community Action Partnership,668,Greene - Miami Valley Community Action Partnership - AP
@@ -823,8 +822,6 @@ Ross County Community Action Commission,370,Ross - Ross County CAC - AP,2002,78,
 Community Action Commission of Fayette County,370,Clinton - Clinton County Services for the Homeless - AP,1997,6,Community Action Commission of Fayette County,670,Clinton - Clinton County Services for the Homeless - AP
 Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - Fayette Landing - AP,1999,6,Community Action Commission of Fayette County,669,Fayette - CAC of Fayette County - Fayette Landing - AP
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - Lancaster Fairfield CAA Family Shelter - AP,2009,59,Community Action Program Commission of the Lancaster Fairfield County Area,679,Fairfield - Lancaster Fairfield CAA - Lancaster Fairfield CAA Family Shelter - AP
-"Extended Housing, Inc.",196,"Lake - Extended Housing, Inc. - PATH Grant",1363,48,"Extended Housing, Inc.",0,"Lake - Extended Housing, Inc. - PATH Grant"
-Family Abuse Shelter of Miami County Inc.,62,zzMiami - Family Abuse Shelter of Miami County - Buckeye House - ESG-CV ES Overflow,2201,16,Family Abuse Shelter of Miami County Inc.,0,zzMiami - Family Abuse Shelter of Miami County - Buckeye House - ESG-CV ES Overflow
 "Hope House Rescue Mission, Inc.",229,Butler - Hope House Rescue Mission - Center of Hope - AP,1987,63,"Hope House Rescue Mission, Inc.",657,Butler - Hope House Rescue Mission - Center of Hope - AP
 "Hope House Rescue Mission, Inc.",229,Butler - Hope House Rescue Mission - Center of Hope - HCRP HP,1661,63,"Hope House Rescue Mission, Inc.",473,Butler - Hope House Rescue Mission - Center of Hope - HCRP HP
 Interfaith Hospitality Network of Springfield,73,Clark - IHN of Clark County - AP,1994,21,Interfaith Hospitality Network of Springfield,666,Clark - IHN of Clark County - AP
@@ -838,7 +835,6 @@ Integrated Services for Behavioral Health,789,Hocking - Integrated Services - AP
 "Ironton Lawrence County Area CAO, Inc.",71,Lawrence - Ironton Lawrence CAO - AP,1954,19,"Ironton Lawrence County Area CAO, Inc.",630,Lawrence - Ironton Lawrence CAO - AP
 The Main Place,705,Licking - The Main Place - AP,1929,95,The Main Place,608,Licking - The Main Place - AP
 "Residential Administrators, Inc.",88,"Logan - Residential Administrators, Inc. - AP",1984,27,"Residential Administrators, Inc.",658,"Logan - Residential Administrators, Inc. - AP"
-Neighborhood Alliance,225,Lorain - Neighborhood Alliance - PATH Grant,1370,60,Neighborhood Alliance,0,Lorain - Neighborhood Alliance - PATH Grant
 Ohio Heartland Community Action Commission,336,Marion - Ohio Heartland CAC - AP,1817,73,Ohio Heartland Community Action Commission,540,Marion - Ohio Heartland CAC - AP
 Medina Metropolitan Housing Authority,526,Medina - Medina MHA - AP,1958,89,Medina Metropolitan Housing Authority,634,Medina - Medina MHA - AP
 Medina Metropolitan Housing Authority,526,Medina - Medina MHA - ESG-CV HP,2206,89,Medina Metropolitan Housing Authority,824,Medina - Medina MHA - ESG-CV HP
@@ -852,7 +848,6 @@ Integrated Services for Behavioral Health,789,Perry - Integrated Services - AP,2
 Pike - CAC of Pike County,383,Pike - CAC of Pike County - AP,1953,79,Pike - CAC of Pike County,629,Pike - CAC of Pike County - AP
 "Family and Community Services, Inc.",1222,Portage - Family and Community Services - Housing & Emergency Support Services - AP,1964,163,"Family and Community Services, Inc.",640,Portage - Family and Community Services - Housing & Emergency Support Services - AP
 "Family and Community Services, Inc.",1222,Portage - Family and Community Services - SSVF - AP,2045,163,"Family and Community Services, Inc.",710,Portage - Family and Community Services - SSVF - AP
-Mansfield Richland County Public Library,1807,Richland - First Call 211 - AP,1808,239,Mansfield Richland County Public Library,0,Richland - First Call 211 - AP
 "Harmony House Homeless Services, Inc.",108,Richland - Harmony House - AP,2120,34,"Harmony House Homeless Services, Inc.",742,Richland - Harmony House - AP
 Great Lakes Community Action Partnership,12,Seneca - GLCAP - AP,2022,9,Great Lakes Community Action Partnership,690,Seneca - GLCAP - AP
 Greater Youngstown-Warren Urban League,211,Trumbull - Urban League - Amos Christy House - AP,1962,52,Greater Youngstown-Warren Urban League,638,Trumbull - Urban League - Amos Christy House - AP
@@ -863,9 +858,6 @@ Warren Metropolitan Housing Authority,52,Warren - Warren MHA - Transitions - AP,
 Washington - Morgan Counties CAP,141,Washington - Washington Morgan CAP - AP,1968,37,Washington - Morgan Counties CAP,644,Washington - Washington Morgan CAP - AP
 "OneEighty, Inc.",1762,Wayne - One Eighty - AP,2024,231,"OneEighty, Inc.",693,Wayne - One Eighty - AP
 Salvation Army of Wooster,219,Wayne - Salvation Army Wooster - AP,1959,57,Salvation Army of Wooster,635,Wayne - Salvation Army Wooster - AP
-OhioGuidestone,353,zzCarroll - OhioGuideStone - AP,1937,76,OhioGuidestone,0,zzCarroll - OhioGuideStone - AP
-zzGuernsey Monroe Noble Churches,1820,zzGuernsey - Guernsey Monroe Noble Churches - ES Overflow,1821,241,zzGuernsey Monroe Noble Churches,0,zzGuernsey - Guernsey Monroe Noble Churches - ES Overflow
-zzGuernsey - Salvation Army,1340,zzGuernsey - Salvation Army - ES Overflow,1408,184,zzGuernsey - Salvation Army,0,zzGuernsey - Salvation Army - ES Overflow
 Wood Salvation Army,1299,zzWood - Salvation Army - AP,1943,182,Wood Salvation Army,620,Wood - Salvation Army - AP
 "Clinton County Services for the Homeless, Inc.",182,Clinton - Clinton County Services for the Homeless - ESG-CV HP,2265,42,"Clinton County Services for the Homeless, Inc.",1073,Clinton - Clinton County Services for the Homeless - ESG-CV HP
 "Clinton County Services for the Homeless, Inc.",182,Clinton - Clinton County Services for the Homeless - ESG-CV RRH,2266,42,"Clinton County Services for the Homeless, Inc.",1074,Clinton - Clinton County Services for the Homeless - ESG-CV RRH
@@ -875,4 +867,3 @@ Ross County Community Action Commission,370,Ross County CAC - ESG-CV RRH,2270,78
 "Pickaway County Community Action Organization, Inc.",63,Pickaway - Pickaway County CAO - ESG-CV RRH,2268,17,"Pickaway County Community Action Organization, Inc.",885,Pickaway - Pickaway County CAO - ESG-CV RRH
 Coleman Professional Services,4,Portage - Coleman Professional Services - SSO,2481,2,Coleman Professional Services,0,Portage - Coleman Professional Services - SSO
 Ravenwood Mental Health Center,93,Geauga - Ravenwood Mental Health Center - AP,1809,30,Ravenwood Mental Health Center,1066,Geauga - Ravenwood Mental Health Center - AP
-United Way of Guernsey County,1810,Guernsey - United Way of Guernsey County - AP,1811,240,United Way of Guernsey County,0,Guernsey - United Way of Guernsey County - AP

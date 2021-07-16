@@ -536,15 +536,15 @@ Medina Metropolitan Housing Authority,526,Medina - Medina MHA - HCRP HP,961,89,M
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - TANF RRH,2310,11,"Northwestern Ohio Community Action Commission, Inc.",926,Defiance - Northwestern Ohio CAC - TANF RRH
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - HCRP RRH,933,11,"Northwestern Ohio Community Action Commission, Inc.",229,Defiance - Northwestern Ohio CAC - HCRP RRH
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - HCRP HP,934,11,"Northwestern Ohio Community Action Commission, Inc.",230,Defiance - Northwestern Ohio CAC - HCRP HP
-Appleseed Community Mental Health Center,54,Ashland - Appleseed Community Mental Health Center - Safe Haven DV Shelter - ES - DV,1114,299,COORDINATED ENTRY - BoSCoC (OH-507),325,Ashland - Appleseed Community Mental Health Center - Safe Haven DV Shelter - ES - DV
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - Beginning Anew - PSH,1347,299,COORDINATED ENTRY - BoSCoC (OH-507),417,Ashland - Appleseed CMHC - Beginning Anew - PSH
-Appleseed Community Mental Health Center,54,zzAshland - Appleseed CMHC - Keys to Transition - TH,144,299,COORDINATED ENTRY - BoSCoC (OH-507),43,zzAshland - Appleseed CMHC - Keys to Transition - TH
-Appleseed Community Mental Health Center,54,Ashland - Appleseed Rapid Rehousing - RRH,1637,299,COORDINATED ENTRY - BoSCoC (OH-507),470,Ashland - Appleseed Rapid Rehousing - RRH
-Appleseed Community Mental Health Center,54,zzAshland - Appleseed CMHC - Targeted RRH,1890,299,COORDINATED ENTRY - BoSCoC (OH-507),585,zzAshland - Appleseed CMHC - Targeted RRH
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - OHFA ERA - not homeless dedicated,2141,299,COORDINATED ENTRY - BoSCoC (OH-507),760,Ashland - Appleseed CMHC - OHFA ERA - not homeless dedicated
+Appleseed Community Mental Health Center,54,Ashland - Appleseed Community Mental Health Center - Safe Haven DV Shelter - ES - DV,1114,12,Appleseed Community Mental Health Center,325,Ashland - Appleseed Community Mental Health Center - Safe Haven DV Shelter - ES - DV
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - Beginning Anew - PSH,1347,12,Appleseed Community Mental Health Center,417,Ashland - Appleseed CMHC - Beginning Anew - PSH
+Appleseed Community Mental Health Center,54,zzAshland - Appleseed CMHC - Keys to Transition - TH,144,12,Appleseed Community Mental Health Center,43,zzAshland - Appleseed CMHC - Keys to Transition - TH
+Appleseed Community Mental Health Center,54,Ashland - Appleseed Rapid Rehousing - RRH,1637,12,Appleseed Community Mental Health Center,470,Ashland - Appleseed Rapid Rehousing - RRH
+Appleseed Community Mental Health Center,54,zzAshland - Appleseed CMHC - Targeted RRH,1890,12,Appleseed Community Mental Health Center,585,zzAshland - Appleseed CMHC - Targeted RRH
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - OHFA ERA - not homeless dedicated,2141,12,Appleseed Community Mental Health Center,760,Ashland - Appleseed CMHC - OHFA ERA - not homeless dedicated
 Appleseed Community Mental Health Center,54,zzAshland - Pump House Ministries - ES,460,12,Appleseed Community Mental Health Center,110,zzAshland - Pump House Ministries - ES
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - HCRP RRH,870,299,COORDINATED ENTRY - BoSCoC (OH-507),185,Ashland - Appleseed CMHC - HCRP RRH
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - HCRP HP,960,299,COORDINATED ENTRY - BoSCoC (OH-507),250,Ashland - Appleseed CMHC - HCRP HP
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - HCRP RRH,870,12,Appleseed Community Mental Health Center,185,Ashland - Appleseed CMHC - HCRP RRH
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - HCRP HP,960,12,Appleseed Community Mental Health Center,250,Ashland - Appleseed CMHC - HCRP HP
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - BoS - SSVF RRH,1094,13,Community Action Agency of Columbiana County,317,Columbiana - Community Action Agency of Columbiana - BoS - SSVF RRH
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - BoS - SSVF HP,1181,13,Community Action Agency of Columbiana County,353,Columbiana - Community Action Agency of Columbiana - BoS - SSVF HP
 Community Action Agency of Columbiana County,55,Mahoning - Community Action Agency of Columbiana - SSVF HP,1330,13,Community Action Agency of Columbiana County,408,Mahoning - Community Action Agency of Columbiana - SSVF HP
@@ -719,10 +719,10 @@ Sojourners Care Network,855,Vinton - Sojourners Care Network - PSH,1352,99,Sojou
 Sojourners Care Network,855,Vinton - Sojourners Care Network - RHY BCPes,1375,99,Sojourners Care Network,436,Vinton - Sojourners Care Network - RHY BCPes
 Sojourners Care Network,855,Vinton Sojourners Care Network - RHY BCPp,1384,99,Sojourners Care Network,437,Vinton Sojourners Care Network - RHY BCPp
 Sojourners Care Network,855,Vinton Sojourners Care Network - RHY SOP - Street Outreach,1385,99,Sojourners Care Network,438,Vinton Sojourners Care Network - RHY SOP - Street Outreach
-Sojourners Care Network,855,Vinton - Sojourners Care Network - YHDP SSO - CE AP,1858,99,Sojourners Care Network,556,Vinton - Sojourners Care Network - YHDP SSO - CE AP
+Sojourners Care Network,855,Vinton - Sojourners Care Network - YHDP SSO - CE AP,1858,299,COORDINATED ENTRY - BoSCoC (OH-507),556,Vinton - Sojourners Care Network - YHDP SSO - CE AP
 Sojourners Care Network,855,Vinton - Sojourners Care Network - YHDP Crisis TH,1859,99,Sojourners Care Network,557,Vinton - Sojourners Care Network - YHDP Crisis TH
 Sojourners Care Network,855,Vinton - Sojourners Care Network - RHY TLP - TH,1861,99,Sojourners Care Network,559,Vinton - Sojourners Care Network - RHY TLP - TH
-Sojourners Care Network,855,Ross - Sojourners Care Network - SSO - CE AP,2066,99,Sojourners Care Network,716,Ross - Sojourners Care Network - SSO - CE AP
+Sojourners Care Network,855,Ross - Sojourners Care Network - SSO - CE AP,2066,299,COORDINATED ENTRY - BoSCoC (OH-507),716,Ross - Sojourners Care Network - SSO - CE AP
 Sojourners Care Network,855,Vinton - Sojourners Care Network - ODH TLP - TH,2198,99,Sojourners Care Network,817,Vinton - Sojourners Care Network - ODH TLP - TH
 Sojourners Care Network,855,zzVinton - Sojourners Care Network - ES,856,99,Sojourners Care Network,176,zzVinton - Sojourners Care Network - ES
 Sojourners Care Network,855,Vinton - Sojourners Care Network - TH,857,99,Sojourners Care Network,178,Vinton - Sojourners Care Network - TH
@@ -773,21 +773,21 @@ Licking County Coalition for Housing,9,Licking - Licking County Coalition for Ho
 Athens MHA,92,Athens - Athens MHA - Athens Shelter Plus Care - Tenant Based SPC - PSH,150,29,Athens MHA,47,Athens - Athens MHA - Athens Shelter Plus Care - Tenant Based SPC - PSH
 Athens MHA,92,Athens - Athens MHA - Athens Serenity Village SAMI Shelter Plus Care - PSH,376,29,Athens MHA,95,Athens - Athens MHA - Athens Serenity Village SAMI Shelter Plus Care - PSH
 New Sunrise Properties,96,Lorain - New Sunrise Properties Inc. - Supportive Housing - PSH,167,31,New Sunrise Properties,51,Lorain - New Sunrise Properties Inc. - Supportive Housing - PSH
-zzButler - YWCA of Hamilton,105,zzButler - YWCA of Hamilton Ohio - Goodman Place - TH,254,131,NA,1058,NA
-Help Network of Northeast Ohio,2361,Mahoning - Coordinated Entry - CE,2372,258,NA,1026,NA
-zzBelmont - Crossroads Counseling Services - St. Clairsville,888,zzBelmont - Crossroads Counseling Services - HCRP RRH,889,271,NA,1025,NA
-zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP RRH,929,272,NA,1056,NA
-zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP HP,930,272,NA,1057,NA
-zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP RRH,916,272,NA,1047,NA
-zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP HP,915,272,NA,1034,NA
-Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Men's Division - ES,2358,276,NA,1033,NA
-Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Family Services Division - ES,2335,276,NA,1035,NA
-zzJefferson Behavioral Health System,343,zzJefferson - Jefferson Behavioral Health System - HCRP RRH,884,278,NA,1036,NA
-zzJefferson County Housing and Homeless Coalition,491,zzJefferson - Jefferson County CAC - Supportive Housing Program - SSO,760,282,NA,1048,NA
-"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP RRH,927,297,NA,1060,NA
-"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP HP,928,297,NA,1059,NA
-zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Wehler House - TH,767,298,NA,1062,NA
-zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Dimensions Women's Transitional - TH,634,298,NA,1061,NA
+zzButler - YWCA of Hamilton,105,zzButler - YWCA of Hamilton Ohio - Goodman Place - TH,254,131,zzButler - YWCA of Hamilton,1058,zzButler - YWCA of Hamilton Ohio - Goodman Place - TH
+Help Network of Northeast Ohio,2361,Mahoning - Coordinated Entry - CE,2372,300,COORDINATED ENTRY - MCHCOC (OH-504),1026,Mahoning - Coordinated Entry - CE
+zzBelmont - Crossroads Counseling Services - St. Clairsville,888,zzBelmont - Crossroads Counseling Services - HCRP RRH,889,271,zzBelmont - Crossroads Counseling Services - St. Clairsville,1025,zzBelmont - Crossroads Counseling Services - HCRP RRH
+zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP RRH,929,272,zzAuglaize Mercer - Sources Community Network Services,1056,zzAuglaize - Sources Community Network Services - HCRP RRH
+zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP HP,930,272,zzAuglaize Mercer - Sources Community Network Services,1057,zzAuglaize - Sources Community Network Services - HCRP HP
+zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP RRH,916,272,zzAuglaize Mercer - Sources Community Network Services,1047,zzMercer - Sources Community Network Services - HCRP RRH
+zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP HP,915,272,zzAuglaize Mercer - Sources Community Network Services,1034,zzMercer - Sources Community Network Services - HCRP HP
+Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Men's Division - ES,2358,276,Rescue Mission of Mahoning Valley,1033,Mahoning - Rescue Mission of Mahoning Valley Men's Division - ES
+Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Family Services Division - ES,2335,276,Rescue Mission of Mahoning Valley,1035,Mahoning - Rescue Mission of Mahoning Valley Family Services Division - ES
+zzJefferson Behavioral Health System,343,zzJefferson - Jefferson Behavioral Health System - HCRP RRH,884,278,zzJefferson Behavioral Health System,1036,zzJefferson - Jefferson Behavioral Health System - HCRP RRH
+zzJefferson County Housing and Homeless Coalition,491,zzJefferson - Jefferson County CAC - Supportive Housing Program - SSO,760,282,zzJefferson County Housing and Homeless Coalition,1048,zzJefferson - Jefferson County CAC - Supportive Housing Program - SSO
+"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP RRH,927,297,"zzButler County - Community Development Professionals, Inc.",1060,zzButler - Community Development Professionals - HCRP RRH
+"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP HP,928,297,"zzButler County - Community Development Professionals, Inc.",1059,zzButler - Community Development Professionals - HCRP HP
+zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Wehler House - TH,767,298,zzClark - McKinley Hall,1062,zzClark - McKinley Hall - Wehler House - TH
+zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Dimensions Women's Transitional - TH,634,298,zzClark - McKinley Hall,1061,zzClark - McKinley Hall - Dimensions Women's Transitional - TH
 Coalition on Homelessness and Housing in Ohio (COHHIO),1,Unsheltered Clients (OUTREACH),1695,211,Unsheltered Clients - Outreach,1055,Unsheltered Clients - OUTREACH
 Integrated Services for Behavioral Health,789,Jackson - Integrated Services - AP,2014,299,COORDINATED ENTRY - BoSCoC (OH-507),684,Jackson - Integrated Services - AP
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - HASFY - ODH - SSO,2480,59,Community Action Program Commission of the Lancaster Fairfield County Area,1012,Fairfield - Lancaster Fairfield CAA - HASFY - ODH - SSO
@@ -795,7 +795,7 @@ Community Action Program Commission of the Lancaster Fairfield County Area,223,F
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - ODH - Street Outreach,2451,59,Community Action Program Commission of the Lancaster Fairfield County Area,1007,Fairfield - Lancaster Fairfield CAA - ODH - Street Outreach
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - ODH Youth RRH,2452,59,Community Action Program Commission of the Lancaster Fairfield County Area,1008,Fairfield - Lancaster Fairfield CAA - ODH Youth RRH
 Great Lakes Community Action Partnership,12,Sandusky - GLCAP - AP,1829,299,COORDINATED ENTRY - BoSCoC (OH-507),544,Sandusky - GLCAP - AP
-Licking County Coalition for Housing,9,Licking - LCCH AP,1875,7,Licking County Coalition for Housing,571,Licking - LCCH AP
+Licking County Coalition for Housing,9,Licking - LCCH AP,1875,299,COORDINATED ENTRY - BoSCoC (OH-507),571,Licking - LCCH AP
 Volunteers of America Ohio and Indiana,111,Erie - VOA of Ohio and Indiana - Crossroads - AP,1945,299,COORDINATED ENTRY - BoSCoC (OH-507),622,Erie - VOA of Ohio and Indiana - Crossroads - AP
 Integrated Services for Behavioral Health,789,Gallia - Integrated Services - AP,2012,299,COORDINATED ENTRY - BoSCoC (OH-507),682,Gallia - Integrated Services - AP
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - The PATH Center - AP,1938,299,COORDINATED ENTRY - BoSCoC (OH-507),615,Defiance - Northwestern Ohio CAC - The PATH Center - AP
@@ -887,16 +887,16 @@ Great Lakes Community Action Partnership,12,Sandusky - GLCAP - ESG-CV RRH,2216,9
 "Northwestern Ohio Community Action Commission, Inc.",53,Van Wert- Northwestern Ohio CAC - ES Overflow,1918,11,"Northwestern Ohio Community Action Commission, Inc.",600,Van Wert- Northwestern Ohio CAC - ES Overflow
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - ESG-CV HP,2261,11,"Northwestern Ohio Community Action Commission, Inc.",878,Defiance - Northwestern Ohio CAC - ESG-CV HP
 "Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - TANF HP,2407,11,"Northwestern Ohio Community Action Commission, Inc.",969,Defiance - Northwestern Ohio CAC - TANF HP
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV RRH,2209,299,COORDINATED ENTRY - BoSCoC (OH-507),827,Ashland - Appleseed CMHC - ESG-CV RRH
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV HP,2210,299,COORDINATED ENTRY - BoSCoC (OH-507),828,Ashland - Appleseed CMHC - ESG-CV HP
-Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ES Overflow,2439,299,COORDINATED ENTRY - BoSCoC (OH-507),995,Ashland - Appleseed CMHC - ES Overflow
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV RRH,2209,12,Appleseed Community Mental Health Center,827,Ashland - Appleseed CMHC - ESG-CV RRH
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV HP,2210,12,Appleseed Community Mental Health Center,828,Ashland - Appleseed CMHC - ESG-CV HP
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ES Overflow,2439,12,Appleseed Community Mental Health Center,995,Ashland - Appleseed CMHC - ES Overflow
 Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - ESG-CV HP,2249,13,Community Action Agency of Columbiana County,866,Carroll - Community Action Agency of Columbiana - ESG-CV HP
 Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - ESG-CV RRH,2250,13,Community Action Agency of Columbiana County,867,Carroll - Community Action Agency of Columbiana - ESG-CV RRH
 Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - Targeted RRH,2255,13,Community Action Agency of Columbiana County,872,Carroll - Community Action Agency of Columbiana - Targeted RRH
 Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - HCRP RRH,2256,13,Community Action Agency of Columbiana County,873,Carroll - Community Action Agency of Columbiana - HCRP RRH
 Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - HCRP HP,2257,13,Community Action Agency of Columbiana County,874,Carroll - Community Action Agency of Columbiana - HCRP HP
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - TANF RRH,2273,13,Community Action Agency of Columbiana County,890,Columbiana - Community Action Agency of Columbiana - TANF RRH
-Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP,2414,13,Community Action Agency of Columbiana County,976,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP,2414,299,COORDINATED ENTRY - BoSCoC (OH-507),976,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP SSO,2415,13,Community Action Agency of Columbiana County,977,Columbiana - Community Action Agency of Columbiana - YHDP SSO
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP TH,2416,13,Community Action Agency of Columbiana County,978,Columbiana - Community Action Agency of Columbiana - YHDP TH
 Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP RRH,2417,13,Community Action Agency of Columbiana County,979,Columbiana - Community Action Agency of Columbiana - YHDP RRH
@@ -973,7 +973,7 @@ West Ohio Community Action Partnership,784,Mercer - West Ohio CAP - AP,2035,299,
 Integrated Services for Behavioral Health,789,zzAthens - Integrated Services - Youth Targeted RRH,1879,98,Integrated Services for Behavioral Health,575,zzAthens - Integrated Services - Youth Targeted RRH
 Integrated Services for Behavioral Health,789,Athens - Integrated Services - ODH Youth RRH,2153,98,Integrated Services for Behavioral Health,772,Athens - Integrated Services - ODH Youth RRH
 Sojourners Care Network,855,Vinton - Sojourners Care Network - ES Overflow,2126,99,Sojourners Care Network,746,Vinton - Sojourners Care Network - ES Overflow
-Sojourners Care Network,855,Hocking - Sojourners Care Network - SSO - CE AP,2446,99,Sojourners Care Network,1002,Hocking - Sojourners Care Network - SSO - CE AP
+Sojourners Care Network,855,Hocking - Sojourners Care Network - SSO - CE AP,2446,299,COORDINATED ENTRY - BoSCoC (OH-507),1002,Hocking - Sojourners Care Network - SSO - CE AP
 "Maumee Valley Guidance Center, Inc.",859,Defiance - Maumee Valley Guidance Center - AP,2006,299,COORDINATED ENTRY - BoSCoC (OH-507),676,Defiance - Maumee Valley Guidance Center - AP
 "City of Springfield, Ohio",1068,Clark - City of Springfield - St. Vincent de Paul - Hotel/Motel Overflow - ES,1597,107,"City of Springfield, Ohio",461,Clark - City of Springfield - St. Vincent de Paul - Hotel/Motel Overflow - ES
 "City of Springfield, Ohio",1068,Clark - City of Springfield - St. Vincent de Paul - AP,1796,299,COORDINATED ENTRY - BoSCoC (OH-507),535,Clark - City of Springfield - St. Vincent de Paul - AP

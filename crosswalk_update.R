@@ -96,7 +96,7 @@ new_crosswalk <- rbind(current_cross, add_to_crosswalk)
 
 # Taking AP move into account ---------------------------------------------
 
-affected_aps <- read_csv(here("random_data/aps_move.csv")) %>%
+affected_aps <- read_csv(here("data_from_Clarity/APs.csv")) %>%
   rename("Clarity_AgencyID" = 1,
          "Clarity_AgencyName" = 2,
          "Clarity_ProgramID" = 3,

@@ -7,7 +7,7 @@ current_cross <- read_xlsx(here("id_crosswalk.xlsx"), sheet = 1)
 source(here("reading_severance.R"))
 
 sp_projects_orgs <- sp_projects_orgs %>%
-  rename("Legacy_OrganizationName" = SP_AgencyName,
+  rename("Legacy_OrganizationName" = AgencyName,
          "Legacy_OrganizationID" = SP_AgencyID,
          "Legacy_ProgramID" = SP_ProjectID,
          "Legacy_ProgramName" = SP_ProjectName)

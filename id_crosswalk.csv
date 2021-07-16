@@ -773,21 +773,21 @@ Licking County Coalition for Housing,9,Licking - Licking County Coalition for Ho
 Athens MHA,92,Athens - Athens MHA - Athens Shelter Plus Care - Tenant Based SPC - PSH,150,29,Athens MHA,47,Athens - Athens MHA - Athens Shelter Plus Care - Tenant Based SPC - PSH
 Athens MHA,92,Athens - Athens MHA - Athens Serenity Village SAMI Shelter Plus Care - PSH,376,29,Athens MHA,95,Athens - Athens MHA - Athens Serenity Village SAMI Shelter Plus Care - PSH
 New Sunrise Properties,96,Lorain - New Sunrise Properties Inc. - Supportive Housing - PSH,167,31,New Sunrise Properties,51,Lorain - New Sunrise Properties Inc. - Supportive Housing - PSH
-zzButler - YWCA of Hamilton,105,zzButler - YWCA of Hamilton Ohio - Goodman Place - TH,254,131,,1058,
-Help Network of Northeast Ohio,2361,Mahoning - Coordinated Entry - CE,2372,258,,1026,
-zzBelmont - Crossroads Counseling Services - St. Clairsville,888,zzBelmont - Crossroads Counseling Services - HCRP RRH,889,271,,1025,
-zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP RRH,929,272,,1056,
-zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP HP,930,272,,1057,
-zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP RRH,916,272,,1047,
-zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP HP,915,272,,1034,
-Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Men's Division - ES,2358,276,,1033,
-Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Family Services Division - ES,2335,276,,1035,
-zzJefferson Behavioral Health System,343,zzJefferson - Jefferson Behavioral Health System - HCRP RRH,884,278,,1036,
-zzJefferson County Housing and Homeless Coalition,491,zzJefferson - Jefferson County CAC - Supportive Housing Program - SSO,760,282,,1048,
-"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP RRH,927,297,,1060,
-"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP HP,928,297,,1059,
-zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Wehler House - TH,767,298,,1062,
-zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Dimensions Women's Transitional - TH,634,298,,1061,
+zzButler - YWCA of Hamilton,105,zzButler - YWCA of Hamilton Ohio - Goodman Place - TH,254,131,NA,1058,NA
+Help Network of Northeast Ohio,2361,Mahoning - Coordinated Entry - CE,2372,258,NA,1026,NA
+zzBelmont - Crossroads Counseling Services - St. Clairsville,888,zzBelmont - Crossroads Counseling Services - HCRP RRH,889,271,NA,1025,NA
+zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP RRH,929,272,NA,1056,NA
+zzAuglaize Mercer - Sources Community Network Services,287,zzAuglaize - Sources Community Network Services - HCRP HP,930,272,NA,1057,NA
+zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP RRH,916,272,NA,1047,NA
+zzAuglaize Mercer - Sources Community Network Services,287,zzMercer - Sources Community Network Services - HCRP HP,915,272,NA,1034,NA
+Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Men's Division - ES,2358,276,NA,1033,NA
+Rescue Mission of Mahoning Valley,2103,Mahoning - Rescue Mission of Mahoning Valley Family Services Division - ES,2335,276,NA,1035,NA
+zzJefferson Behavioral Health System,343,zzJefferson - Jefferson Behavioral Health System - HCRP RRH,884,278,NA,1036,NA
+zzJefferson County Housing and Homeless Coalition,491,zzJefferson - Jefferson County CAC - Supportive Housing Program - SSO,760,282,NA,1048,NA
+"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP RRH,927,297,NA,1060,NA
+"zzButler County - Community Development Professionals, Inc.",562,zzButler - Community Development Professionals - HCRP HP,928,297,NA,1059,NA
+zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Wehler House - TH,767,298,NA,1062,NA
+zzClark - McKinley Hall,1065,zzClark - McKinley Hall - Dimensions Women's Transitional - TH,634,298,NA,1061,NA
 Coalition on Homelessness and Housing in Ohio (COHHIO),1,Unsheltered Clients (OUTREACH),1695,211,Unsheltered Clients - Outreach,1055,Unsheltered Clients - OUTREACH
 Integrated Services for Behavioral Health,789,Jackson - Integrated Services - AP,2014,98,Integrated Services for Behavioral Health,684,Jackson - Integrated Services - AP
 Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - HASFY - ODH - SSO,2480,59,Community Action Program Commission of the Lancaster Fairfield County Area,1012,Fairfield - Lancaster Fairfield CAA - HASFY - ODH - SSO
@@ -867,3 +867,235 @@ Ross County Community Action Commission,370,Ross County CAC - ESG-CV RRH,2270,78
 "Pickaway County Community Action Organization, Inc.",63,Pickaway - Pickaway County CAO - ESG-CV RRH,2268,17,"Pickaway County Community Action Organization, Inc.",885,Pickaway - Pickaway County CAO - ESG-CV RRH
 Coleman Professional Services,4,Portage - Coleman Professional Services - SSO,2481,2,Coleman Professional Services,0,Portage - Coleman Professional Services - SSO
 Ravenwood Mental Health Center,93,Geauga - Ravenwood Mental Health Center - AP,1809,30,Ravenwood Mental Health Center,1066,Geauga - Ravenwood Mental Health Center - AP
+"Family and Community Services, Inc.",1222,Portage - Family and Community Services - Miller Community House - AP,NA,163,"Family and Community Services, Inc.",610,Portage - Family and Community Services - Miller Community House - ES
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - Brick House - AP,1956,6,Community Action Commission of Fayette County,632,Fayette - CAC of Fayette County - Brick House - AP
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - Peace House - TH,2166,6,Community Action Commission of Fayette County,785,Fayette - CAC of Fayette County - Peace House - TH
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - ESG-CV HP,2241,6,Community Action Commission of Fayette County,858,Fayette - CAC of Fayette County - ESG-CV HP
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - ESG-CV RRH,2244,6,Community Action Commission of Fayette County,861,Fayette - CAC of Fayette County - ESG-CV RRH
+Community Action Commission of Fayette County,8,Highland - CAC of Fayette County - ESG-CV HP,2263,6,Community Action Commission of Fayette County,880,Highland - CAC of Fayette County - ESG-CV HP
+Community Action Commission of Fayette County,8,Highland - CAC of Fayette County - ESG-CV RRH,2264,6,Community Action Commission of Fayette County,881,Highland - CAC of Fayette County - ESG-CV RRH
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - ODH TAY - RRH,2442,6,Community Action Commission of Fayette County,998,Fayette - CAC of Fayette County - ODH TAY - RRH
+Community Action Commission of Fayette County,8,Fayette - CAC of Fayette County - Empowerment Center - RRH,2479,6,Community Action Commission of Fayette County,1011,Fayette - CAC of Fayette County - Empowerment Center - RRH
+Licking County Coalition for Housing,9,Licking - Licking County Coalition for Housing - ESG-CV RRH,2190,7,Licking County Coalition for Housing,809,Licking - Licking County Coalition for Housing - ESG-CV RRH
+"Transitional Living, Inc.",11,Butler - Transitional Living - TH,1126,8,"Transitional Living, Inc.",331,Butler - Transitional Living - TH
+Great Lakes Community Action Partnership,12,Wood - GLCAP - AP,2023,9,Great Lakes Community Action Partnership,691,Wood - GLCAP - AP
+Great Lakes Community Action Partnership,12,Ottawa - GLCAP - AP,2021,9,Great Lakes Community Action Partnership,692,Ottawa - GLCAP - AP
+Great Lakes Community Action Partnership,12,Huron - GLCAP - AP,2043,9,Great Lakes Community Action Partnership,708,Huron - GLCAP - AP
+Great Lakes Community Action Partnership,12,Sandusky - GLCAP - Targeted RRH,2082,9,Great Lakes Community Action Partnership,727,Sandusky - GLCAP - Targeted RRH
+Great Lakes Community Action Partnership,12,Sandusky - GLCAP - ES Overflow,2162,9,Great Lakes Community Action Partnership,780,Sandusky - GLCAP - ES Overflow
+Great Lakes Community Action Partnership,12,Sandusky - GLCAP - ESG-CV RRH,2216,9,Great Lakes Community Action Partnership,833,Sandusky - GLCAP - ESG-CV RRH
+"Northwestern Ohio Community Action Commission, Inc.",53,Van Wert- Northwestern Ohio CAC - ES Overflow,1918,11,"Northwestern Ohio Community Action Commission, Inc.",600,Van Wert- Northwestern Ohio CAC - ES Overflow
+"Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - ESG-CV HP,2261,11,"Northwestern Ohio Community Action Commission, Inc.",878,Defiance - Northwestern Ohio CAC - ESG-CV HP
+"Northwestern Ohio Community Action Commission, Inc.",53,Defiance - Northwestern Ohio CAC - TANF HP,2407,11,"Northwestern Ohio Community Action Commission, Inc.",969,Defiance - Northwestern Ohio CAC - TANF HP
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV RRH,2209,12,Appleseed Community Mental Health Center,827,Ashland - Appleseed CMHC - ESG-CV RRH
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ESG-CV HP,2210,12,Appleseed Community Mental Health Center,828,Ashland - Appleseed CMHC - ESG-CV HP
+Appleseed Community Mental Health Center,54,Ashland - Appleseed CMHC - ES Overflow,2439,12,Appleseed Community Mental Health Center,995,Ashland - Appleseed CMHC - ES Overflow
+Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - ESG-CV HP,2249,13,Community Action Agency of Columbiana County,866,Carroll - Community Action Agency of Columbiana - ESG-CV HP
+Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - ESG-CV RRH,2250,13,Community Action Agency of Columbiana County,867,Carroll - Community Action Agency of Columbiana - ESG-CV RRH
+Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - Targeted RRH,2255,13,Community Action Agency of Columbiana County,872,Carroll - Community Action Agency of Columbiana - Targeted RRH
+Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - HCRP RRH,2256,13,Community Action Agency of Columbiana County,873,Carroll - Community Action Agency of Columbiana - HCRP RRH
+Community Action Agency of Columbiana County,55,Carroll - Community Action Agency of Columbiana - HCRP HP,2257,13,Community Action Agency of Columbiana County,874,Carroll - Community Action Agency of Columbiana - HCRP HP
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - TANF RRH,2273,13,Community Action Agency of Columbiana County,890,Columbiana - Community Action Agency of Columbiana - TANF RRH
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP,2414,13,Community Action Agency of Columbiana County,976,Columbiana - Community Action Agency of Columbiana - YHDP SSO-CE AP
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP SSO,2415,13,Community Action Agency of Columbiana County,977,Columbiana - Community Action Agency of Columbiana - YHDP SSO
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP TH,2416,13,Community Action Agency of Columbiana County,978,Columbiana - Community Action Agency of Columbiana - YHDP TH
+Community Action Agency of Columbiana County,55,Columbiana - Community Action Agency of Columbiana - YHDP RRH,2417,13,Community Action Agency of Columbiana County,979,Columbiana - Community Action Agency of Columbiana - YHDP RRH
+Family Abuse Shelter of Miami County Inc.,62,Miami - Family Abuse Shelter of Miami County - AP,1951,16,Family Abuse Shelter of Miami County Inc.,626,Miami - Family Abuse Shelter of Miami County - AP
+Family Abuse Shelter of Miami County Inc.,62,Miami - Family Abuse Shelter of Miami County - ESG-CV HP,2403,16,Family Abuse Shelter of Miami County Inc.,965,Miami - Family Abuse Shelter of Miami County - ESG-CV HP
+Behavioral Healthcare Partners of Central Ohio,72,Licking - Behavioral Healthcare Partners of Central Ohio - ESG-CV RRH,2193,20,Behavioral Healthcare Partners of Central Ohio,812,Licking - Behavioral Healthcare Partners of Central Ohio - ESG-CV RRH
+Behavioral Healthcare Partners of Central Ohio,72,Licking - Behavioral Healthcare Partners of Central Ohio - ESG-CV HP,2194,20,Behavioral Healthcare Partners of Central Ohio,813,Licking - Behavioral Healthcare Partners of Central Ohio - ESG-CV HP
+Behavioral Healthcare Partners of Central Ohio,72,Knox - Behavioral Healthcare Partners of Central Ohio - ESG-CV RRH,2195,20,Behavioral Healthcare Partners of Central Ohio,814,Knox - Behavioral Healthcare Partners of Central Ohio - ESG-CV RRH
+Behavioral Healthcare Partners of Central Ohio,72,Knox - Behavioral Healthcare Partners of Central Ohio - ESG-CV HP,2196,20,Behavioral Healthcare Partners of Central Ohio,815,Knox - Behavioral Healthcare Partners of Central Ohio - ESG-CV HP
+Behavioral Healthcare Partners of Central Ohio,72,Knox - Behavioral Healthcare Partners of Central Ohio - TANF RRH,2224,20,Behavioral Healthcare Partners of Central Ohio,841,Knox - Behavioral Healthcare Partners of Central Ohio - TANF RRH
+Behavioral Healthcare Partners of Central Ohio,72,Licking - Behavioral Healthcare Partners of Central Ohio - TANF RRH,2227,20,Behavioral Healthcare Partners of Central Ohio,844,Licking - Behavioral Healthcare Partners of Central Ohio - TANF RRH
+Interfaith Hospitality Network of Springfield,73,Clark - IHN of Clark County - City Project - ESG-CV RRH,2212,21,Interfaith Hospitality Network of Springfield,829,Clark - IHN of Clark County - City Project - ESG-CV RRH
+Interfaith Hospitality Network of Springfield,73,Clark - IHN of Clark County - City Project - ESG-CV HP,2213,21,Interfaith Hospitality Network of Springfield,830,Clark - IHN of Clark County - City Project - ESG-CV HP
+Interfaith Hospitality Network of Springfield,73,Greene - IHN of Clark County - ESG-CV HP,2278,21,Interfaith Hospitality Network of Springfield,894,Greene - IHN of Clark County - ESG-CV HP
+Athens MHA,92,Athens - MHA - VASH - PSH,1117,29,Athens MHA,327,Athens - MHA - VASH - PSH
+Portage Metropolitan Housing Authority,102,Portage - Portage MHA - VASH - PSH,1629,32,Portage Metropolitan Housing Authority,466,Portage - Portage MHA - VASH - PSH
+Jefferson County CAC,107,Jefferson - Jefferson County CAC - AP,1936,33,Jefferson County CAC,614,Jefferson - Jefferson County CAC - AP
+"Harmony House Homeless Services, Inc.",108,Richland - Harmony House Homeless Services - HCRP HP,906,34,"Harmony House Homeless Services, Inc.",210,Richland - Harmony House Homeless Services - HCRP HP
+"Liberty Center of Sandusky County, Inc.",174,Sandusky - Liberty Center of Sandusky County - Liberty Center - AP,1942,38,"Liberty Center of Sandusky County, Inc.",619,Sandusky - Liberty Center of Sandusky County - Liberty Center - AP
+Scioto Christian Ministries,176,Scioto - Scioto Christian Ministries - AP,1955,39,Scioto Christian Ministries,631,Scioto - Scioto Christian Ministries - AP
+Scioto Christian Ministries,176,Scioto - Scioto Christian Ministries - Targeted RRH,2081,39,Scioto Christian Ministries,726,Scioto - Scioto Christian Ministries - Targeted RRH
+Greater Cincinnati Behavioral Health Services,177,Clermont - GCBHS - AP,1986,40,Greater Cincinnati Behavioral Health Services,660,Clermont - GCBHS - AP
+The Salvation Army of Belmont County,180,Belmont - Salvation Army of Belmont County - Family Homeless Shelter - AP,1970,41,The Salvation Army of Belmont County,646,Belmont - Salvation Army of Belmont County - Family Homeless Shelter - AP
+Community Action Commission of Fayette County,8,Clinton - Clinton County Services for the Homeless - AP,1997,42,"Clinton County Services for the Homeless, Inc.",1072,Clinton - Clinton County Services for the Homeless - AP
+"Lima's Samaritan House, Inc.",184,Allen - Lima Samaritan House - AP,1981,43,"Lima's Samaritan House, Inc.",655,Allen - Lima Samaritan House - AP
+"Marion Shelter Program, Inc.",186,Marion - Marion Shelter Program - AP,1978,44,"Marion Shelter Program, Inc.",653,Marion - Marion Shelter Program - AP
+"Marion Shelter Program, Inc.",186,zzMarion - Marion Shelter Program - Men's Facility - AP,1979,44,"Marion Shelter Program, Inc.",654,zzMarion - Marion Shelter Program - Men's Facility - AP
+Licking - The Salvation Army,187,Licking - Salvation Army Licking County - AP,2010,45,Licking - The Salvation Army,680,Licking - Salvation Army Licking County - AP
+The Salvation Army of Zanesville,194,Muskingum - Salvation Army of Zanesville - AP,1967,46,The Salvation Army of Zanesville,643,Muskingum - Salvation Army of Zanesville - AP
+Kno-Ho-Co-Ashland Community Action Commission,206,Coshocton - Knohoco Ashland CAC - TANF RRH,2291,50,Kno-Ho-Co-Ashland Community Action Commission,907,Coshocton - Knohoco Ashland CAC - TANF RRH
+Kno-Ho-Co-Ashland Community Action Commission,206,Holmes - Knohoco Ashland CAC - TANF RRH,2292,50,Kno-Ho-Co-Ashland Community Action Commission,908,Holmes - Knohoco Ashland CAC - TANF RRH
+Kno-Ho-Co-Ashland Community Action Commission,206,Coshocton - Knohoco Ashland CAC - TANF HP,2294,50,Kno-Ho-Co-Ashland Community Action Commission,910,Coshocton - Knohoco Ashland CAC - TANF HP
+Kno-Ho-Co-Ashland Community Action Commission,206,Coshocton - Knohoco Ashland CAC - ESG-CV RRH,2297,50,Kno-Ho-Co-Ashland Community Action Commission,913,Coshocton - Knohoco Ashland CAC - ESG-CV RRH
+Kno-Ho-Co-Ashland Community Action Commission,206,Holmes - Knohoco Ashland CAC - ESG-CV RRH,2298,50,Kno-Ho-Co-Ashland Community Action Commission,914,Holmes - Knohoco Ashland CAC - ESG-CV RRH
+Kno-Ho-Co-Ashland Community Action Commission,206,Coshocton - Knohoco Ashland CAC - ESG-CV HP,2300,50,Kno-Ho-Co-Ashland Community Action Commission,916,Coshocton - Knohoco Ashland CAC - ESG-CV HP
+Kno-Ho-Co-Ashland Community Action Commission,206,Holmes - Knohoco Ashland CAC - ESG-CV HP,2301,50,Kno-Ho-Co-Ashland Community Action Commission,917,Holmes - Knohoco Ashland CAC - ESG-CV HP
+Kno-Ho-Co-Ashland Community Action Commission,206,Knox - Knohoco Ashland CAC - ESG-CV HP,2302,50,Kno-Ho-Co-Ashland Community Action Commission,918,Knox - Knohoco Ashland CAC - ESG-CV HP
+"Adams County Shelter for the Homeless, Inc.",210,Adams - Adams County Shelter for the Homeless - HCRP - HP,1786,51,"Adams County Shelter for the Homeless, Inc.",532,Adams - Adams County Shelter for the Homeless - HCRP - HP
+"Caring Kitchen, Inc.",212,Champaign - Caring Kitchen - AP,1947,53,"Caring Kitchen, Inc.",624,Champaign - Caring Kitchen - AP
+"Abuse and Rape Crisis Shelter of Warren County, Inc.",213,Warren - ARC Shelter - AP,1816,54,"Abuse and Rape Crisis Shelter of Warren County, Inc.",539,Warren - ARC Shelter - AP
+Interfaith Hospitality Network of Warren County,215,Warren - Community Resources - Hotel/Motel Overflow Voucher - ES,1857,55,Interfaith Hospitality Network of Warren County,555,Warren - Community Resources - Hotel/Motel Overflow Voucher - ES
+Interfaith Hospitality Network of Warren County,215,Warren - Warren IHN - OHFA ERA - Not homeless dedicated,2134,55,Interfaith Hospitality Network of Warren County,753,Warren - Warren IHN - OHFA ERA - Not homeless dedicated
+Interfaith Hospitality Network of Warren County,215,Warren - Warren IHN - ESG-CV - HP,2419,55,Interfaith Hospitality Network of Warren County,981,Warren - Warren IHN - ESG-CV - HP
+Interfaith Hospitality Network of Warren County,215,Warren - Warren IHN - ESG-CV - RRH,2420,55,Interfaith Hospitality Network of Warren County,982,Warren - Warren IHN - ESG-CV - RRH
+Salvation Army of Wooster,219,Wayne - Salvation Army Wooster - Severe Weather Shelter - ES,2163,57,Salvation Army of Wooster,782,Wayne - Salvation Army Wooster - Severe Weather Shelter - ES
+Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - ESG-CV RRH,2186,59,Community Action Program Commission of the Lancaster Fairfield County Area,805,Fairfield - Lancaster Fairfield CAA - ESG-CV RRH
+Community Action Program Commission of the Lancaster Fairfield County Area,223,Fairfield - Lancaster Fairfield CAA - ESG-CV HP,2187,59,Community Action Program Commission of the Lancaster Fairfield County Area,806,Fairfield - Lancaster Fairfield CAA - ESG-CV HP
+"Hope House Rescue Mission, Inc.",229,Butler - Hope House Rescue Mission - Hope House - AP,1988,63,"Hope House Rescue Mission, Inc.",659,Butler - Hope House Rescue Mission - Hope House - AP
+Highland County Homeless Shelter,238,Highland - Highland County Homeless Shelter - AP,2000,65,Highland County Homeless Shelter,671,Highland - Highland County Homeless Shelter - AP
+Highland County Homeless Shelter,238,Highland - Highland County Homeless Shelter - ES Overflow,2167,65,Highland County Homeless Shelter,786,Highland - Highland County Homeless Shelter - ES Overflow
+"Clermont County Community Services, Inc.",289,Clermont - Clermont County Community Services - Youth Targeted RRH,1921,67,"Clermont County Community Services, Inc.",602,Clermont - Clermont County Community Services - Youth Targeted RRH
+"Clermont County Community Services, Inc.",289,Clermont - Clermont County Community Services - ESG-CV - RRH,2421,67,"Clermont County Community Services, Inc.",983,Clermont - Clermont County Community Services - ESG-CV - RRH
+"Clermont County Community Services, Inc.",289,Clermont - Clermont County Community Services - ESG -CV - HP,2422,67,"Clermont County Community Services, Inc.",984,Clermont - Clermont County Community Services - ESG -CV - HP
+"The Urban Mission Ministries, Inc.",296,Jefferson - Urban Mission Ministries - War Memorial Women & Children's Shelter - ES,1730,69,"The Urban Mission Ministries, Inc.",504,Jefferson - Urban Mission Ministries - War Memorial Women & Children's Shelter - ES
+"The Urban Mission Ministries, Inc.",296,Jefferson - Urban Mission Dormitory - AP,2008,69,"The Urban Mission Ministries, Inc.",678,Jefferson - Urban Mission Dormitory - AP
+Home is the Foundation,312,Preble - Home is the Foundation - Homelessness Prevention - HP,409,70,Home is the Foundation,102,Preble - Home is the Foundation - Homelessness Prevention - HP
+Home is the Foundation,312,Preble - Home is the Foundation - AP,1952,70,Home is the Foundation,628,Preble - Home is the Foundation - AP
+Coalition on Homelessness and Housing in Ohio,1,zzPreble - Church Ministries - Vouchers - ES Overflow,1265,70,Home is the Foundation,1027,zzPreble - Church Ministries - Vouchers - ES Overflow
+Home is the Foundation,312,zzPreble - Church Ministries - Vouchers - ES Overflow,1893,70,Home is the Foundation,1027,zzPreble - Church Ministries - Vouchers - ES Overflow
+"Friends of the Homeless, Tuscarawas County",340,Tuscarawas - Friends of the Homeless - Tuscarawas County Shelter - AP,1935,74,"Friends of the Homeless, Tuscarawas County",613,Tuscarawas - Friends of the Homeless - Tuscarawas County Shelter - AP
+Miami Valley Community Action Partnership,365,Darke -  Miami Valley Community Action Partnership - AP,1949,77,Miami Valley Community Action Partnership,627,Darke -  Miami Valley Community Action Partnership - AP
+Miami Valley Community Action Partnership,365,Preble - Miami Valley Community Action Partnership - OHFA ERA - not homeless dedicated,2144,77,Miami Valley Community Action Partnership,763,Preble - Miami Valley Community Action Partnership - OHFA ERA - not homeless dedicated
+Miami Valley Community Action Partnership,365,Darke - Miami Valley Community Action Partnership - ES Overflow,2161,77,Miami Valley Community Action Partnership,781,Darke - Miami Valley Community Action Partnership - ES Overflow
+Catholic Charities of Ashtabula County,407,Ashtabula - Catholic Charities of Ashtabula County - ESG-CV RRH,2242,82,Catholic Charities of Ashtabula County,859,Ashtabula - Catholic Charities of Ashtabula County - ESG-CV RRH
+Catholic Charities of Ashtabula County,407,Ashtabula - Catholic Charities of Ashtabula County - TANF RRH,2406,82,Catholic Charities of Ashtabula County,968,Ashtabula - Catholic Charities of Ashtabula County - TANF RRH
+Interfaith Hospitality Network of Greene County,521,Greene - IHN of Greene County - Churches - AP,1995,88,Interfaith Hospitality Network of Greene County,667,Greene - IHN of Greene County - Churches - AP
+G.M.N. TriCounty Community Action Committee,592,Belmont - G.M.N. TriCounty CAC - AP,2030,91,G.M.N. TriCounty Community Action Committee,696,Belmont - G.M.N. TriCounty CAC - AP
+G.M.N. TriCounty Community Action Committee,592,Monroe - G.M.N. TriCounty CAC - AP,2042,91,G.M.N. TriCounty Community Action Committee,707,Monroe - G.M.N. TriCounty CAC - AP
+G.M.N. TriCounty Community Action Committee,592,Noble - G.M.N. TriCounty CAC - ESG-CV RRH,2234,91,G.M.N. TriCounty Community Action Committee,851,Noble - G.M.N. TriCounty CAC - ESG-CV RRH
+Family Promise of Delaware County,716,Delaware - Family Promise of Delaware County - IHN - AP,1972,96,Family Promise of Delaware County,648,Delaware - Family Promise of Delaware County - IHN - AP
+West Ohio Community Action Partnership,784,Allen - West Ohio CAP - AP,1982,97,West Ohio Community Action Partnership,656,Allen - West Ohio CAP - AP
+West Ohio Community Action Partnership,784,Auglaize - West Ohio CAP - AP,2034,97,West Ohio Community Action Partnership,700,Auglaize - West Ohio CAP - AP
+West Ohio Community Action Partnership,784,Mercer - West Ohio CAP - AP,2035,97,West Ohio Community Action Partnership,701,Mercer - West Ohio CAP - AP
+Integrated Services for Behavioral Health,789,zzAthens - Integrated Services - Youth Targeted RRH,1879,98,Integrated Services for Behavioral Health,575,zzAthens - Integrated Services - Youth Targeted RRH
+Integrated Services for Behavioral Health,789,Athens - Integrated Services - ODH Youth RRH,2153,98,Integrated Services for Behavioral Health,772,Athens - Integrated Services - ODH Youth RRH
+Sojourners Care Network,855,Vinton - Sojourners Care Network - ES Overflow,2126,99,Sojourners Care Network,746,Vinton - Sojourners Care Network - ES Overflow
+Sojourners Care Network,855,Hocking - Sojourners Care Network - SSO - CE AP,2446,99,Sojourners Care Network,1002,Hocking - Sojourners Care Network - SSO - CE AP
+"Maumee Valley Guidance Center, Inc.",859,Defiance - Maumee Valley Guidance Center - AP,2006,100,"Maumee Valley Guidance Center, Inc.",676,Defiance - Maumee Valley Guidance Center - AP
+"City of Springfield, Ohio",1068,Clark - City of Springfield - St. Vincent de Paul - Hotel/Motel Overflow - ES,1597,107,"City of Springfield, Ohio",461,Clark - City of Springfield - St. Vincent de Paul - Hotel/Motel Overflow - ES
+"City of Springfield, Ohio",1068,Clark - City of Springfield - St. Vincent de Paul - AP,1796,107,"City of Springfield, Ohio",535,Clark - City of Springfield - St. Vincent de Paul - AP
+"City of Springfield, Ohio",1068,Clark - City of Springfield - St. Vincent House - SSO,2482,107,"City of Springfield, Ohio",1023,Clark - City of Springfield - St. Vincent House - SSO
+Columbiana Metropolitan Housing Authority,1072,Columbiana - MHA - VASH - PSH,2471,110,Columbiana Metropolitan Housing Authority,1010,Columbiana - MHA - VASH - PSH
+Fairfield Metropolitan Housing Authority,1074,Fairfield - Fairfield MHA - VASH - PSH,1621,112,Fairfield Metropolitan Housing Authority,463,Fairfield - Fairfield MHA - VASH - PSH
+Licking Metropolitan Housing Authority,1080,Licking - MHA - VASH - PSH,2463,117,Licking Metropolitan Housing Authority,1009,Licking - MHA - VASH - PSH
+"Muskingum Economic Opportunity Action Group, Inc.",1098,"Muskingum - Muskingum Economic Opportunity Action Group, Inc. - AP",1966,123,"Muskingum Economic Opportunity Action Group, Inc.",642,"Muskingum - Muskingum Economic Opportunity Action Group, Inc. - AP"
+"Muskingum Economic Opportunity Action Group, Inc.",1098,"Muskingum - Muskingum Economic Opportunity Action Group, Inc. - ESG-CV HP",2188,123,"Muskingum Economic Opportunity Action Group, Inc.",807,"Muskingum - Muskingum Economic Opportunity Action Group, Inc. - ESG-CV HP"
+YWCA Hamilton,1127,Butler - YWCA Hamilton - Goodman Place - PSH,2408,131,YWCA Hamilton,970,Butler - YWCA Hamilton - Goodman Place - PSH
+Project Woman of Springfield and Clark County,1131,Clark - Project Woman of Springfield - Reigns of Renewal - RRH - DV,1559,132,Project Woman of Springfield and Clark County,448,Clark - Project Woman of Springfield - Reigns of Renewal - RRH - DV
+YWCA of Greater Cincinnati,1134,Clermont - YWCA of Greater Cincinnati - OVW - TH - DV,1888,133,YWCA of Greater Cincinnati,583,Clermont - YWCA of Greater Cincinnati - OVW - TH - DV
+YWCA of Greater Cincinnati,1134,Clermont - YWCA of Greater Cincinnati - House of Peace - DV - AP,1989,133,YWCA of Greater Cincinnati,661,Clermont - YWCA of Greater Cincinnati - House of Peace - DV - AP
+Catholic Charities Regional Agency,1139,Columbiana - Catholic Charities - Christina House - ES - DV,1140,134,Catholic Charities Regional Agency,336,Columbiana - Catholic Charities - Christina House - ES - DV
+Catholic Charities Regional Agency,1139,Trumbull - Catholic Charities Regional Agency - AP,2047,134,Catholic Charities Regional Agency,712,Trumbull - Catholic Charities Regional Agency - AP
+Catholic Charities Regional Agency,1139,Mahoning - Catholic Charities - ES Overflow,2385,134,Catholic Charities Regional Agency,964,Mahoning - Catholic Charities - ES Overflow
+Fairfield - Department of Job and Family Services,1156,Fairfield - Department of Job and Family Services - Hotel/Motel Vouchers - ES Overflow,1157,140,Fairfield - Department of Job and Family Services,342,Fairfield - Department of Job and Family Services - Hotel/Motel Vouchers - ES Overflow
+My Sister's House,1162,Fayette - My Sister's House - ES - DV,1163,143,My Sister's House,345,Fayette - My Sister's House - ES - DV
+Guernsey Haven of Hope,1187,Guernsey - Haven of Hope - ES - DV,1188,150,Guernsey Haven of Hope,1068,Guernsey - Haven of Hope - ES - DV
+Hancock City Mission,1192,Hancock - City Mission - Warming Center - ES Overflow,1836,152,Hancock City Mission,1069,Hancock - City Mission - Warming Center - ES Overflow
+Hocking Hills Inspire Shelter,1201,Hocking - Hills Inspire Shelter - AP,2003,155,Hocking Hills Inspire Shelter,673,Hocking - Hills Inspire Shelter - AP
+Forbes House,1207,Lake - Forbes House - DV - AP,2025,158,Forbes House,694,Lake - Forbes House - DV - AP
+Lawrence County DV Task Force,1211,Lawrence - DV Task Force - ES - DV,1213,159,Lawrence County DV Task Force,363,Lawrence - DV Task Force - ES - DV
+Society of St. Vincent de Paul Housing Facility,1215,Licking - St. Vincent de Paul - Licking Hotel/Motel - ES Overflow,1216,161,Society of St. Vincent de Paul Housing Facility,365,Licking - St. Vincent de Paul - Licking Hotel/Motel - ES Overflow
+"Family and Community Services, Inc.",1222,Ashtabula - Family and Community Services - SSVF HP,1855,163,"Family and Community Services, Inc.",553,Ashtabula - Family and Community Services - SSVF HP
+"Family and Community Services, Inc.",1222,Ashtabula - Family and Community Services - SSVF RRH,1856,163,"Family and Community Services, Inc.",554,Ashtabula - Family and Community Services - SSVF RRH
+"Family and Community Services, Inc.",1222,Trumbull - Someplace Safe - TH - DV,2085,163,"Family and Community Services, Inc.",730,Trumbull - Someplace Safe - TH - DV
+"Family and Community Services, Inc.",1222,Portage - Family and Community Services - Ravenna - TANF RRH,2178,163,"Family and Community Services, Inc.",797,Portage - Family and Community Services - Ravenna - TANF RRH
+"Family and Community Services, Inc.",1222,Mahoning - Family and Community Services - Veteran's Haven - GPD - TH,2444,163,"Family and Community Services, Inc.",1000,Mahoning - Family and Community Services - Veteran's Haven - GPD - TH
+"Family and Community Services, Inc.",1222,Geauga - Family & Community Services Inc - Next Step - ODH SSO,2449,163,"Family and Community Services, Inc.",1005,Geauga - Family & Community Services Inc - Next Step - ODH SSO
+Pickaway Metropolitan Housing Authority,1256,Pickaway - Ross MHA - Pickaway VASH - PSH,1257,172,Pickaway Metropolitan Housing Authority,378,Pickaway - Ross MHA - Pickaway VASH - PSH
+YWCA of Greater Dayton,1266,Preble - YWCA of Greater Dayton - DV - TH,2436,174,YWCA of Greater Dayton,993,Preble - YWCA of Greater Dayton - DV - TH
+Ross - Metropolitan Housing Authority,1268,Ross - MHA - VASH - PSH,1269,175,Ross - Metropolitan Housing Authority,384,Ross - MHA - VASH - PSH
+First Step,1276,Seneca - First Call - AP,2020,177,First Step,689,Seneca - First Call - AP
+"EVE, Incorporated",1287,Washington - EVE - Domestic Violence Shelter - DV - AP,2041,179,"EVE, Incorporated",706,Washington - EVE - Domestic Violence Shelter - DV - AP
+Cocoon,1297,Wood - The Cocoon Shelter - AP,2044,181,Cocoon,709,Wood - The Cocoon Shelter - AP
+"Lifeline, Inc.",1324,"Lake - Lifeline, Inc. - ESG-CV HP",2236,183,"Lifeline, Inc.",853,"Lake - Lifeline, Inc. - ESG-CV HP"
+"Lifeline, Inc.",1324,"Lake - Lifeline, Inc. - TANF HP",2281,183,"Lifeline, Inc.",897,"Lake - Lifeline, Inc. - TANF HP"
+"Lifeline, Inc.",1324,"Geauga - Lifeline, Inc. - TANF HP",2283,183,"Lifeline, Inc.",899,"Geauga - Lifeline, Inc. - TANF HP"
+"Lifeline, Inc.",1324,"Geauga - Lifeline, Inc. - TANF RRH",2284,183,"Lifeline, Inc.",900,"Geauga - Lifeline, Inc. - TANF RRH"
+NA,NA,"Geauga - Lifeline, Inc. - HCRP RRH",NA,183,"Lifeline, Inc.",1065,"Geauga - Lifeline, Inc. - HCRP RRH"
+Licking Veterans Service Commission,1396,Licking - Licking Veterans Service Commission - Hotel/motel Overflow - ES,1397,188,Licking Veterans Service Commission,440,Licking - Licking Veterans Service Commission - Hotel/motel Overflow - ES
+Overflow,1398,Licking County - Licking hotel/motel - ES,1399,189,Licking County,1063,Licking County - Licking hotel/motel - ES
+Mansfield Metropolitan Housing Authority,1400,Richland - Mansfield Metropolitan Housing Authority - Richland VASH - PSH,1401,190,Mansfield Metropolitan Housing Authority,439,Richland - Mansfield Metropolitan Housing Authority - Richland VASH - PSH
+Social Service Agency,1415,Williams - Social Service Agency-Hotel/motel Overflow - ES,1416,193,Social Service Agency,443,Williams - Social Service Agency-Hotel/motel Overflow - ES
+Talbert House,1468,Butler - Talbert House - AP,1992,194,Talbert House,664,Butler - Talbert House - AP
+Clermont MHA,1555,Clermont - Clermont MHA - VASH - PSH,1556,195,Clermont MHA,445,Clermont - Clermont MHA - VASH - PSH
+Darke MHA,1557,Darke - Darke MHA - VASH - PSH,1558,196,Darke MHA,447,Darke - Darke MHA - VASH - PSH
+Geauga - United Way,1571,Geauga - United Way - Motel Voucher - ES,1572,198,Geauga - United Way,453,Geauga - United Way - Motel Voucher - ES
+Children's Services,1606,zzAshtabula - Children's Services - Hotel/Motel overflow vouchers-ES,1607,199,Children's Services,1070,zzAshtabula - Children's Services - Hotel/Motel overflow vouchers-ES
+Children's Services,1606,zzRoss - Children's Services - ES - overflow,1920,199,Children's Services,1071,zzRoss - Children's Services - ES - overflow
+St. Vincent De Paul,1627,Montgomery - St. Vincent de Paul of Dayton - AP,2007,201,St. Vincent De Paul,677,Montgomery - St. Vincent de Paul of Dayton - AP
+United Methodist,1631,Van Wert - United Methodist - ES Overflow,1633,202,United Methodist,467,Van Wert - United Methodist - ES Overflow
+Nonprofit Overflow Project,1682,Allen - Overflow Vouchers - ES,1683,205,Nonprofit Overflow Project,489,Allen - Overflow Vouchers - ES
+FrontLine Service,1687,Ashtabula - FrontLine Service - AP,2026,208,FrontLine Service,695,Ashtabula - FrontLine Service - AP
+Lorain Metropolitan Housing Authority,1702,Lorain - Lorain MHA - VASH - PSH,1703,212,Lorain Metropolitan Housing Authority,498,Lorain - Lorain MHA - VASH - PSH
+Butler - Family Promise,1721,Butler - Family Promise - AP,2306,216,Butler - Family Promise,922,Butler - Family Promise - AP
+Grace Mennonite Church,1726,Holmes - Grace Mennonite Church - DV - ES,1727,218,Grace Mennonite Church,1067,Holmes - Grace Mennonite Church - DV - ES
+Shelby MHA,1759,Shelby - Shelby MHA - VASH - PSH,1760,230,Shelby MHA,518,Shelby - Shelby MHA - VASH - PSH
+"OneEighty, Inc.",1762,Wayne - One Eighty - ESG-CV HP,2204,231,"OneEighty, Inc.",822,Wayne - One Eighty - ESG-CV HP
+Sandusky County Share and Care Center,1777,Sandusky County Share and Care Center - Services Only,1778,233,Sandusky County Share and Care Center,527,Sandusky County Share and Care Center - Services Only
+Sandusky County Share and Care Center,1777,Sandusky County Share and Care Center - AP,1944,233,Sandusky County Share and Care Center,621,Sandusky County Share and Care Center - AP
+Bridges Community Action Partnership,1799,Madison - Bridges CAP - Homeless Assistance Grant - AP,1971,237,Bridges Community Action Partnership,647,Madison - Bridges CAP - Homeless Assistance Grant - AP
+Bridges Community Action Partnership,1799,Shelby - Bridges CAP - ESG-CV - HP,2447,237,Bridges Community Action Partnership,1003,Shelby - Bridges CAP - ESG-CV - HP
+Trumbull Metropolitan Housing Authority,1885,Trumbull MHA - VASH Voucher Program - PSH,1886,246,Trumbull Metropolitan Housing Authority,581,Trumbull MHA - VASH Voucher Program - PSH
+"A.L.I.V.E., Inc.",1894,Jefferson - Alive Shelter - ES - DV,1895,247,"A.L.I.V.E., Inc.",588,Jefferson - Alive Shelter - ES - DV
+Zion United Church of Christ,2087,Delaware - Zion United Church of Christ - Place of Warmth - ES Overflow,2088,252,Zion United Church of Christ,732,Delaware - Zion United Church of Christ - Place of Warmth - ES Overflow
+Compass Family & Community Services,2104,Mahoning - Compass Family & Community Services - Sojouner House - ES - DV,2353,253,Compass Family & Community Services,937,Mahoning - Compass Family & Community Services - Sojouner House - ES - DV
+Mahoning County Continuum of Care,2361,zzMahoning - PATH Trumbull County - Street Outreach,2336,258,Help Network of Northeast Ohio,1042,zzMahoning - PATH Trumbull County - Street Outreach
+Allegheny County MHA,2455,Allegheny - Allegheny County MHA - VASH - PSH,2456,260,Allegheny County MHA,1014,Allegheny - Allegheny County MHA - VASH - PSH
+Adams MHA,2464,Adams - MHA - VASH - PSH,2465,261,Adams MHA,1013,Adams - MHA - VASH - PSH
+Ashtabula MHA,1560,Ashtabula - Ashtabula MHA - VASH - PSH,1561,262,Ashtabula MHA,1015,Ashtabula - Ashtabula MHA - VASH - PSH
+Athens County Children's Services,1394,Athens - Athens County Children's Services - ES,1395,263,Athens County Children's Services,1016,Athens - Athens County Children's Services - ES
+Auglaize County Crisis Center,2089,Auglaize - Auglaize County Crisis Center - ES - DV,2090,264,Auglaize County Crisis Center,1017,Auglaize - Auglaize County Crisis Center - ES - DV
+Battered Women's Shelter,1239,Medina - Battered Women's Shelter - ES - DV,1242,265,Battered Women's Shelter,1018,Medina - Battered Women's Shelter - ES - DV
+Bridges of Hope,1837,Greene - Bridges of Hope - ES,1838,266,Bridges of Hope,1019,Greene - Bridges of Hope - ES
+Butler Haven House,1122,Butler - Haven House - ES,1123,267,Butler Haven House,1020,Butler - Haven House - ES
+Butler Metro Housing Authority,1622,Butler - MHA - VASH - PSH,2466,268,Butler Metro Housing Authority,1021,Butler - MHA - VASH - PSH
+Pickaway County Emergency Shelter,2434,Pickaway - Pickaway Emergency Shelter - ES,2435,270,Pickaway County Emergency Shelter,1024,Pickaway - Pickaway Emergency Shelter - ES
+Clinton MHA,2469,Clinton - MHA - VASH - PSH,2470,273,Clinton MHA,1028,Clinton - MHA - VASH - PSH
+Pike MHA,2457,Pike - Pike MHA - VASH - PSH,2458,274,Pike MHA,1029,Pike - Pike MHA - VASH - PSH
+Portsmouth MHA,2453,Scioto - Portsmouth MHA - VASH - PSH,2454,275,Portsmouth MHA,1030,Scioto - Portsmouth MHA - VASH - PSH
+Rescue Mission of Mahoning Valley,2103,zzMahoning - Rescue Mission of Mahoning Valley Resident Men's Division - ES,2339,276,Rescue Mission of Mahoning Valley,1031,zzMahoning - Rescue Mission of Mahoning Valley Resident Men's Division - ES
+Columbus MHA,2472,Franklin - MHA - VASH - PSH,2473,277,Columbus MHA,1032,Franklin - MHA - VASH - PSH
+Dayton MHA,2459,Montgomery - Dayton MHA - VASH - PSH,2460,279,Dayton MHA,1037,Montgomery - Dayton MHA - VASH - PSH
+Erie MHA,2474,Sandusky - Erie MHA - VASH - PSH,2475,280,Erie MHA,1038,Sandusky - Erie MHA - VASH - PSH
+NA,NA,Columbiana - Family Recovery Center - Fleming House - TH,NA,281,Family Recovery Center,1039,Columbiana - Family Recovery Center - Fleming House - TH
+Geauga Faith and Rescue,2429,Geauga - Faith and Rescue - ES,2430,283,Geauga Faith and Rescue,1040,Geauga - Faith and Rescue - ES
+Lake - Metropolitan Housing Authority,1434,Lake - MHA - VASH - PSH,2476,284,Lake Metropolitan Housing Authority,1041,Lake - MHA - VASH - PSH
+Sarah's Friends Inc,2099,Williams - Sarah's Friends - Sarah's House - TH,2100,285,Sarah's Friends Inc,1043,Williams - Sarah's Friends - Sarah's House - TH
+Springfield MHA,2467,Clark - Springfield MHA - VASH - PSH,2468,286,Springfield MHA,1044,Clark - Springfield MHA - VASH - PSH
+Washington Morgan MHA,2461,Washington - Morgan - MHA - VASH - PSH,2462,287,Washington Morgan MHA,1045,Washington - Morgan - MHA - VASH - PSH
+Washington Veterans Service Office,1909,Washington - Veterans Service Office - ES Overflow,1910,288,Washington Veterans Service Office,1046,Washington - Veterans Service Office - ES Overflow
+zzLake County - Lake County Federal Grants Office,624,"zzLake - Lifeline, Inc. - Transitional Housing - TH",1326,289,zzLake County - Lake County Federal Grants Office,1049,"zzLake - Lifeline, Inc. - Transitional Housing - TH"
+zzLake County - Lake County Federal Grants Office,624,zzLake - Ecumenical Shelter Network - Project Hope - HCRP RRH,876,289,zzLake County - Lake County Federal Grants Office,1051,zzLake - Ecumenical Shelter Network - Project Hope - HCRP RRH
+zzLorain - St. Joseph Church,1225,zzLorain - St. Joseph Church - St. Joe's Men's Shelter - ES,1230,290,zzLorain - St. Joseph Church,1052,zzLorain - St. Joseph Church - St. Joe's Men's Shelter - ES
+zzLorain - St. Joseph Church,1225,zzLorain - St. Joseph Church - St. Joe's Women's Shelter - ES,1231,290,zzLorain - St. Joseph Church,1053,zzLorain - St. Joseph Church - St. Joe's Women's Shelter - ES
+zzMahoning - COMPASS,1640,zzMahoning - COMPASS - HOPWA STRMU - HP,1641,291,zzMahoning - COMPASS,1054,zzMahoning - COMPASS - HOPWA STRMU - HP
+Lorain - Salvation Army,865,none,none,102,Lorain - Salvation Army,NA,NA
+Erie Safe Harbor,1154,none,none,139,Erie Safe Harbor,NA,NA
+Samaritan Center,1189,none,none,151,Samaritan Center,NA,NA
+Open Arms DV and Rape Crisis Services,1194,none,none,153,Open Arms DV and Rape Crisis Services,NA,NA
+zzHardin - Crossroads Crisis Center,1199,none,none,154,zzHardin - Crossroads Crisis Center,NA,NA
+The Woodlands,1219,none,none,162,The Woodlands,NA,NA
+Lorain - Safe Harbor,1224,none,none,164,Lorain - Safe Harbor,NA,NA
+New Choices,1279,none,none,178,New Choices,NA,NA
+zzGuernsey - Salvation Army,1340,none,none,184,zzGuernsey - Salvation Army,NA,NA
+zzOhio Valley Goodwill,1411,none,none,192,zzOhio Valley Goodwill,NA,NA
+zzSalvation Army in Central Ohio,1684,none,none,206,zzSalvation Army in Central Ohio,NA,NA
+Emmanuel Lutheran Church,1712,none,none,213,Emmanuel Lutheran Church,NA,NA
+Pillars of Success,1723,none,none,217,Pillars of Success,NA,NA
+Medina - The Salvation Army,1752,none,none,227,Medina - The Salvation Army,NA,NA
+Salvation Army Kroc Center,1792,none,none,234,Salvation Army Kroc Center,NA,NA
+Salvation Army of Clark County,1794,none,none,235,Salvation Army of Clark County,NA,NA
+Oberlin Police Dept,1801,none,none,238,Oberlin Police Dept,NA,NA
+Mansfield Richland County Public Library,1807,none,none,239,Mansfield Richland County Public Library,NA,NA
+United Way of Guernsey County,1810,none,none,240,United Way of Guernsey County,NA,NA
+zzGuernsey Monroe Noble Churches,1820,none,none,241,zzGuernsey Monroe Noble Churches,NA,NA
+H.E.L.P. House,1825,none,none,243,H.E.L.P. House,NA,NA
+zzLake Veterans of Foreign Wars - VFW,1913,none,none,249,zzLake Veterans of Foreign Wars - VFW,NA,NA
+zzRichland - Volunteers of America of Greater Ohio,103,none,none,292,zzRichland - Volunteers of America of Greater Ohio,NA,NA
+"zzScioto - Counseling Center, Inc.",405,none,none,293,"zzScioto - Counseling Center, Inc.",NA,NA
+zzTurning Point Counseling Services,2114,none,none,294,zzTurning Point Counseling Services,NA,NA
+zzWayne - Wayne MHA,518,none,none,295,zzWayne - Wayne MHA,NA,NA
+zzWayne - Wooster Interfaith Housing WIHC,74,none,none,296,zzWayne - Wooster Interfaith Housing WIHC,NA,NA

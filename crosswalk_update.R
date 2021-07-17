@@ -126,3 +126,23 @@ adjusted_new_crosswalk <- new_crosswalk %>%
   select(-New_Clarity_AgencyID)
 
 write_csv(adjusted_new_crosswalk, "id_crosswalk.csv")
+
+
+# Just some checking ------------------------------------------------------
+
+final_csv <- read_csv(here("random_data/final_csv_project_list.csv")) %>%
+  mutate(Legacy_ProgramID = as.character(Legacy_ProgramID)) %>%
+  select(-OperatingEnd, -ProjectType)
+
+crosswalk_with_benefits <- adjusted_new_crosswalk %>%
+  left_join(final_csv, by = c("Legacy_ProgramID", "Legacy_ProgramName")) %>%
+  mutate(GettingData = if_else(is.na(OperatingStart), "No", "Yes")) %>%
+  select(-OperatingStart)
+
+write_csv(crosswalk_with_benefits, "id_crosswalk_w_benefits.csv")
+
+
+
+
+
+

@@ -19,7 +19,6 @@ library(here)
 source(here("reading_severance.R"))
 
 clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
-  filter(!is.na(ServiceID)) %>%
   mutate(
     ServiceItemName = case_when(
       ServiceItemName %in% c("Case management", "Case management services") ~
@@ -38,7 +37,7 @@ all_service_items <- clarity_service_items %>%
   select(ServiceItemName) %>%
   unique()
 
-nrow(all_service_items) == 121 # YOU WANT TRUE! If FALSE, adjust service_translator
+nrow(all_service_items) == 131 # YOU WANT TRUE! If FALSE, check service_translator
 
 service_translator <- tibble(
   sp_code = c(
@@ -77,6 +76,10 @@ cohort_services <- sp_need_service %>%
   ) %>%
   filter(active == TRUE &
            client_id %in% client_cohort &
+           is.na(hopwa_service_type) &
+           is.na(path_service_type) &
+           is.na(rhy_service_type) &
+           is.na(ssvf_service_type) &
            ((
              program_type_code == "Homelessness Prevention (HUD)" &
                code %in% c(
@@ -160,7 +163,7 @@ prep <- cohort_services %>%
 service_items <- prep %>%
   left_join(service_translator, by = "sp_code") %>%
   left_join(clarity_service_items, by = c("clarity_desc" = "ServiceItemName",
-                                          "ProjectID"))
+                                          "Clarity_ProgramName" = "ProjectName"))
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &
@@ -171,18 +174,21 @@ fund_amounts <- sp_need_service_group_fund %>%
                      need_service_id), by = "need_service_group_id") %>%
   select("ServicesID" = need_service_id, source, "FAAmount" = cost)
 
-sp_service_fund_types <- fund_amounts$FundingSource %>% unique()
+sp_service_fund_types <- fund_amounts$source %>% unique() %>% sort()
 
 fund_translator <- tibble(
   SPServiceFundingSource = c(sp_service_fund_types),
-  funding_source = c()
+  funding_source = c(
+    46, 46, 46, 46, 46, 46, 47, 46, 46, 46, 15, 16, 17, 46, 46, 46, 2, 2, 46, 
+    34, 46, 46, 46, 46, 2, 46, 46, 2, 46, 46, 2, 46, 46, 33, 33, 43, 46
+  ),
+  funding_source_other = c(
+    14, 14, 14, 2, 18, 13, NA, 0, 0, 6, 0, 0, 0, 6, 6, 6, NA, NA, 14, NA, 5, 7,
+    7, 10, NA, 19, 14, NA, 14, 6, NA, 11, 14, NA, NA, NA, 14
+  )
 )
 
-# some of these ^^ should have multiple Service Items in Clarity bc they have 
-# multiple Funding Sources in SP
 
-service_items_w_funding <- service_items %>%
-  left_join(fund_amounts, by = "ServicesID")
   
   
   

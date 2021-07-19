@@ -18,11 +18,10 @@ library(janitor)
 # Organizations -----------------------------------------------------------
 
 organization_sp <- read_csv("data_to_Clarity/Organization.csv") %>%
-  select(OrganizationName, VictimServicesProvider,
-         DateCreated, DateUpdated)
+  select(OrganizationName, VictimServicesProvider, DateCreated, DateUpdated)
+
 organization_bf <- read_csv("data_from_Clarity/Organization.csv") %>%
-  select(OrganizationName, VictimServicesProvider,
-         DateCreated, DateUpdated)
+  select(OrganizationName, VictimServicesProvider, DateCreated, DateUpdated)
 
 differences <- base::setdiff(organization_sp, organization_bf)
 

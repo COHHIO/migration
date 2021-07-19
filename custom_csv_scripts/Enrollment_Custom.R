@@ -34,6 +34,9 @@ ohio <- get_decennial(geography = "county",
 
 # Getting HMIS data -------------------------------------------------------
 
+# from ART because ART has the DataCollectionStage already figured out whereas
+# the severance file would need a lot of work to get that.
+
 at_entry <- read_xlsx("random_data/Enrollment_Custom_ART.xlsx", sheet = 1) %>%
   mutate(InformationDate = as.Date(InformationDate, origin = "1899-12-30"))
 

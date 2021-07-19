@@ -140,7 +140,7 @@ Enrollment_improved <- EntryExits %>%
   relocate(MoveInDate, .after = DateOfEngagement)
 
 write_csv(Enrollment_improved, 
-          here("data_to_Clarity/Enrollment.csv"), 
+          here("data_to_Clarity/final_csv/Enrollment.csv"), 
           append = FALSE,
           na = "")
 
@@ -148,10 +148,10 @@ write_csv(Enrollment_improved,
 
 remove_quotes <- function(file) {
   cat(file, sep = "\n")
-  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+  x <- read_csv(here(paste0("data_to_Clarity/final_csv/", file, ".csv")),
                 col_types = cols()) 
 
-  fwrite(x, here(paste0("data_to_Clarity/", file, ".csv")))
+  fwrite(x, here(paste0("data_to_Clarity/final_csv/", file, ".csv")))
 }
 
 data.frame(
@@ -184,13 +184,13 @@ data.frame(
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
-  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+  x <- read_csv(here(paste0("data_to_Clarity/final_csv/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
            DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"))
   
   fwrite(x, 
-         here(paste0("data_to_Clarity/", file, ".csv")),
+         here(paste0("data_to_Clarity/final_csv/", file, ".csv")),
          logical01 = TRUE)
 }
 

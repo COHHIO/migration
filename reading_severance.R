@@ -8,11 +8,11 @@ library(lubridate)
 
 # Get all csv files into dfs ----------------------------------------------
 
-files <- list.files(path = "random_data/corrected_severance/", pattern = ".csv")
+files <- list.files(path = "random_data/final_severance/", pattern = ".csv")
 
 make_dfs <- function(file) {
   cat(file, sep = "\n")
-  x <- read_csv(here(paste0("random_data/corrected_severance/", file)), 
+  x <- read_csv(here(paste0("random_data/final_severance/", file)), 
                 col_types = cols())
   x <- data.frame(x)
   assign(str_remove(file, ".csv"), x, envir = .GlobalEnv)

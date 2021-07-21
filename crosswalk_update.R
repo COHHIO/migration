@@ -1,4 +1,4 @@
-library(readxl)
+
 library(tidyverse)
 library(here)
 
@@ -63,54 +63,54 @@ data_coming_from_sp <- all_projects_from_sp %>%
   select(starts_with("Legacy"))
 
 clarity_projects_orgs <- data_coming_from_sp %>%
-  left_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName"))
+  left_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName")) %>%
+  mutate(Clarity_ProgramName = Legacy_ProgramName) %>%
+  relocate(Legacy_AgencyID:Legacy_AgencyName, .before = Legacy_ProgramID)
 
 clarity_projects_orgs %>%
   filter(is.na(Clarity_ProgramID)) %>% nrow() == 0 # YOU WANT TRUE
 
 # Clarity Agencies to Add to Crosswalk ------------------------------------
 
-
-
-empty_agencies <- clarity_agencies_not_on_crosswalk %>%
-  filter(is.na(Clarity_ProgramID))
-
-get_sp_equivalents_empty <- empty_agencies %>%
-  left_join(sp_projects_orgs %>%
-              select(Legacy_ProgramID, Legacy_ProgramName), 
-            by = c("Clarity_AgencyName" = "Legacy_ProgramName")) %>%
-  mutate(Legacy_OrganizationName = Clarity_AgencyName,
-         Legacy_OrganizationID = Legacy_ProgramID,
-         Legacy_ProgramName = "none",
-         Legacy_ProgramID = "none") %>%
-  select(
-    Legacy_OrganizationName, 
-    Legacy_OrganizationID,   
-    Legacy_ProgramName,
-    Legacy_ProgramID,        
-    Clarity_AgencyID,        
-    Clarity_AgencyName,
-    Clarity_ProgramID,
-    Clarity_ProgramName
-  )
-
-real_agencies <- clarity_agencies_not_on_crosswalk %>%
-  filter(!is.na(Clarity_ProgramID))
-
-get_sp_equivalents_real <- real_agencies %>%
-  left_join(sp_projects_orgs, 
-            by = c("Clarity_ProgramName" = "Legacy_ProgramName")) %>%
-  mutate(Legacy_ProgramName = Clarity_ProgramName) %>%
-  select(
-    Legacy_OrganizationName, 
-    Legacy_OrganizationID,   
-    Legacy_ProgramName,
-    Legacy_ProgramID,        
-    Clarity_AgencyID,        
-    Clarity_AgencyName,
-    Clarity_ProgramID,
-    Clarity_ProgramName
-  )
+# empty_agencies <- clarity_agencies_not_on_crosswalk %>%
+#   filter(is.na(Clarity_ProgramID))
+# 
+# get_sp_equivalents_empty <- empty_agencies %>%
+#   left_join(sp_projects_orgs %>%
+#               select(Legacy_ProgramID, Legacy_ProgramName), 
+#             by = c("Clarity_AgencyName" = "Legacy_ProgramName")) %>%
+#   mutate(Legacy_OrganizationName = Clarity_AgencyName,
+#          Legacy_OrganizationID = Legacy_ProgramID,
+#          Legacy_ProgramName = "none",
+#          Legacy_ProgramID = "none") %>%
+#   select(
+#     Legacy_OrganizationName, 
+#     Legacy_OrganizationID,   
+#     Legacy_ProgramName,
+#     Legacy_ProgramID,        
+#     Clarity_AgencyID,        
+#     Clarity_AgencyName,
+#     Clarity_ProgramID,
+#     Clarity_ProgramName
+#   )
+# 
+# real_agencies <- clarity_agencies_not_on_crosswalk %>%
+#   filter(!is.na(Clarity_ProgramID))
+# 
+# get_sp_equivalents_real <- real_agencies %>%
+#   left_join(sp_projects_orgs, 
+#             by = c("Clarity_ProgramName" = "Legacy_ProgramName")) %>%
+#   mutate(Legacy_ProgramName = Clarity_ProgramName) %>%
+#   select(
+#     Legacy_OrganizationName, 
+#     Legacy_OrganizationID,   
+#     Legacy_ProgramName,
+#     Legacy_ProgramID,        
+#     Clarity_AgencyID,        
+#     Clarity_AgencyName,
+#     Clarity_ProgramID,
+#     Clarity_ProgramName
+#   )
 
 # Projects to Add to the Crosswalk ----------------------------------------
 

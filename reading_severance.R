@@ -54,8 +54,8 @@ clarity_projects_orgs <- data_coming_from_sp %>%
   mutate(Clarity_ProgramName = Legacy_ProgramName) %>%
   relocate(Legacy_AgencyID:Legacy_AgencyName, .before = Legacy_ProgramID)
 
-clarity_projects_orgs %>%
-  filter(is.na(Clarity_ProgramID)) %>% nrow() == 0 # YOU WANT TRUE
+cat(clarity_projects_orgs %>%
+  filter(is.na(Clarity_ProgramID)) %>% nrow() == 0) # YOU WANT TRUE
 
 # Getting Client Cohort ---------------------------------------------------
 

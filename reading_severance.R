@@ -60,3 +60,30 @@ clarity_projects_orgs <- sp_projects_orgs %>%
     Clarity_AgencyID,
     Clarity_AgencyName
   )
+
+other_funding_source_crosswalk <- tibble(
+  ReferenceNo = c(1:19),
+  OtherFundingSource = c(
+  "Bezos Day One",
+  "CDBG",
+  "church",
+  "community",
+  "ODH",
+  "ODSA",
+  "OHFA",
+  "Ohio Department of Health- Youth Initiative",
+  "OSDA",
+  "Pandemic Emergency Fund",
+  "TANF",
+  "Unknown",
+  "CSBG",
+  "Local",
+  "OHFA ERA",
+  "OVW Transitional Housing",
+  "United Way",
+  "COVID-19 Deconcentration",
+  "Risk Mitigation")
+)
+
+
+

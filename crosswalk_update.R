@@ -5,51 +5,72 @@ library(here)
 
 # Get lists ---------------------------------------------------------------
 
+# from ServicePoint (final)
 source(here("reading_severance.R"))
 
-live_clarity <- read_csv(here("data_from_Clarity/agencies_programs_in_Clarity.csv"))
+# from Clarity (may need updating)
+live_clarity <- read_csv(here("data_from_Clarity/agencies_programs_in_Clarity.csv")) %>%
+  select(Clarity_AgencyID:Clarity_ProgramName)
 
+# from ServicePoint (may need updating)
 in_provider_group <- read_csv(here("random_data/projects_in_sp_provider_group_final.csv"))
-
-bf_likes <- read_csv(here("random_data/live_BF_likes_projects.csv"))
-
-bf_does_not_like <- read_csv(here("random_data/live_BF_does_not_like_projects.csv"))
-
-
+# 
+# bf_likes <- read_csv(here("random_data/live_BF_likes_projects.csv"))
+# 
+# bf_does_not_like <- read_csv(here("random_data/live_BF_does_not_like_projects.csv"))
+# 
 # Verify what they like ---------------------------------------------------
-
-non_matching_org_names <- bf_likes %>%
-  filter(Legacy_organization_name != Clarity_Agency_name) %>%
-  select(Legacy_organization_ID,
-         Legacy_organization_name,
-         Clarity_Agency_ID,
-         Clarity_Agency_name)
-
-non_matching_project_names <- bf_likes %>%
-  filter(Legacy_programName != Clarity_program_name) %>%
-  select(Legacy_ProgramID,
-         Legacy_programName,
-         Clarity_program_ID,
-         Clarity_program_name)
-
-
+# 
+# non_matching_org_names <- bf_likes %>%
+#   filter(Legacy_organization_name != Clarity_Agency_name) %>%
+#   select(Legacy_organization_ID,
+#          Legacy_organization_name,
+#          Clarity_Agency_ID,
+#          Clarity_Agency_name)
+# 
+# non_matching_project_names <- bf_likes %>%
+#   filter(Legacy_programName != Clarity_program_name) %>%
+#   select(Legacy_ProgramID,
+#          Legacy_programName,
+#          Clarity_program_ID,
+#          Clarity_program_name)
+# 
 # Fix what they don't like ------------------------------------------------
+# 
+# guessing <- bf_does_not_like %>%
+#   select(Legacy_programName) %>%
+#   left_join(live_clarity, by = c("Legacy_programName" = "ProjectName"))
+# 
 
-guessing <- bf_does_not_like %>%
-  select(Legacy_programName) %>%
-  left_join(live_clarity, by = c("Legacy_programName" = "ProjectName"))
+# Get Updated Crosswalk ---------------------------------------------------
 
+all_projects_from_sp <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("Legacy_ProgramID" = provider_id, 
+         "Legacy_ProgramName" = name, 
+         "Legacy_AgencyID" = hud_organization_id) %>%
+  left_join(
+    sp_provider %>%
+      select(
+        "Legacy_AgencyID" = provider_id,
+        "Legacy_AgencyName" = name
+      ),
+    by = "Legacy_AgencyID"
+  )
+
+data_coming_from_sp <- all_projects_from_sp %>%
+  right_join(in_provider_group, by = c("Legacy_ProgramID", "Legacy_ProgramName")) %>%
+  select(starts_with("Legacy"))
+
+clarity_projects_orgs <- data_coming_from_sp %>%
+  left_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName"))
+
+clarity_projects_orgs %>%
+  filter(is.na(Clarity_ProgramID)) %>% nrow() == 0 # YOU WANT TRUE
 
 # Clarity Agencies to Add to Crosswalk ------------------------------------
 
-# current_cross <- read_xlsx(here("id_crosswalk.xlsx"), sheet = 1)
 
-clarity_agencies_not_on_crosswalk <- read_xlsx(here("id_crosswalk.xlsx"), 
-                                               sheet = 2) %>%
-  rename("Clarity_AgencyID" = AgencyID,
-         "Clarity_AgencyName" = AgencyName,
-         "Clarity_ProgramID" = ProjectID,
-         "Clarity_ProgramName" = ProjectName)
 
 empty_agencies <- clarity_agencies_not_on_crosswalk %>%
   filter(is.na(Clarity_ProgramID))
@@ -141,6 +162,37 @@ crosswalk_with_benefits <- adjusted_new_crosswalk %>%
 write_csv(crosswalk_with_benefits, "id_crosswalk_w_benefits.csv")
 
 
+# Keep these in play for other scripts ------------------------------------
+
+projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("ProjectID" = provider_id, 
+         "ProjectName" = name, 
+         "AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
+            by = "AgencyID")
+
+sp_projects_orgs <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("SP_ProjectID" = provider_id, 
+         "SP_ProjectName" = name, 
+         "SP_AgencyID" = hud_organization_id) %>%
+  left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
+            by = "SP_AgencyID")
+
+clarity_projects_orgs <- sp_projects_orgs %>%
+  left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
+  filter(!is.na(Clarity_ProgramID)) %>%
+  select(
+    SP_ProjectID,
+    SP_ProjectName,
+    SP_AgencyID,
+    "SP_AgencyName" = AgencyName,
+    Clarity_ProgramID,
+    Clarity_ProgramName,
+    Clarity_AgencyID,
+    Clarity_AgencyName
+  )
 
 
 

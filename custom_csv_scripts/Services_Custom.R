@@ -16,8 +16,10 @@ library(tidyverse)
 library(lubridate)
 library(here)
 
+# from ServicePoint:
 source(here("reading_severance.R"))
 
+# from Clarity live:
 clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
   mutate(
     ServiceItemName = case_when(
@@ -37,8 +39,9 @@ all_service_items <- clarity_service_items %>%
   select(ServiceItemName) %>%
   unique()
 
-nrow(all_service_items) == 131 # YOU WANT TRUE! If FALSE, check service_translator
+nrow(all_service_items) == 122 # YOU WANT TRUE! If FALSE, check service_translator
 
+# connector
 service_translator <- tibble(
   sp_code = c(
     "PH-1000",
@@ -68,6 +71,8 @@ service_translator <- tibble(
     "Moving Cost Assistance"
   )
 )
+
+# from ServicePoint:
 
 cohort_services <- sp_need_service %>%
   left_join(
@@ -117,6 +122,8 @@ cohort_services <- sp_need_service %>%
              )
            ))
 
+# connector:
+
 projects_orgs <- sp_provider %>%
   filter(active == TRUE) %>%
   select("ProjectID" = provider_id, 
@@ -125,6 +132,8 @@ projects_orgs <- sp_provider %>%
   left_join(sp_provider %>%
               select("AgencyID" = provider_id, "AgencyName" = name),
             by = "AgencyID")
+
+# mostly ServicePoint + connector data:
 
 prep <- cohort_services %>%
   select(
@@ -163,7 +172,13 @@ prep <- cohort_services %>%
 service_items <- prep %>%
   left_join(service_translator, by = "sp_code") %>%
   left_join(clarity_service_items, by = c("clarity_desc" = "ServiceItemName",
-                                          "Clarity_ProgramName" = "ProjectName"))
+                                          "Clarity_ProgramName" = "ProjectName", 
+                                          "Clarity_ProgramID" = "ProjectID")) %>%
+  unique()
+
+projects_not_done <- service_items %>% 
+  filter(is.na(ServiceItemID)) %>% 
+  count(Legacy_ProgramName, sp_desc, clarity_desc, PersonalID, DateProvided)
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &
@@ -176,6 +191,10 @@ fund_amounts <- sp_need_service_group_fund %>%
 
 sp_service_fund_types <- fund_amounts$source %>% unique() %>% sort()
 
+hud_funding_sources <- read_csv(here("random_data/HUDSpecs.csv")) %>%
+  filter(DataElement == "FundingSource") %>%
+  mutate(ReferenceNo = as.numeric(ReferenceNo))
+
 fund_translator <- tibble(
   SPServiceFundingSource = c(sp_service_fund_types),
   funding_source = c(
@@ -186,7 +205,10 @@ fund_translator <- tibble(
     14, 14, 14, 2, 18, 13, NA, 0, 0, 6, 0, 0, 0, 6, 6, 6, NA, NA, 14, NA, 5, 7,
     7, 10, NA, 19, 14, NA, 14, 6, NA, 11, 14, NA, NA, NA, 14
   )
-)
+) %>%
+  left_join(hud_funding_sources, by = c("funding_source" = "ReferenceNo")) %>%
+  left_join(other_funding_source_crosswalk, 
+            by = c("funding_source_other" = "ReferenceNo"))
 
 
   

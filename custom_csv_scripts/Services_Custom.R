@@ -19,7 +19,7 @@ library(here)
 # from ServicePoint:
 source(here("reading_severance.R"))
 
-# from Clarity live:
+# from Clarity live (may need updating):
 clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
   mutate(
     ServiceItemName = case_when(
@@ -139,16 +139,16 @@ prep <- cohort_services %>%
   select(
     "ServicesID" = need_service_id,
     "PersonalID" = client_id,
-    "ProjectID" = provide_provider_id,
+    "Legacy_ProgramID" = provide_provider_id,
     "DateProvided" = provide_start_date,
     "DateCreated" = date_added,
     "DateUpdated" = date_updated,
     "UserID" = user_creating_id,
     "sp_code" = code
   ) %>%
-  left_join(projects_orgs %>% select(ProjectID, AgencyID),
-            by = "ProjectID") %>%
-  relocate(AgencyID, .after = PersonalID) %>%
+  left_join(clarity_projects_orgs,
+            by = "Legacy_ProgramID") %>%
+  relocate(Clarity_AgencyID, .after = PersonalID) %>%
   left_join(sp_entry_exit %>%
               filter(active == TRUE) %>%
               select(client_id, entry_exit_id, entry_date, exit_date, provider_id),
@@ -157,17 +157,11 @@ prep <- cohort_services %>%
     exit_adjust = if_else(is.na(exit_date), now(), exit_date),
     enrollment_interval = interval(ymd_hms(entry_date), ymd_hms(exit_adjust))
   ) %>%
-  filter(DateProvided %within% enrollment_interval &
-           provider_id == ProjectID) %>%
+  filter(ymd_hms(DateProvided) %within% enrollment_interval &
+           provider_id == Legacy_ProgramID) %>%
   rename("EnrollmentID" = entry_exit_id) %>%
-  relocate(EnrollmentID, .after = AgencyID) %>%
-  left_join(
-    id_cross %>%
-      rename("AgencyID" = Legacy_OrganizationID,
-             "ProjectID" = Legacy_ProgramID),
-    by = c("AgencyID", "ProjectID")
-  ) %>%
-  select(-entry_date, -exit_date, -enrollment_interval, -exit_adjust, -provider_id)
+  relocate(EnrollmentID, .after = Clarity_AgencyID) %>%
+  select(ServicesID:Clarity_ProgramName)
 
 service_items <- prep %>%
   left_join(service_translator, by = "sp_code") %>%

@@ -21,6 +21,44 @@ make_dfs <- function(file) {
 data.frame(file = files) %>%
   purrr::pwalk(make_dfs)
 
+# Create Crosswalk --------------------------------------------------------
+
+# from Clarity (may need updating)
+live_clarity <- read_csv(here("data_from_Clarity/agencies_programs_in_Clarity.csv")) %>%
+  select(Clarity_AgencyID:Clarity_ProgramName)
+
+# from ServicePoint (may need updating)
+in_provider_group <- read_csv(here("random_data/projects_in_sp_provider_group_final.csv"))
+
+
+all_projects_from_sp <- sp_provider %>%
+  filter(active == TRUE) %>%
+  select("Legacy_ProgramID" = provider_id, 
+         "Legacy_ProgramName" = name, 
+         "Legacy_AgencyID" = hud_organization_id) %>%
+  left_join(
+    sp_provider %>%
+      select(
+        "Legacy_AgencyID" = provider_id,
+        "Legacy_AgencyName" = name
+      ),
+    by = "Legacy_AgencyID"
+  )
+
+data_coming_from_sp <- all_projects_from_sp %>%
+  right_join(in_provider_group, by = c("Legacy_ProgramID", "Legacy_ProgramName")) %>%
+  select(starts_with("Legacy"))
+
+clarity_projects_orgs <- data_coming_from_sp %>%
+  left_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName")) %>%
+  mutate(Clarity_ProgramName = Legacy_ProgramName) %>%
+  relocate(Legacy_AgencyID:Legacy_AgencyName, .before = Legacy_ProgramID)
+
+clarity_projects_orgs %>%
+  filter(is.na(Clarity_ProgramID)) %>% nrow() == 0 # YOU WANT TRUE
+
+# Getting Client Cohort ---------------------------------------------------
+
 client_cohort <- sp_entry_exit %>%
   filter(active == TRUE &
            !client_id %in% c(5, 4216) &
@@ -28,38 +66,6 @@ client_cohort <- sp_entry_exit %>%
            (ymd_hms(exit_date) >= ymd("20140601") |
               is.na(exit_date))) %>%
   pull(client_id) %>% unique()
-
-projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
-
-id_cross <- read_csv(here("id_crosswalk.csv"))
-
-sp_projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("SP_ProjectID" = provider_id, 
-         "SP_ProjectName" = name, 
-         "SP_AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
-            by = "SP_AgencyID")
-
-clarity_projects_orgs <- sp_projects_orgs %>%
-  left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
-  filter(!is.na(Clarity_ProgramID)) %>%
-  select(
-    SP_ProjectID,
-    SP_ProjectName,
-    SP_AgencyID,
-    "SP_AgencyName" = AgencyName,
-    Clarity_ProgramID,
-    Clarity_ProgramName,
-    Clarity_AgencyID,
-    Clarity_AgencyName
-  )
 
 other_funding_source_crosswalk <- tibble(
   ReferenceNo = c(1:19),

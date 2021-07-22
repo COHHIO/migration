@@ -19,6 +19,8 @@ library(lubridate)
 
 source(here("reading_severance.R"))
 
+# 9 custom fields coming in
+
 sp_question_codes <- c(
   "PERMANENTHOUSINGTRACK",
   "EXPECTEDPERMANENTHOUS",
@@ -30,6 +32,8 @@ sp_question_codes <- c(
   "VAELIGIBLE",
   "DATEVETERANIDENTIFIED"
 )
+
+# 5 of them have droplists with Reference Numbers in Clarity
 
 answers_ph_track <- tibble(
   ReferenceNo = c(0:6),
@@ -64,9 +68,11 @@ answers_va_eligible <- tibble(
             "Veteran not eligible for VA services")
 )
 
+# gathering them as they are in the data
+
 client_level <- da_answer %>%
   filter(question_code %in% c(sp_question_codes) &
-           active == TRUE) %>%
+           active == TRUE & client_id %in% c(client_cohort)) %>%
   group_by(client_id, question_code) %>%
   slice_max(date_effective) %>%
   slice_max(date_added) %>%
@@ -96,6 +102,8 @@ client_level <- da_answer %>%
   ) %>%
   relocate(ClientCustomID, .before = "PersonalID") %>%
   relocate(ExportID, .after = "PersonalID")
+
+# turning the 5 that need it into their Clarity Reference Numbers
 
 client_custom <- client_level %>%
   left_join(answers_enhanced_yes_no, by = c("c_covid19_consent_to_vaccine" = "Value")) %>%

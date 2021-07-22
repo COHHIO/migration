@@ -65,6 +65,9 @@ client_cohort <- sp_entry_exit %>%
            !provider_id %in% c(1695, 1680) &
            (ymd_hms(exit_date) >= ymd("20140601") |
               is.na(exit_date))) %>%
+  anti_join(sp_client %>%
+               filter(active == FALSE) %>%
+               select(client_id), by = "client_id") %>%
   pull(client_id) %>% unique()
 
 other_funding_source_crosswalk <- tibble(

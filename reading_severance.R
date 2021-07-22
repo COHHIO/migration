@@ -54,6 +54,8 @@ clarity_projects_orgs <- data_coming_from_sp %>%
   mutate(Clarity_ProgramName = Legacy_ProgramName) %>%
   relocate(Legacy_AgencyID:Legacy_AgencyName, .before = Legacy_ProgramID)
 
+project_cohort <- clarity_projects_orgs$Legacy_ProgramID 
+
 cat(clarity_projects_orgs %>%
   filter(is.na(Clarity_ProgramID)) %>% nrow() == 0) # YOU WANT TRUE
 
@@ -62,7 +64,7 @@ cat(clarity_projects_orgs %>%
 client_cohort <- sp_entry_exit %>%
   filter(active == TRUE &
            !client_id %in% c(5, 4216) &
-           !provider_id %in% c(1695, 1680) &
+           provider_id %in% c(project_cohort) &
            (ymd_hms(exit_date) >= ymd("20140601") |
               is.na(exit_date))) %>%
   anti_join(sp_client %>%

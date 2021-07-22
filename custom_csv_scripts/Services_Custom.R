@@ -85,6 +85,7 @@ cohort_services <- sp_need_service %>%
            is.na(path_service_type) &
            is.na(rhy_service_type) &
            is.na(ssvf_service_type) &
+           is.na(ssvf_fin_assist_type) &
            ((
              program_type_code == "Homelessness Prevention (HUD)" &
                code %in% c(
@@ -122,17 +123,6 @@ cohort_services <- sp_need_service %>%
              )
            ))
 
-# connector:
-
-projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("ProjectID" = provider_id, 
-         "ProjectName" = name, 
-         "AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>%
-              select("AgencyID" = provider_id, "AgencyName" = name),
-            by = "AgencyID")
-
 # mostly ServicePoint + connector data:
 
 prep <- cohort_services %>%
@@ -166,13 +156,21 @@ prep <- cohort_services %>%
 service_items <- prep %>%
   left_join(service_translator, by = "sp_code") %>%
   left_join(clarity_service_items, by = c("clarity_desc" = "ServiceItemName",
-                                          "Clarity_ProgramName" = "ProjectName", 
-                                          "Clarity_ProgramID" = "ProjectID")) %>%
+                                          "Clarity_ProgramName", 
+                                          "Clarity_ProgramID")) %>%
   unique()
 
 projects_not_done <- service_items %>% 
   filter(is.na(ServiceItemID)) %>% 
-  count(Legacy_ProgramName, sp_desc, clarity_desc, PersonalID, DateProvided)
+  count(Legacy_ProgramName, sp_desc, clarity_desc) %>%
+  mutate(ok = case_when(
+    str_detect(Legacy_ProgramName, "SSVF") |
+      str_detect(Legacy_ProgramName, "YHDP") |
+      str_detect(Legacy_ProgramName, "RHY") ~ "ok", 
+    TRUE ~ "not ok"))
+
+services_not_connecting <- service_items %>% 
+  filter(is.na(ServiceItemID))
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &

@@ -167,11 +167,34 @@ projects_not_done <- service_items %>%
   mutate(ok = case_when(
     str_detect(Legacy_ProgramName, "SSVF") |
       str_detect(Legacy_ProgramName, "YHDP") |
-      str_detect(Legacy_ProgramName, "RHY") ~ "ok", 
+      str_detect(Legacy_ProgramName, "RHY") |
+      str_detect(Legacy_ProgramName, "ODH") ~ "ok", 
     TRUE ~ "not ok"))
 
 services_not_connecting <- service_items %>% 
-  filter(is.na(ServiceItemID))
+  filter(is.na(ServiceItemID) &
+           str_detect(Legacy_ProgramName, "SSVF", negate = TRUE) &
+           str_detect(Legacy_ProgramName, "YHDP", negate = TRUE) &
+           str_detect(Legacy_ProgramName, "RHY", negate = TRUE) &
+           str_detect(Legacy_ProgramName, "ODH", negate = TRUE))
+
+cat(services_not_connecting %>% nrow() == 0) # you want true
+
+services_not_coming <- service_items %>%
+  filter(is.na(ServiceItemID) &
+           (
+             str_detect(Legacy_ProgramName, "SSVF") |
+               str_detect(Legacy_ProgramName, "YHDP") |
+               str_detect(Legacy_ProgramName, "RHY") |
+               str_detect(Legacy_ProgramName, "ODH")
+           ))
+
+# dropping all the services that did not connect to any ServiceItemID
+
+prep_2 <- service_items %>%
+  filter(!is.na(ServiceItemID))
+
+# getting funding sources ready
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &

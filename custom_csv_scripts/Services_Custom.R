@@ -80,6 +80,7 @@ cohort_services <- sp_need_service %>%
     by = c("provide_provider_id" = "provider_id")
   ) %>%
   filter(active == TRUE &
+           ymd_hms(provide_start_date) > ymd("20140601") &
            client_id %in% client_cohort &
            is.na(hopwa_service_type) &
            is.na(path_service_type) &

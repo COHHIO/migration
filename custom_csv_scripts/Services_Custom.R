@@ -192,12 +192,13 @@ services_not_coming <- service_items %>%
 # dropping all the services that did not connect to any ServiceItemID
 
 prep_2 <- service_items %>%
-  filter(!is.na(ServiceItemID))
+  filter(!is.na(ServiceItemID)) 
 
 # getting funding sources ready
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &
+           source != "Diversion" &
            last_action %in% c("Modified", "Submitted")) %>%
   select(need_service_group_id, cost, source) %>%
   left_join(sp_need_service %>%
@@ -226,9 +227,35 @@ fund_translator <- tibble(
   left_join(other_funding_source_crosswalk, 
             by = c("funding_source_other" = "ReferenceNo"))
 
+clarity_funds <- read_csv(here("data_from_Clarity/program_funds_clarity.csv"))
 
+prep_3 <- prep_2 %>%
+  left_join(fund_amounts, by = "ServicesID") %>%
+  left_join(fund_translator, by = c("source" = "SPServiceFundingSource")) %>%
+  left_join(
+    clarity_funds %>%
+      select(-Clarity_AgencyName,-Clarity_ProgramName),
+    by = c(
+      "Clarity_AgencyID",
+      "funding_source" = "FundingSourceID",
+      "funding_source_other" = "FundingOtherID"
+    )
+  )
+
+# checking for services missing legit funding sources  
   
-  
-  
+missings <- prep_3 %>%
+  filter(!is.na(source) & is.na(ClarityFundingSourceID)) %>%
+  count(Clarity_ProgramName, source)
+
+
+
+
+
+
+
+
+
+
   
 

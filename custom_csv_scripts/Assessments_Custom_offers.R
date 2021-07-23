@@ -70,17 +70,19 @@ deduplicated <- offer_subs %>%
 
 offer_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "ProjectID" = sub_provider_created, 
+         "Legacy_ProgramID" = sub_provider_created, 
          "InformationDate" = date_effective,
          offer_accept_decline_date,
          offer_date,
          offer_accepted,
          offer_type
   ) %>%
-  filter(!PersonalID %in% c(5, 4216) &
-           !is.na(offer_date)) %>%
-  left_join(projects_orgs, by = "ProjectID") %>%
+  left_join(sp_provider %>% select(provider_id, hud_organization_id),
+            by = c("Legacy_ProgramID" = "provider_id")) %>%
   mutate(
+    offer_date = case_when(
+      is.na(ymd_hms(offer_date)) ~ InformationDate,
+      TRUE ~ ymd_hms(offer_date)),
     AssessmentID = 194,
     AssessmentName = "Offers of Permanent Housing",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
@@ -96,10 +98,10 @@ offer_data <- deduplicated %>%
     ),
     AssessmentCustomID = row_number()
   ) %>% 
-  left_join(clarity_projects_orgs %>%
-              select(SP_AgencyID, Clarity_AgencyID) %>%
+  left_join(clarity_projects_orgs %>% 
+              select(Legacy_AgencyID, Clarity_AgencyID) %>%
               unique(), 
-            by = c("AgencyID" = "SP_AgencyID")) %>%
+            by = c("hud_organization_id" = "Legacy_AgencyID")) %>%
   filter(!is.na(Clarity_AgencyID)) %>%
   select(AssessmentCustomID,
          AssessmentID,

@@ -70,15 +70,13 @@ deduplicated <- dose_subs %>%
 
 dose_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "ProjectID" = sub_provider_created, 
+         "Legacy_ProgramID" = sub_provider_created, 
          "InformationDate" = date_effective,
          c_covid19_client_contact_info,
          c_covid19_vaccine_manufacturer,
          c_covid19_date_vaccine_administered,
          c_covid19_vaccine_documentation
   ) %>%
-  filter(!PersonalID %in% c(5, 4216)) %>%
-  left_join(projects_orgs, by = "ProjectID") %>%
   mutate(
     AssessmentID = 195,
     AssessmentName = "COVID-19 Vaccine Doses",
@@ -98,10 +96,8 @@ dose_data <- deduplicated %>%
     ),
     AssessmentCustomID = row_number()
   ) %>% 
-  left_join(clarity_projects_orgs %>%
-              select(SP_AgencyID, Clarity_AgencyID) %>%
-              unique(), 
-            by = c("AgencyID" = "SP_AgencyID")) %>%
+  left_join(clarity_projects_orgs, 
+            by = "Legacy_ProgramID") %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,

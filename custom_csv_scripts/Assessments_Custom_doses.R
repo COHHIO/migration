@@ -77,6 +77,8 @@ dose_data <- deduplicated %>%
          c_covid19_date_vaccine_administered,
          c_covid19_vaccine_documentation
   ) %>%
+  left_join(sp_provider %>% select(provider_id, hud_organization_id),
+            by = c("Legacy_ProgramID" = "provider_id")) %>%
   mutate(
     AssessmentID = 195,
     AssessmentName = "COVID-19 Vaccine Doses",
@@ -96,8 +98,11 @@ dose_data <- deduplicated %>%
     ),
     AssessmentCustomID = row_number()
   ) %>% 
-  left_join(clarity_projects_orgs, 
-            by = "Legacy_ProgramID") %>%
+  left_join(clarity_projects_orgs %>% 
+              select(Legacy_AgencyID, Clarity_AgencyID) %>%
+              unique(), 
+            by = c("hud_organization_id" = "Legacy_AgencyID")) %>%
+  filter(!is.na(Clarity_AgencyID)) %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,

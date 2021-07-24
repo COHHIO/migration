@@ -229,14 +229,20 @@ fund_translator <- tibble(
 
 clarity_funds <- read_csv(here("data_from_Clarity/program_funds_clarity.csv"))
 
+changes_to_sources <- read_csv(here("random_data/funding_source_exceptions.csv"))
+
 prep_3 <- prep_2 %>%
   left_join(fund_amounts, by = "ServicesID") %>%
+  left_join(changes_to_sources, by = c(
+    "Clarity_ProgramID", "Clarity_ProgramName", "source"
+  )) %>%
+  mutate(source = if_else(is.na(NewSource), source, NewSource)) %>%
   left_join(fund_translator, by = c("source" = "SPServiceFundingSource")) %>%
   left_join(
     clarity_funds %>%
-      select(-Clarity_AgencyName,-Clarity_ProgramName),
+      select(-Clarity_AgencyName,-Clarity_ProgramName, -Clarity_AgencyID),
     by = c(
-      "Clarity_AgencyID",
+      "Clarity_ProgramID",
       "funding_source" = "FundingSourceID",
       "funding_source_other" = "FundingOtherID"
     )
@@ -246,16 +252,34 @@ prep_3 <- prep_2 %>%
   
 missings <- prep_3 %>%
   filter(!is.na(source) & is.na(ClarityFundingSourceID)) %>%
-  count(Clarity_ProgramName, source)
+  count(Clarity_ProgramName, source, Description, OtherFundingSource)
+
+writexl::write_xlsx(missings, here("random_data/funding_source_setup.xlsx"))
 
 
+# analysis Risk Mitigation data
 
+x <- sp_need_service %>%
+  filter(str_detect(code, "TP-") & active == TRUE)
 
+earliest <- x %>% group_by(active) %>%
+  summarise(earliest = min(provide_start_date, na.rm = TRUE)) %>% pull()
 
+latest <- x %>% group_by(active) %>%
+  summarise(earliest = max(provide_start_date, na.rm = TRUE)) %>% pull()
 
+who <- x %>%
+  left_join(clarity_projects_orgs, 
+            by = c("provide_provider_id" = "Legacy_ProgramID")) %>%
+  count(Legacy_ProgramName)
 
-
-
+who_when <- x %>%
+  left_join(clarity_projects_orgs, 
+            by = c("provide_provider_id" = "Legacy_ProgramID")) %>%
+  group_by(Legacy_ProgramName) %>%
+  summarise(services = n(),
+            earliest = min(provide_start_date, na.rm = TRUE),
+            latest = max(provide_start_date, na.rm = TRUE))
 
   
 

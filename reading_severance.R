@@ -22,6 +22,8 @@ data.frame(file = files) %>%
   purrr::pwalk(make_dfs)
 
 # Create Crosswalk --------------------------------------------------------
+# get tree moves
+tree_moves <- read_csv(here("random_data/tree_moves.csv"))
 
 # from Clarity (may need updating)
 live_clarity <- read_csv(here("data_from_Clarity/agencies_programs_in_Clarity.csv")) %>%
@@ -30,9 +32,15 @@ live_clarity <- read_csv(here("data_from_Clarity/agencies_programs_in_Clarity.cs
 # from ServicePoint (may need updating)
 in_provider_group <- read_csv(here("random_data/projects_in_sp_provider_group_final.csv"))
 
-
 all_projects_from_sp <- sp_provider %>%
   filter(active == TRUE) %>%
+  left_join(tree_moves, by = c("provider_id" = "Legacy_ProgramID")) %>%
+  mutate(
+    hud_organization_id = 
+      case_when(
+        !is.na(correct_Legacy_AgencyID) ~ correct_Legacy_AgencyID,
+        TRUE ~ hud_organization_id)
+    ) %>%
   select("Legacy_ProgramID" = provider_id, 
          "Legacy_ProgramName" = name, 
          "Legacy_AgencyID" = hud_organization_id) %>%

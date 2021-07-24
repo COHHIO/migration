@@ -36,6 +36,11 @@ all_projects_from_sp <- sp_provider %>%
   filter(active == TRUE) %>%
   left_join(tree_moves, by = c("provider_id" = "Legacy_ProgramID")) %>%
   mutate(
+    name = case_when(
+      provider_id == 85 ~ "Columbiana - Family Recovery Center - Fleming House - TH",
+      provider_id == 416 ~ "zzScioto - Counseling Center - Transitional Living - TH", 
+      TRUE ~ name
+    ),
     hud_organization_id = 
       case_when(
         !is.na(correct_Legacy_AgencyID) ~ correct_Legacy_AgencyID,
@@ -51,15 +56,33 @@ all_projects_from_sp <- sp_provider %>%
         "Legacy_AgencyName" = name
       ),
     by = "Legacy_AgencyID"
+  ) %>%
+  mutate(
+    Legacy_AgencyName = case_when(
+      Legacy_AgencyID == 2999 ~ "COORDINATED ENTRY - BoSCoC (OH-507)",
+      Legacy_AgencyID == 3000 ~ "COORDINATED ENTRY - MCHCOC (OH-504)",
+      TRUE ~ Legacy_AgencyName
+    )
   )
 
 data_coming_from_sp <- all_projects_from_sp %>%
   right_join(in_provider_group, by = c("Legacy_ProgramID", "Legacy_ProgramName")) %>%
   select(starts_with("Legacy"))
 
+all_projects <- all_projects_from_sp %>%
+  inner_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName"))
+
 clarity_projects_orgs <- data_coming_from_sp %>%
   left_join(live_clarity, by = c("Legacy_ProgramName" = "Clarity_ProgramName")) %>%
-  mutate(Clarity_ProgramName = Legacy_ProgramName) %>%
+  mutate(
+    Clarity_ProgramName = Legacy_ProgramName,
+    Legacy_AgencyName = case_when(
+      Legacy_AgencyID == 2999 ~
+        "COORDINATED ENTRY - BoSCoC (OH-507)",
+      Legacy_AgencyID == 3000 ~ "COORDINATED ENTRY - MCHCOC (OH-504)",
+      TRUE ~ Legacy_AgencyName
+    )
+  ) %>%  
   relocate(Legacy_AgencyID:Legacy_AgencyName, .before = Legacy_ProgramID)
 
 project_cohort <- clarity_projects_orgs$Legacy_ProgramID 

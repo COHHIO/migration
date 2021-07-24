@@ -26,7 +26,7 @@ vispdat_subs <- da_recordset %>%
   filter(
     active == TRUE &
       question %in% c("VI-SPDAT v2.0", "VI-FSPDAT v2.0", "TAY-VI-SPDAT v1.0") &
-      !client_id %in% c(5, 4216)
+      client_id %in% c(client_cohort)
   ) %>% 
   rename("subassessment_name" = question,
          "sub_is_active" = active,
@@ -77,37 +77,37 @@ deduplicated <- corrected_subs %>%
 
 
 
-# Projects to Organizations -----------------------------------------------
-
-sp_projects_orgs <- sp_provider %>%
-  filter(active == TRUE) %>%
-  select("SP_ProjectID" = provider_id, 
-         "SP_ProjectName" = name, 
-         "SP_AgencyID" = hud_organization_id) %>%
-  left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
-            by = "SP_AgencyID")
-
-clarity_projects_orgs <- sp_projects_orgs %>%
-  left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
-  filter(!is.na(Clarity_ProgramID)) %>%
-  select(
-    SP_ProjectID,
-    SP_ProjectName,
-    SP_AgencyID,
-    "SP_AgencyName" = AgencyName,
-    "Clarity_ProjectID" = Clarity_ProgramID,
-    "Clarity_ProjectName" = Clarity_ProgramName,
-    "Clarity_AgencyID" = Clarity_AgencyID,
-    "Clarity_AgencyName" = Clarity_AgencyName
-  )
+# # Projects to Organizations -----------------------------------------------
+# 
+# sp_projects_orgs <- sp_provider %>%
+#   filter(active == TRUE) %>%
+#   select("SP_ProjectID" = provider_id, 
+#          "SP_ProjectName" = name, 
+#          "SP_AgencyID" = hud_organization_id) %>%
+#   left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
+#             by = "SP_AgencyID")
+# 
+# clarity_projects_orgs <- sp_projects_orgs %>%
+#   left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
+#   filter(!is.na(Clarity_ProgramID)) %>%
+#   select(
+#     SP_ProjectID,
+#     SP_ProjectName,
+#     SP_AgencyID,
+#     "SP_AgencyName" = AgencyName,
+#     "Clarity_ProjectID" = Clarity_ProgramID,
+#     "Clarity_ProjectName" = Clarity_ProgramName,
+#     "Clarity_AgencyID" = Clarity_AgencyID,
+#     "Clarity_AgencyName" = Clarity_AgencyName
+#   )
 
 # building vi-spdat -------------------------------------------------------
 
-agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
+# agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 spdat_data <- deduplicated %>%
   select("PersonalID" = client_id,
-         "SP_ProjectID" = sub_provider_created, 
+         "Legacy_ProgramID" = sub_provider_created, 
          "InformationDate" = date_effective,
          "c_vispdat_score" = Score, 
          "assessment_date" = date_effective,
@@ -127,13 +127,23 @@ spdat_data <- deduplicated %>%
       'TAY-VI-SPDAT v1.0' = 3
     )
   ) %>%
-  left_join(clarity_projects_orgs, by = c("c_vispdat_program_name" = "SP_ProjectID")) %>%
-  mutate(SP_AgencyID = case_when(SP_ProjectID %in% c(2372, 1695) ~ SP_ProjectID,
-                              TRUE ~ SP_AgencyID),
-         c_vispdat_program_name = SP_ProjectName, 
-         AssessmentCustomID = row_number()) %>% 
-  filter((SP_AgencyID %in% c(agencies) |
-                                  SP_AgencyID == 2372) &
+  left_join(sp_provider %>% select(provider_id, hud_organization_id),
+            by = c("Legacy_ProgramID" = "provider_id")) %>%
+  mutate(rowcount = row_number()) %>%
+  left_join(clarity_projects_orgs %>% 
+              select(Legacy_AgencyID, Clarity_AgencyID) %>%
+              unique(), 
+            by = c("hud_organization_id" = "Legacy_AgencyID",)) %>%  
+  mutate(
+    Legacy_AgencyID = case_when(
+      Legacy_ProgramID %in% c(2372, 1695) ~ Legacy_ProgramID,
+      TRUE ~ Legacy_AgencyID
+    ),
+    c_vispdat_program_name = Legacy_ProgramName,
+    AssessmentCustomID = row_number()
+  ) %>% 
+  filter((Legacy_AgencyID %in% c(agencies) |
+                                  Legacy_AgencyID == 2372) &
            !is.na(InformationDate)) %>% # servicepoint bug
   select(AssessmentCustomID,
          AssessmentID,

@@ -159,6 +159,16 @@ spdat_data <- deduplicated %>%
          c_vispdat_program_name,
          c_vispdat_score) 
 
+x <- clarity_projects_orgs %>% 
+     select(Legacy_AgencyID, Clarity_AgencyID) %>%
+     unique()
+View(x)
+x <- janitor::get_dupes(spdat_data, rowcount)
+
+y <- x$Legacy_ProgramID %>% unique()
+
+the_problem <- clarity_projects_orgs %>% filter(Legacy_ProgramID %in% c(y))
+
 # Writing it out to csv ---------------------------------------------------
 
 write_csv(spdat_data, here("data_to_Clarity/Assessment_Custom_spdats.csv"))

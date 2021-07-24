@@ -106,13 +106,15 @@ deduplicated <- corrected_subs %>%
 # agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 spdat_data <- deduplicated %>%
-  select("PersonalID" = client_id,
-         "Legacy_ProgramID" = sub_provider_created, 
-         "InformationDate" = date_effective,
-         "c_vispdat_score" = Score, 
-         "assessment_date" = date_effective,
-         "c_vispdat_type" = subassessment_name,
-         "c_vispdat_program_name" = sub_provider_created) %>%
+  select(
+    "PersonalID" = client_id,
+    "Legacy_ProgramID" = sub_provider_created,
+    "InformationDate" = date_effective,
+    "c_vispdat_score" = Score,
+    "assessment_date" = date_effective,
+    "c_vispdat_type" = subassessment_name,
+    "c_vispdat_program_name" = sub_provider_created
+  ) %>%
   mutate(
     AssessmentID = 193,
     AssessmentName = "ServicePoint VI-SPDAT Assessment",
@@ -127,24 +129,17 @@ spdat_data <- deduplicated %>%
       'TAY-VI-SPDAT v1.0' = 3
     )
   ) %>%
-  left_join(sp_provider %>% select(provider_id, hud_organization_id),
-            by = c("Legacy_ProgramID" = "provider_id")) %>%
-  mutate(rowcount = row_number()) %>%
-  left_join(clarity_projects_orgs %>% 
-              select(Legacy_AgencyID, Clarity_AgencyID) %>%
-              unique(), 
-            by = c("hud_organization_id" = "Legacy_AgencyID",)) %>%  
+  left_join(
+    sp_provider %>% select(provider_id, hud_organization_id),
+    by = c("Legacy_ProgramID" = "provider_id")
+  ) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
   mutate(
-    Legacy_AgencyID = case_when(
-      Legacy_ProgramID %in% c(2372, 1695) ~ Legacy_ProgramID,
-      TRUE ~ Legacy_AgencyID
-    ),
     c_vispdat_program_name = Legacy_ProgramName,
-    AssessmentCustomID = row_number()
+    AssessmentCustomID = row_number(),
+    Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID)
   ) %>% 
-  filter((Legacy_AgencyID %in% c(agencies) |
-                                  Legacy_AgencyID == 2372) &
-           !is.na(InformationDate)) %>% # servicepoint bug
+  filter(!is.na(InformationDate)) %>% # servicepoint bug
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
@@ -158,16 +153,6 @@ spdat_data <- deduplicated %>%
          c_vispdat_type,
          c_vispdat_program_name,
          c_vispdat_score) 
-
-x <- clarity_projects_orgs %>% 
-     select(Legacy_AgencyID, Clarity_AgencyID) %>%
-     unique()
-View(x)
-x <- janitor::get_dupes(spdat_data, rowcount)
-
-y <- x$Legacy_ProgramID %>% unique()
-
-the_problem <- clarity_projects_orgs %>% filter(Legacy_ProgramID %in% c(y))
 
 # Writing it out to csv ---------------------------------------------------
 

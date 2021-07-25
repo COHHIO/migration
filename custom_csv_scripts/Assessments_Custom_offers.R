@@ -102,7 +102,9 @@ offer_data <- deduplicated %>%
               select(Legacy_AgencyID, Clarity_AgencyID) %>%
               unique(), 
             by = c("hud_organization_id" = "Legacy_AgencyID")) %>%
-  filter(!is.na(Clarity_AgencyID)) %>%
+  mutate(Clarity_AgencyID = case_when(
+    is.na(Clarity_AgencyID) ~ 299,
+    TRUE ~ Clarity_AgencyID)) %>% 
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,

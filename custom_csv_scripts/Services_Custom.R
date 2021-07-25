@@ -248,6 +248,24 @@ prep_3 <- prep_2 %>%
     )
   )
 
+Custom_Services <- prep_3 %>%
+  mutate(ServicesID = row_number()) %>%
+  select(
+    ServicesID,
+    PersonalID,
+    "AgencyID" = Clarity_AgencyID,
+    EnrollmentID,
+    ServiceItemID,
+    DateProvided,
+    "FundingSourceID" = ClarityFundingSourceID,
+    FundingSource,
+    FundingOther,
+    FAAmount,
+    DateCreated,
+    DateUpdated,
+    UserID
+  )
+
 # checking for services missing legit funding sources  
   
 missings <- prep_3 %>%
@@ -257,29 +275,23 @@ missings <- prep_3 %>%
 writexl::write_xlsx(missings, here("random_data/funding_source_setup.xlsx"))
 
 
-# analysis Risk Mitigation data
+# Writing it out to csv ---------------------------------------------------
 
-x <- sp_need_service %>%
-  filter(str_detect(code, "TP-") & active == TRUE)
+write_csv(All_Notes, here("data_to_Clarity/Notes_Custom.csv"))
 
-earliest <- x %>% group_by(active) %>%
-  summarise(earliest = min(provide_start_date, na.rm = TRUE)) %>% pull()
-
-latest <- x %>% group_by(active) %>%
-  summarise(earliest = max(provide_start_date, na.rm = TRUE)) %>% pull()
-
-who <- x %>%
-  left_join(clarity_projects_orgs, 
-            by = c("provide_provider_id" = "Legacy_ProgramID")) %>%
-  count(Legacy_ProgramName)
-
-who_when <- x %>%
-  left_join(clarity_projects_orgs, 
-            by = c("provide_provider_id" = "Legacy_ProgramID")) %>%
-  group_by(Legacy_ProgramName) %>%
-  summarise(services = n(),
-            earliest = min(provide_start_date, na.rm = TRUE),
-            latest = max(provide_start_date, na.rm = TRUE))
-
+fix_date_times <- function(file) {
+  cat(file, sep = "\n")
+  x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
+                col_types = cols())  %>%
+    mutate(
+      Date = format.Date(Date, "%Y-%m-%d"),
+      DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
+      DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")
+    )
   
+  fwrite(x,
+         here(paste0("data_to_Clarity/", file, ".csv")),
+         logical01 = TRUE)
+}
 
+fix_date_times("Notes_Custom")

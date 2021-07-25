@@ -73,37 +73,7 @@ deduplicated <- corrected_subs %>%
   rename("Score" = val) %>%
   select(-question_name, -corrected_date_effective)
 
-# Translators -------------------------------------------------------------
-
-
-
-# # Projects to Organizations -----------------------------------------------
-# 
-# sp_projects_orgs <- sp_provider %>%
-#   filter(active == TRUE) %>%
-#   select("SP_ProjectID" = provider_id, 
-#          "SP_ProjectName" = name, 
-#          "SP_AgencyID" = hud_organization_id) %>%
-#   left_join(sp_provider %>% select("SP_AgencyID" = provider_id, "AgencyName" = name),
-#             by = "SP_AgencyID")
-# 
-# clarity_projects_orgs <- sp_projects_orgs %>%
-#   left_join(id_cross, by = c("SP_ProjectID" = "Legacy_ProgramID")) %>%
-#   filter(!is.na(Clarity_ProgramID)) %>%
-#   select(
-#     SP_ProjectID,
-#     SP_ProjectName,
-#     SP_AgencyID,
-#     "SP_AgencyName" = AgencyName,
-#     "Clarity_ProjectID" = Clarity_ProgramID,
-#     "Clarity_ProjectName" = Clarity_ProgramName,
-#     "Clarity_AgencyID" = Clarity_AgencyID,
-#     "Clarity_AgencyName" = Clarity_AgencyName
-#   )
-
 # building vi-spdat -------------------------------------------------------
-
-# agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 spdat_data <- deduplicated %>%
   select(
@@ -138,6 +108,63 @@ spdat_data <- deduplicated %>%
     c_vispdat_program_name = Legacy_ProgramName,
     AssessmentCustomID = row_number(),
     Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID)
+  ) %>% 
+  filter(!is.na(InformationDate)) %>% # servicepoint bug
+  select(AssessmentCustomID,
+         AssessmentID,
+         AssessmentName,
+         PersonalID,
+         "AgencyID" = Clarity_AgencyID,
+         InformationDate,
+         assessment_date,
+         assessment_type,
+         assessment_level,
+         assessment_location,
+         c_vispdat_type,
+         c_vispdat_program_name,
+         c_vispdat_score) 
+
+# building vi-spdat -------------------------------------------------------
+
+mahoning_providers <- c(2384, 1641, 697, 1639, 1739, 1704, 1638, 1640,1392, 696, 
+                        1738, 2103, 2339, 2322, 2091, 1773, 110, 2335, 2364,
+                        2351, 2333, 2365, 2383, 2344, 2317, 2316, 2326, 2332,
+                        2358, 2352, 2341, 2373, 2371, 2105, 2331, 2334, 2329,
+                        2325, 2323, 2346, 2349, 2338, 2385, 2437, 1330, 2376,
+                        2382, 2375, 2328, 2359, 2374, 2348, 2362, 2378, 2380, 
+                        1331, 2342, 1327, 2353, 2379, 2372, 2354, 2340, 2355,
+                        2356, 2363, 2381, 2370, 2357, 2366, 2377, 2345, 2360,  
+                        2318, 2367, 2336, 2343, 2368, 2319, 2369, 2444, 2445
+)
+
+spdat_data2 <- deduplicated %>%
+  select(
+    "PersonalID" = client_id,
+    "Legacy_ProgramID" = sub_provider_created,
+    "InformationDate" = date_effective,
+    "c_vispdat_score" = Score,
+    "assessment_date" = date_effective,
+    "c_vispdat_type" = subassessment_name,
+    "c_vispdat_program_name" = sub_provider_created
+  ) %>%
+  mutate(
+    AssessmentID = 193,
+    AssessmentName = "ServicePoint VI-SPDAT Assessment",
+    InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
+    assessment_type = 1,
+    assessment_level = 2,
+    assessment_location = 0,
+    c_vispdat_type = recode(
+      c_vispdat_type,
+      'VI-SPDAT v2.0' = 1,
+      'VI-FSPDAT v2.0' = 2,
+      'TAY-VI-SPDAT v1.0' = 3
+    )) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
+  mutate(
+    c_vispdat_program_name = Legacy_ProgramName,
+    AssessmentCustomID = row_number(),
+    Clarity_AgencyID = if_else(Legacy_ProgramID %in% c(mahoning_providers), 300, 299)
   ) %>% 
   filter(!is.na(InformationDate)) %>% # servicepoint bug
   select(AssessmentCustomID,

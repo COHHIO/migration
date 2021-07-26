@@ -22,7 +22,7 @@ source(here("reading_severance.R"))
 # Notes attached to Goals -------------------------------------------------
 
 notes_goals <- sp_goal_casenote %>%
-  filter(active == TRUE) %>%
+  filter(active == TRUE & client_id %in% c(client_cohort)) %>%
   select("PersonalID" = client_id,
          "DateCreated" = date_added,
          "DateUpdated" = date_updated,
@@ -47,7 +47,7 @@ notes_goals <- sp_goal_casenote %>%
 # Client Notes ------------------------------------------------------------
 
 notes_clients <- sp_client_note %>%
-  filter(active == TRUE) %>%
+  filter(active == TRUE & client_id %in% c(client_cohort)) %>%
   select("PersonalID" = client_id,
          "DateCreated" = date_added,
          "DateUpdated" = date_updated,
@@ -72,7 +72,7 @@ notes_clients <- sp_client_note %>%
 # Notes attached to Services ----------------------------------------------
 
 notes_services <- sp_need_service %>% 
-  filter(!is.na(service_note) & active == TRUE) %>% 
+  filter(!is.na(service_note) & client_id %in% c(client_cohort) & active == TRUE) %>% 
   mutate(Title = "imported from ServicePoint Service",
          Legacy_ProgramID = as.numeric(provide_provider_id),
          EnrollmentID = "") %>%
@@ -91,7 +91,7 @@ notes_services <- sp_need_service %>%
 # Notes attached to Needs -------------------------------------------------
 
 notes_needs <- sp_need %>% 
-  filter(!is.na(note) & active == TRUE) %>% 
+  filter(!is.na(note) & active == TRUE & client_id %in% c(client_cohort)) %>% 
   mutate(Title = "imported from ServicePoint Need",
          note = paste("Note:", note, 
                       "\nStatus:", status, 
@@ -114,11 +114,12 @@ notes_needs <- sp_need %>%
 
 # Exit Notes --------------------------------------------------------------
 
-# agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
-
 notes_exits <- sp_entry_exit %>%
   left_join(all_projects, by = c("provider_id" = "Legacy_ProgramID")) %>%
-  filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601")) %>%
+  filter(!is.na(notes) & 
+           active == TRUE & 
+           ymd_hms(exit_date) >= ymd("20140601") &
+           client_id %in% c(client_cohort)) %>%
   mutate(Title = paste("Exit note: Exited", 
                        Legacy_ProgramName, 
                        "on", 
@@ -172,8 +173,8 @@ notes_proper_agency <- All_Notes_prep %>%
   ) %>%
   filter(!is.na(AgencyID))
 
-notes_missing_agency <- All_Notes_prep %>%
-  filter(is.na(Clarity_AgencyID)) %>%
+notes_missing_agency <- notes_proper_agency %>%
+  filter(is.na(AgencyID)) %>%
   count(Legacy_ProgramID) %>%
   left_join(sp_provider %>% select(provider_id, name), 
             by = c("Legacy_ProgramID" = "provider_id"))

@@ -64,7 +64,30 @@ enrollment_custom <- counties_all %>%
     ExportID,
     c_county_served,
     c_county_prior
-  )
+  ) #%>%
+  # left_join(sp_entry_exit %>% select(entry_exit_id, provider_id),
+  #         by = c("EnrollmentID" = "entry_exit_id"))
+
+# enrollments_we_gave_them <-
+#   read_csv("data_to_Clarity/final_csv/Enrollment.csv") %>%
+#   pull(EnrollmentID)
+# 
+# enrollments_not_matching <- enrollment_custom %>%
+#   filter(!EnrollmentID %in% c(enrollments_we_gave_them)) %>%
+#   left_join(all_projects, by = c("provider_id" = "Legacy_ProgramID")) %>%
+#   count(provider_id, Legacy_ProgramName) %>%
+#   left_join(in_provider_group,
+#             by = c("provider_id" = "Legacy_ProgramID",
+#                    "Legacy_ProgramName"))
+
+# clients_we_gave_them <- 
+#   read_csv("data_to_Clarity/final_csv/Client.csv") %>%
+#   pull(PersonalID)
+# 
+# clients_not_matching <- enrollment_custom %>%
+#   filter(!PersonalID %in% c(clients_we_gave_them)) %>%
+#   left_join(sp_client %>% select(client_id, active), by = c("PersonalID" = "client_id")) %>%
+#   left_join(in_provider_group, by = c("provider_id" = "Legacy_ProgramID"))
 
 # Writing it out to csv ---------------------------------------------------
 

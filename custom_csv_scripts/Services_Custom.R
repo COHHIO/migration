@@ -156,9 +156,12 @@ prep <- cohort_services %>%
 
 service_items <- prep %>%
   left_join(service_translator, by = "sp_code") %>%
-  left_join(clarity_service_items, by = c("clarity_desc" = "ServiceItemName",
-                                          "Clarity_ProgramName", 
-                                          "Clarity_ProgramID")) %>%
+  left_join(
+    clarity_service_items,
+    by = c("clarity_desc" = "ServiceItemName",
+           "Clarity_ProgramName",
+           "Clarity_ProgramID")
+  ) %>%
   unique()
 
 projects_not_done <- service_items %>% 
@@ -277,14 +280,14 @@ writexl::write_xlsx(missings, here("random_data/funding_source_setup.xlsx"))
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(All_Notes, here("data_to_Clarity/Notes_Custom.csv"))
+write_csv(Custom_Services, here("data_to_Clarity/Services_Custom.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
     mutate(
-      Date = format.Date(Date, "%Y-%m-%d"),
+      DateProvided = format.Date(DateProvided, "%Y-%m-%d"),
       DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
       DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")
     )
@@ -294,4 +297,4 @@ fix_date_times <- function(file) {
          logical01 = TRUE)
 }
 
-fix_date_times("Notes_Custom")
+fix_date_times("Services_Custom")

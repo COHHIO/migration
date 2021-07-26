@@ -127,5 +127,15 @@ other_funding_source_crosswalk <- tibble(
   "Risk Mitigation")
 )
 
+# for testing -------------------------------------------------------------
+
+
+enrollments_we_gave_them <-
+  read_csv("data_to_Clarity/final_csv/Enrollment.csv") %>%
+  pull(EnrollmentID)
+
+clients_we_gave_them <-
+  read_csv("data_to_Clarity/final_csv/Client.csv") %>%
+  pull(PersonalID)
 
 

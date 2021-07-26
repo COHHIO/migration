@@ -183,7 +183,7 @@ spdat_data2 <- deduplicated %>%
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(spdat_data, here("data_to_Clarity/Assessment_Custom_spdats.csv"))
+write_csv(spdat_data2, here("data_to_Clarity/Assessment_Custom_spdats.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")

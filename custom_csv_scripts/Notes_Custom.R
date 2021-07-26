@@ -28,12 +28,21 @@ notes_goals <- sp_goal_casenote %>%
          "DateUpdated" = date_updated,
          "Note" = note,
          "Date" = note_date,
-         "ProjectID" = provider_id) %>%
-  left_join(projects_orgs %>%
-              select(ProjectID, AgencyID), by = "ProjectID") %>%
+         "Legacy_ProgramID" = provider_id) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
   mutate(Title = "imported from Goals",
          EnrollmentID = "",
-         ServicesID = "") 
+         ServicesID = "") %>%
+  select(PersonalID,
+         "AgencyID" = Clarity_AgencyID,
+         Legacy_ProgramID,
+         EnrollmentID,
+         ServicesID,
+         Title,
+         Date,
+         Note,
+         DateCreated,
+         DateUpdated)
 
 # Client Notes ------------------------------------------------------------
 
@@ -44,30 +53,33 @@ notes_clients <- sp_client_note %>%
          "DateUpdated" = date_updated,
          "Note" = note,
          "Date" = note_date,
-         provider_creating_id) %>%
-  left_join(
-    projects_orgs %>%
-      select(ProjectID, AgencyID),
-    by = c("provider_creating_id" = "ProjectID")
-  ) %>%
+         "Legacy_ProgramID" = provider_creating_id) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
   mutate(Title = "imported from Client",
          EnrollmentID = "",
          ServicesID = "") %>%
-  rename("ProjectID" = provider_creating_id)
+  select(PersonalID,
+         "AgencyID" = Clarity_AgencyID,
+         Legacy_ProgramID,
+         EnrollmentID,
+         ServicesID,
+         Title,
+         Date,
+         Note,
+         DateCreated,
+         DateUpdated)
 
 # Notes attached to Services ----------------------------------------------
 
 notes_services <- sp_need_service %>% 
   filter(!is.na(service_note) & active == TRUE) %>% 
   mutate(Title = "imported from ServicePoint Service",
-         ProjectID = as.numeric(provide_provider_id),
+         Legacy_ProgramID = as.numeric(provide_provider_id),
          EnrollmentID = "") %>%
-  left_join(projects_orgs %>%
-              select(ProjectID, AgencyID), 
-            by = c("provide_provider_id" = "ProjectID")) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
   select("PersonalID" = client_id,
-         AgencyID,
-         ProjectID,
+         "AgencyID" = Clarity_AgencyID,
+         Legacy_ProgramID,
          EnrollmentID,
          "ServicesID" = need_service_id,
          Title,
@@ -85,14 +97,13 @@ notes_needs <- sp_need %>%
                       "\nStatus:", status, 
                       "\nOutcome:", outcome, 
                       "\nReason Unmet:", reason_unmet),
-         ProjectID = as.numeric(provider_id),
+         Legacy_ProgramID = as.numeric(provider_id),
          EnrollmentID = "",
          ServicesID = "") %>%
-  left_join(projects_orgs %>%
-              select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
+  left_join(all_projects, by = "Legacy_ProgramID") %>%
   select("PersonalID" = client_id, 
-         AgencyID, 
-         ProjectID,
+         "AgencyID" = Clarity_AgencyID, 
+         Legacy_ProgramID,
          EnrollmentID,
          ServicesID,
          Title,
@@ -106,20 +117,17 @@ notes_needs <- sp_need %>%
 # agencies <- read_csv("frozen/Agencies.csv") %>% pull(id)
 
 notes_exits <- sp_entry_exit %>%
-  left_join(sp_provider %>% select(provider_id, name), by = "provider_id") %>%
+  left_join(all_projects, by = c("provider_id" = "Legacy_ProgramID")) %>%
   filter(!is.na(notes) & active == TRUE & ymd_hms(exit_date) >= ymd("20140601")) %>%
   mutate(Title = paste("Exit note: Exited", 
-                       name, 
+                       Legacy_ProgramName, 
                        "on", 
                        format.Date(exit_date, "%m-%d-%Y")),
-         ProjectID = as.numeric(provider_id),
+         Legacy_ProgramID = as.numeric(provider_id),
          ServicesID = "") %>%
-  left_join(projects_orgs %>% 
-              select(ProjectID, AgencyID), by = c("provider_id" = "ProjectID")) %>%
-  # filter(AgencyID %in% c(agencies)) %>%
   select("PersonalID" = client_id, 
-         ProjectID,
-         AgencyID,
+         Legacy_ProgramID,
+         "AgencyID" = Clarity_AgencyID,
          ServicesID,
          "EnrollmentID" = entry_exit_id, # some are null
          Title,
@@ -139,23 +147,36 @@ All_Notes_prep <- rbind(
 ) %>%
   filter(PersonalID %in% c(client_cohort) & 
            !is.na(Note)) %>%
-  left_join(clarity_projects_orgs %>%
-              select(SP_AgencyID, Clarity_AgencyID) %>%
-              unique(), by = c("AgencyID" = "SP_AgencyID"))
+  left_join(all_projects, by = "Legacy_ProgramID")
 
 notes_proper_agency <- All_Notes_prep %>%
-  filter(!is.na(Clarity_AgencyID))
-
+  mutate(
+    AgencyID = case_when(
+      Legacy_ProgramID == 1139 ~ 134,
+      Legacy_ProgramID == 594 ~ 28,
+      Legacy_ProgramID == 1775 ~ 299,
+      Legacy_ProgramID == 220 ~ 58,
+      Legacy_ProgramID == 1355 ~ 4,
+      Legacy_ProgramID == 592 ~ 91,
+      Legacy_ProgramID == 12 ~ 9,
+      Legacy_ProgramID == 417 ~ 84,
+      Legacy_ProgramID == 865 ~ 299,
+      Legacy_ProgramID == 1808 ~ 299,
+      Legacy_ProgramID == 1316 ~ 9,
+      Legacy_ProgramID == 855 ~ 99,
+      Legacy_ProgramID == 1775 ~ 299,
+      Legacy_ProgramID == 1775 ~ 299,
+      Legacy_ProgramID == 590 ~ 163, # there were others but these have higher counts
+      TRUE ~ AgencyID
+    )
+  ) %>%
+  filter(!is.na(AgencyID))
 
 notes_missing_agency <- All_Notes_prep %>%
   filter(is.na(Clarity_AgencyID)) %>%
-  select(-Clarity_AgencyID) %>%
-  left_join(
-    clarity_projects_orgs %>%
-      select(SP_AgencyID, Clarity_AgencyID),
-    by = c("ProjectID" = "SP_AgencyID")
-  ) %>% unique() %>%
-  filter(!is.na(Clarity_AgencyID))
+  count(Legacy_ProgramID) %>%
+  left_join(sp_provider %>% select(provider_id, name), 
+            by = c("Legacy_ProgramID" = "provider_id"))
 
 All_Notes <- rbind(notes_proper_agency, notes_missing_agency) %>%
   mutate(NoteID = row_number()) %>%

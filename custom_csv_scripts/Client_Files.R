@@ -21,13 +21,13 @@ library(janitor)
 source(here("reading_severance.R"))
 
 prep_files <- sp_file_attachment %>%
-  filter(entity_name != "ROI" & 
-           client_id %in% c(client_cohort) &
-           active == TRUE) %>%
+  filter(client_id %in% c(client_cohort) &
+           active == TRUE &
+           ymd_hms(date_added) >= ymd("20140601")) %>%
   select(
     "FileID" = server_filename,
     "PersonalID" = client_id,
-    "ProjectID" = provider_creating_id,
+    "Legacy_ProgramID" = provider_creating_id,
     "DateCreated" = date_created,
     "DateUpdated" = date_updated,
     "UserID" = user_creating_id,
@@ -42,9 +42,23 @@ prep_files <- sp_file_attachment %>%
     OtherName = file_name,
     ExportID = as.numeric(format.Date(today(), "%Y%m%d"))
   ) %>%
-  left_join(clarity_projects_orgs, by = c("ProjectID" = "SP_ProjectID")) 
+  left_join(clarity_projects_orgs, by = "Legacy_ProgramID") 
 
 all_good_files <- prep_files %>%
+  mutate(
+    Clarity_AgencyID = case_when(
+      Legacy_ProgramID == 1695 ~ 211,
+      Legacy_ProgramID == 862 ~ 101,
+      Legacy_ProgramID == 1366 ~ 8,
+      Legacy_ProgramID == 1316 ~ 9,
+      Legacy_ProgramID == 8 ~ 6,
+      Legacy_ProgramID == 12 ~ 9,
+      Legacy_ProgramID == 1139 ~ 134,
+      Legacy_ProgramID == 6 ~ 4,
+      Legacy_ProgramID == 1355 ~ 4,
+      TRUE ~ Clarity_AgencyID
+    )
+  ) %>% 
   filter(!is.na(Clarity_AgencyID)) %>%
   select(
     FileID,
@@ -58,47 +72,10 @@ all_good_files <- prep_files %>%
     UserID,
     ExportID
   )
-
-missing_agency_files <- prep_files %>%
-  filter(is.na(Clarity_AgencyID)) %>%
-  select(
-    "FileID",
-    "PersonalID",
-    "ProjectID",
-    "DateCreated",
-    "DateUpdated",
-    "UserID",
-    "file_name",
-    "Category",
-    "FileName",
-    "OtherName",
-    "ExportID"
-  ) %>%
-  left_join(
-    clarity_projects_orgs %>%
-      select(SP_AgencyID, Clarity_AgencyID),
-    by = c("ProjectID" = "SP_AgencyID")
-  ) %>%
-  unique() %>%
-  filter(!is.na(Clarity_AgencyID)) %>%
-  select(
-    FileID,
-    PersonalID,
-    "AgencyID" = Clarity_AgencyID,
-    Category,
-    FileName,
-    OtherName,
-    DateCreated,
-    DateUpdated,
-    UserID,
-    ExportID
-  )
-
-files_client <- rbind(missing_agency_files, all_good_files)
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(files_client, here("data_to_Clarity/Client_Files.csv"))
+write_csv(all_good_files, here("data_to_Clarity/Client_Files.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")

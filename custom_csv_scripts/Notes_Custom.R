@@ -170,8 +170,7 @@ notes_proper_agency <- All_Notes_prep %>%
       Legacy_ProgramID == 590 ~ 163, # there were others but these have higher counts
       TRUE ~ AgencyID
     )
-  ) %>%
-  filter(!is.na(AgencyID))
+  )
 
 notes_missing_agency <- notes_proper_agency %>%
   filter(is.na(AgencyID)) %>%
@@ -179,7 +178,8 @@ notes_missing_agency <- notes_proper_agency %>%
   left_join(sp_provider %>% select(provider_id, name), 
             by = c("Legacy_ProgramID" = "provider_id"))
 
-All_Notes <- rbind(notes_proper_agency, notes_missing_agency) %>%
+All_Notes <- notes_proper_agency %>%
+  filter(!is.na(AgencyID)) %>%
   mutate(NoteID = row_number()) %>%
   select(
     NoteID,
@@ -192,8 +192,7 @@ All_Notes <- rbind(notes_proper_agency, notes_missing_agency) %>%
     Note,
     DateCreated,
     DateUpdated
-  ) %>%
-  arrange(AgencyID)
+  )
 
 # Writing it out to csv ---------------------------------------------------
 

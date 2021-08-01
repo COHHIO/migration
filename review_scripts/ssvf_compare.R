@@ -188,9 +188,42 @@ disabilities_dates_diffs <- disabilities_dates_legacy %>%
                                     units = "days")
   ) 
 
+# Services file comparison ------------------------------------------------
+
+services_legacy <-
+  read_csv(here("random_data/talberthousessvf_legacy/Services.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+services_clarity <-
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/Services.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+services_comparison <- summary(comparedf(services_clarity, services_legacy))
+
+services_differences <- services_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
 
 
+# Services file comparison results: why different row counts? -------------
 
+services_row_count <- services_legacy %>%
+  select(Name, ServicesID) %>%
+  count(Name) %>%
+  full_join(services_clarity %>%
+              select(Name, ServicesID) %>%
+              count(Name),
+            by = "Name") %>%
+  filter(n.x != n.y)
+
+clients_that_are_different <- services_row_count$Name
+
+diffs_legacy <- services_legacy %>% filter(Name %in% c(clients_that_are_different))
+
+diffs_clarity <- services_clarity %>% filter(Name %in% c(clients_that_are_different))
 
 
 

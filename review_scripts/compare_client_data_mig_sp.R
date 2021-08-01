@@ -21,7 +21,7 @@ library(janitor)
 
 # ServicePoint ------------------------------------------------------------
 
-sp_directory <- "data_to_Clarity/initial_csv"
+sp_directory <- "data_to_Clarity/final_csv"
 
 if(ncol(read_csv(paste0(sp_directory, "/Client.csv"))) == 36) {
   SP_Client <-

@@ -129,7 +129,6 @@ other_funding_source_crosswalk <- tibble(
 
 # for testing -------------------------------------------------------------
 
-
 enrollments_we_gave_them <-
   read_csv("data_to_Clarity/final_csv/Enrollment.csv") %>%
   pull(EnrollmentID)

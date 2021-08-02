@@ -221,9 +221,152 @@ services_row_count <- services_legacy %>%
 
 clients_that_are_different <- services_row_count$Name
 
-diffs_legacy <- services_legacy %>% filter(Name %in% c(clients_that_are_different))
+diffs_legacy <- services_legacy %>% 
+  filter(Name %in% c(clients_that_are_different))
 
-diffs_clarity <- services_clarity %>% filter(Name %in% c(clients_that_are_different))
+diffs_clarity <- services_clarity %>% 
+  filter(Name %in% c(clients_that_are_different))
+
+
+# Project file comparison -------------------------------------------------
+
+projects_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/Project.csv"))
+
+project_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/Project.csv"))
+
+project_comparison <- summary(comparedf(project_clarity, projects_legacy))
+
+project_differences <- project_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+
+# IncomeBenefits file comparison ------------------------------------------
+
+income_benefits_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/IncomeBenefits.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+income_benefits_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/IncomeBenefits.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+income_benefits_comparison <- 
+  summary(comparedf(income_benefits_clarity, income_benefits_legacy))
+
+income_benefits_differences <- 
+  income_benefits_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+single_record_ib_legacy <- 
+  income_benefits_legacy %>%
+  unite("SingleRecord", InformationDate:DataCollectionStage) %>%
+  select(Name, SingleRecord)
+
+single_record_ib_clarity <- 
+  income_benefits_clarity %>%
+  unite("SingleRecord", InformationDate:DataCollectionStage) %>%
+  select(Name, SingleRecord)
+
+diffs <- single_record_ib_clarity %>%
+  full_join(single_record_ib_legacy, by = "Name") %>%
+  filter(SingleRecord.x != SingleRecord.y)
+
+# copied some SingleRecords that mostly match into Notepad++ to see where they
+# differed, just found some very basic and fine things that are ok and good,
+# everything else was just rows not matching up (since the IDs differ)
+
+# Enrollment file comparison ----------------------------------------------
+
+enrollments_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/Enrollment.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+enrollments_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/Enrollment.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+enrollments_comparison <- 
+  summary(comparedf(enrollments_clarity, enrollments_legacy))
+
+enrollments_differences <- 
+  enrollments_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+# Exit file comparison ----------------------------------------------
+
+exits_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/Exit.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+exits_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/Exit.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+exits_comparison <- 
+  summary(comparedf(exits_clarity, exits_legacy))
+
+exits_differences <- 
+  exits_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+# EnrollmentCoC file comparison -------------------------------------------
+
+enrollment_coc_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/EnrollmentCoC.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+enrollment_coc_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/EnrollmentCoC.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+enrollment_coc_comparison <- 
+  summary(comparedf(enrollment_coc_clarity, enrollment_coc_legacy))
+
+enrollment_coc_differences <- 
+  enrollment_coc_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+
+# EmploymentEducation file comparison -------------------------------------
+
+employment_education_legacy <- 
+  read_csv(here("random_data/talberthousessvf_legacy/EmploymentEducation.csv")) %>%
+  left_join(client_legacy %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+employment_education_clarity <- 
+  read_csv(here("data_from_Clarity/talberthousessvf_clarity/EmploymentEducation.csv")) %>%
+  left_join(client_clarity %>% select(PersonalID, FirstName, LastName), 
+            by = "PersonalID") %>%
+  unite("Name", FirstName, LastName)
+
+employment_education_comparison <- 
+  summary(comparedf(employment_education_clarity, employment_education_legacy))
+
+employment_education_differences <- 
+  employment_education_comparison[["diffs.byvar.table"]] %>%
+  filter(n > 0)
+
+
 
 
 

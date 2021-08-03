@@ -74,8 +74,8 @@ client_level <- da_answer %>%
   filter(question_code %in% c(sp_question_codes) &
            active == TRUE & client_id %in% c(client_cohort)) %>%
   group_by(client_id, question_code) %>%
-  slice_max(date_effective) %>%
-  slice_max(date_added) %>%
+  slice_max(ymd_hms(date_effective)) %>%
+  slice_max(ymd_hms(date_added)) %>%
   ungroup() %>%
   pivot_wider(
     id_cols = c(client_id),
@@ -86,8 +86,7 @@ client_level <- da_answer %>%
     DATEVETERANIDENTIFIED = format.Date(DATEVETERANIDENTIFIED, "%Y-%m-%d"),
     EXPECTEDPERMANENTHOUS = format.Date(EXPECTEDPERMANENTHOUS, "%Y-%m-%d"),
     ClientCustomID = row_number(),
-         ExportID = as.numeric(format.Date(today(), "%Y%m%d"))) %>%
-  
+    ExportID = as.numeric(format.Date(today(), "%Y%m%d"))) %>%
   rename(
     "PersonalID" = client_id,
     "c_ph_track" = PERMANENTHOUSINGTRACK,

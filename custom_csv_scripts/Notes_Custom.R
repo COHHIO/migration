@@ -32,7 +32,9 @@ notes_goals <- sp_goal_casenote %>%
   left_join(all_projects, by = "Legacy_ProgramID") %>%
   mutate(Title = "imported from Goals",
          EnrollmentID = "",
-         ServicesID = "") %>%
+         ServicesID = "",
+         Date = format.Date(Date, "%Y-%m-%d"),
+         Note = str_squish(gsub("\r?\n|\r", " ", Note))) %>%
   select(PersonalID,
          "AgencyID" = Clarity_AgencyID,
          Legacy_ProgramID,
@@ -57,7 +59,9 @@ notes_clients <- sp_client_note %>%
   left_join(all_projects, by = "Legacy_ProgramID") %>%
   mutate(Title = "imported from Client",
          EnrollmentID = "",
-         ServicesID = "") %>%
+         ServicesID = "",
+         Date = format.Date(Date, "%Y-%m-%d"),
+         Note = str_squish(gsub("\r?\n|\r", " ", Note))) %>%
   select(PersonalID,
          "AgencyID" = Clarity_AgencyID,
          Legacy_ProgramID,
@@ -75,7 +79,9 @@ notes_services <- sp_need_service %>%
   filter(!is.na(service_note) & client_id %in% c(client_cohort) & active == TRUE) %>% 
   mutate(Title = "imported from ServicePoint Service",
          Legacy_ProgramID = as.numeric(provide_provider_id),
-         EnrollmentID = "") %>%
+         EnrollmentID = "",
+         provide_start_date = format.Date(provide_start_date, "%Y-%m-%d"),
+         service_note = str_squish(gsub("\r?\n|\r", " ", service_note))) %>%
   left_join(all_projects, by = "Legacy_ProgramID") %>%
   select("PersonalID" = client_id,
          "AgencyID" = Clarity_AgencyID,
@@ -94,12 +100,14 @@ notes_needs <- sp_need %>%
   filter(!is.na(note) & active == TRUE & client_id %in% c(client_cohort)) %>% 
   mutate(Title = "imported from ServicePoint Need",
          note = paste("Note:", note, 
-                      "\nStatus:", status, 
-                      "\nOutcome:", outcome, 
-                      "\nReason Unmet:", reason_unmet),
+                      "\rStatus:", status, 
+                      "\rOutcome:", outcome, 
+                      "\rReason Unmet:", reason_unmet),
          Legacy_ProgramID = as.numeric(provider_id),
          EnrollmentID = "",
-         ServicesID = "") %>%
+         ServicesID = "",
+         date_set = format.Date(date_set, "%Y-%m-%d"),
+         note = str_squish(gsub("\r?\n|\r", " ", note))) %>%
   left_join(all_projects, by = "Legacy_ProgramID") %>%
   select("PersonalID" = client_id, 
          "AgencyID" = Clarity_AgencyID, 
@@ -123,9 +131,11 @@ notes_exits <- sp_entry_exit %>%
   mutate(Title = paste("Exit note: Exited", 
                        Legacy_ProgramName, 
                        "on", 
-                       format.Date(exit_date, "%m-%d-%Y")),
+                       format.Date(exit_date, "%Y-%m-%d %T")),
          Legacy_ProgramID = as.numeric(provider_id),
-         ServicesID = "") %>%
+         ServicesID = "", 
+         exit_date = format.Date(exit_date, "%Y-%m-%d"),
+         notes = str_squish(gsub("\r?\n|\r", " ", notes))) %>%
   select("PersonalID" = client_id, 
          Legacy_ProgramID,
          "AgencyID" = Clarity_AgencyID,

@@ -39,7 +39,7 @@ all_service_items <- clarity_service_items %>%
   select(ServiceItemName) %>%
   unique()
 
-nrow(all_service_items) == 122 # YOU WANT TRUE! If FALSE, check service_translator
+nrow(all_service_items) == 130 # YOU WANT TRUE! If FALSE, check service_translator
 
 # connector
 service_translator <- tibble(
@@ -191,6 +191,8 @@ services_not_coming <- service_items %>%
                str_detect(Legacy_ProgramName, "RHY") |
                str_detect(Legacy_ProgramName, "ODH")
            ))
+
+# because these were supposed to have been entered as VA/HHS Services ^^
 
 # dropping all the services that did not connect to any ServiceItemID
 

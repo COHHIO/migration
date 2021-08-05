@@ -211,7 +211,7 @@ fund_amounts <- sp_need_service_group_fund %>%
                      need_service_id), by = "need_service_group_id") %>%
   select("ServicesID" = need_service_id, source, "FAAmount" = cost)
 
-sp_service_fund_types <- fund_amounts$source %>% unique() %>% sort()
+sp_service_fund_types <- c(fund_amounts$source, "ESG - HP") %>% unique() %>% sort()
 
 hud_funding_sources <- read_csv(here("random_data/HUDSpecs.csv")) %>%
   filter(DataElement == "FundingSource") %>%
@@ -220,12 +220,12 @@ hud_funding_sources <- read_csv(here("random_data/HUDSpecs.csv")) %>%
 fund_translator <- tibble(
   SPServiceFundingSource = c(sp_service_fund_types),
   funding_source = c(
-    46, 46, 46, 46, 46, 46, 47, 46, 46, 46, 15, 16, 17, 46, 46, 46, 2, 2, 46, 
-    34, 46, 46, 46, 46, 2, 46, 46, 2, 46, 46, 2, 46, 46, 33, 33, 43, 46
+    46, 46, 46, 46, 46, 46, 47, 9, 46, 46, 46, 15, 16, 17, 46, 46, 46, 2, 2, 46, 
+    34, 46, 46, 46, 46, 2, 46, 46, 2, 10, 46, 2, 46, 46, 33, 33, 43, 46
   ),
   funding_source_other = c(
-    14, 14, 14, 2, 18, 13, NA, 0, 0, 6, 0, 0, 0, 6, 6, 6, NA, NA, 14, NA, 5, 7,
-    7, 10, NA, 19, 14, NA, 14, 6, NA, 11, 14, NA, NA, NA, 14
+    14, 14, 14, 2, 18, 13, NA, NA, 0, 0, 6, 0, 0, 0, 6, 6, 6, NA, NA, 14, NA, 5, 7,
+    7, 10, NA, 19, 14, NA, NA, 6, NA, 11, 14, NA, NA, NA, 14
   )
 ) %>%
   left_join(hud_funding_sources, by = c("funding_source" = "ReferenceNo")) %>%
@@ -275,7 +275,7 @@ Custom_Services <- prep_3 %>%
   
 missings <- prep_3 %>%
   filter(!is.na(source) & is.na(ClarityFundingSourceID)) %>%
-  count(Clarity_ProgramName, source, Description, OtherFundingSource)
+  count(Clarity_ProgramID, Clarity_ProgramName, source, Description, OtherFundingSource)
 
 writexl::write_xlsx(missings, here("random_data/funding_source_setup.xlsx"))
 

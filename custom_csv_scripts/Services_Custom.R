@@ -243,7 +243,12 @@ fund_translator <- tibble(
   left_join(other_funding_source_crosswalk, 
             by = c("funding_source_other" = "ReferenceNo"))
 
-clarity_funds <- read_csv(here("data_from_Clarity/program_funds_clarity.csv"))
+clarity_funds <-
+  read_csv(here("data_from_Clarity/program_funds_clarity.csv")) %>%
+  mutate(
+    FundingOtherID = case_when(FundingSourceID == 46 ~ FundingOtherID),
+    FundingOther = case_when(FundingSourceID == 46 ~ FundingOther)
+  )
 
 prep_3 <- prep_2 %>%
   left_join(fund_amounts, by = "ServicesID") %>%

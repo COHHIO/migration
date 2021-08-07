@@ -19,7 +19,7 @@ library(here)
 # from ServicePoint:
 source(here("reading_severance.R"))
 
-# from Clarity live (may need updating):
+# from Clarity live (may need updating): "Project Services and Service Items"
 clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")) %>%
   mutate(
     ServiceItemName = case_when(
@@ -33,7 +33,8 @@ clarity_service_items <- read_csv(here("data_from_Clarity/service_item_ids.csv")
         "Utility Deposit",
       TRUE ~ ServiceItemName
     )
-  )
+  ) %>%
+  filter(!is.na(Clarity_ProgramID) & !is.na(ServiceItemID))
 
 all_service_items <- clarity_service_items %>%
   select(ServiceItemName) %>%
@@ -81,7 +82,7 @@ cohort_services <- sp_need_service %>%
   ) %>%
   filter(active == TRUE &
            ymd_hms(provide_start_date) > ymd("20140601") &
-           client_id %in% client_cohort &
+           client_id %in% c(client_cohort) &
            is.na(hopwa_service_type) &
            is.na(path_service_type) &
            is.na(rhy_service_type) &
@@ -140,6 +141,7 @@ prep <- cohort_services %>%
   left_join(clarity_projects_orgs,
             by = "Legacy_ProgramID") %>%
   relocate(Clarity_AgencyID, .after = PersonalID) %>%
+  # start checking that Services are connected to an Enrollment
   left_join(sp_entry_exit %>%
               filter(active == TRUE) %>%
               select(client_id, entry_exit_id, entry_date, exit_date, provider_id),
@@ -192,6 +194,9 @@ services_not_coming <- service_items %>%
                str_detect(Legacy_ProgramName, "ODH")
            ))
 
+writexl::write_xlsx(services_not_coming,
+                    here("random_data/IntegratedServicesServices.xlsx"))
+
 # because these were supposed to have been entered as VA/HHS Services ^^
 
 # dropping all the services that did not connect to any ServiceItemID
@@ -203,6 +208,7 @@ prep_2 <- service_items %>%
 
 fund_amounts <- sp_need_service_group_fund %>%
   filter(active == TRUE &
+           ymd_hms(date_added) >= ymd("20140601") &
            source != "Diversion" &
            last_action %in% c("Modified", "Submitted")) %>%
   select(need_service_group_id, cost, source) %>%
@@ -211,7 +217,12 @@ fund_amounts <- sp_need_service_group_fund %>%
                      need_service_id), by = "need_service_group_id") %>%
   select("ServicesID" = need_service_id, source, "FAAmount" = cost)
 
-sp_service_fund_types <- c(fund_amounts$source, "ESG - HP") %>% unique() %>% sort()
+# has duplicates, maybe needs another ID column or a date column?
+changes_to_sources <- read_csv(here("random_data/funding_source_exceptions.csv"))
+
+sp_service_fund_types <- c(fund_amounts$source, changes_to_sources$NewSource) %>% 
+  unique() %>% 
+  sort()
 
 hud_funding_sources <- read_csv(here("random_data/HUDSpecs.csv")) %>%
   filter(DataElement == "FundingSource") %>%
@@ -220,12 +231,12 @@ hud_funding_sources <- read_csv(here("random_data/HUDSpecs.csv")) %>%
 fund_translator <- tibble(
   SPServiceFundingSource = c(sp_service_fund_types),
   funding_source = c(
-    46, 46, 46, 46, 46, 46, 47, 9, 46, 46, 46, 15, 16, 17, 46, 46, 46, 2, 2, 46, 
-    34, 46, 46, 46, 46, 2, 46, 46, 2, 10, 46, 2, 46, 46, 33, 33, 43, 46
+    46, 46, 46, 46, 3, 46, 46, 46, 47, 9, 46, 46, 46, 15, 16, 17, 46, 2, 2, 46, 
+    46, 46, 46, 46, 46, 46, 2, 46, 46, 2, 10, 46, 46, 46, 33, 43, 46
   ),
   funding_source_other = c(
-    14, 14, 14, 2, 18, 13, NA, NA, 0, 0, 6, 0, 0, 0, 6, 6, 6, NA, NA, 14, NA, 5, 7,
-    7, 10, NA, 19, 14, NA, NA, 6, NA, 11, 14, NA, NA, NA, 14
+    14, 14, 14, 2, NA, 18, 13, 1, NA, NA, 0, 0, 6, 0, 0, 0, 6, NA, NA, 14, 5, 6, 7,
+    7, 15, 10, NA, 19, 14, NA, NA, 6, 11, 14, NA, NA, 14
   )
 ) %>%
   left_join(hud_funding_sources, by = c("funding_source" = "ReferenceNo")) %>%
@@ -233,8 +244,6 @@ fund_translator <- tibble(
             by = c("funding_source_other" = "ReferenceNo"))
 
 clarity_funds <- read_csv(here("data_from_Clarity/program_funds_clarity.csv"))
-
-changes_to_sources <- read_csv(here("random_data/funding_source_exceptions.csv"))
 
 prep_3 <- prep_2 %>%
   left_join(fund_amounts, by = "ServicesID") %>%
@@ -278,7 +287,6 @@ missings <- prep_3 %>%
   count(Clarity_ProgramID, Clarity_ProgramName, source, Description, OtherFundingSource)
 
 writexl::write_xlsx(missings, here("random_data/funding_source_setup.xlsx"))
-
 
 # Writing it out to csv ---------------------------------------------------
 

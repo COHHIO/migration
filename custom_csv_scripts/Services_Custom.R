@@ -259,7 +259,7 @@ prep_3 <- prep_2 %>%
   left_join(fund_translator, by = c("source" = "SPServiceFundingSource")) %>%
   left_join(
     clarity_funds %>%
-      select(-Clarity_AgencyName,-Clarity_ProgramName, -Clarity_AgencyID),
+      select(-Clarity_AgencyName, -Clarity_ProgramName, -Clarity_AgencyID),
     by = c(
       "Clarity_ProgramID",
       "funding_source" = "FundingSourceID",

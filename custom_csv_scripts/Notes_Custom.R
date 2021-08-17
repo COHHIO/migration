@@ -190,7 +190,8 @@ notes_missing_agency <- notes_proper_agency %>%
 
 All_Notes <- notes_proper_agency %>%
   filter(!is.na(AgencyID)) %>%
-  mutate(NoteID = row_number()) %>%
+  mutate(NoteID = row_number(),
+         Category = 13) %>%
   select(
     NoteID,
     PersonalID,

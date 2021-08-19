@@ -19,7 +19,7 @@ library(data.table)
 source(here("Project_Import_Schema/Programs.R"))
 
 Inventory <-
-  read_csv("data_to_Clarity/Inventory.csv",
+  read_csv("data_to_Clarity/initial_csv/Inventory.csv",
            col_types = "nncnnnnnnnnnnnnDDTTcTn")
 
 ProgramInventory <- Inventory %>%

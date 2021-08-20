@@ -57,8 +57,6 @@ covid_data_raw <- da_answer %>%
       client_id %in% c(clients_we_gave_them)
   ) 
 
-
-
 covid_data <- covid_data_raw %>%
   mutate(InformationDate = format.Date(date_effective, "%Y-%m-%d")) %>%
   group_by(client_id, InformationDate, provider_id, user_id) %>%
@@ -71,20 +69,74 @@ covid_data <- covid_data_raw %>%
   mutate(
     AssessmentID = 178,
     AssessmentName = "COVID-19 Screening Tool",
-    AssessmentCustomID = row_number()
+    AssessmentCustomID = row_number(),
+    Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID),
+    IFYESDATEOFCONTACTWIT = if_else(
+      is.na(IFYESDATEOFCONTACTWIT_1), IFYESDATEOFCONTACTWIT, IFYESDATEOFCONTACTWIT_1
+    )
   ) %>% 
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
-         PersonalID,
+         "PersonalID" = client_id,
          "AgencyID" = Clarity_AgencyID,
-         InformationDate) 
-
-
+         InformationDate,
+         "c_covid19_investigated_contact_date" = IFYESDATEOFCONTACTWIT, 
+         "c_covid19_contact_with_confirmed" = COHCOV19CONTACTPERSON_1, 
+         "c_covid19_notes" = COHCOV19NONCONFIDENTI, 
+         "c_covid19_under_investigation" = HASAMEDICALPROFESSION_1, 
+         "c_covid19_contact_with_investigated" = COHCOV19CONTACTPERSON, 
+         "c_covid19_investigation_determination_date" = DATEOFDETERMINATION, 
+         "c_covid19_risk_chronic_illness" = COHCOV19CHRONICILLNESS, 
+         "c_covid19_risk_history_of_respiratory_illness" = COHCOV19HISTORYRESPIR,
+         "c_covid19_risk_immunocompromised" = AREYOUIMMUNOCOMPROMIS, 
+         "c_covid19_risk_kidney_disease" = DOYOUHAVECHRONICKIDNE, 
+         "c_covid19_risk_over_65" = COHCOV1960OLDER, 
+         "c_covid19_risk_smoker" = HAVEYOUSMOKEDTOBACCOI, 
+         "c_covid19_screening_date" = COHCOV19ASSESSMENTDATE, 
+         "c_covid19_tested" = HASAMEDICALPROFESSION, 
+         "c_covid19_test_date" = DATEOFCOVID19DIAGNOSIS, 
+         "c_covid19_test_results" = COVID19TESTRESULTS, 
+         "c_symptom_breathing_difficult" = COHCOV19DIFFICULTYBRE, 
+         "c_symptom_chills" = COHCOV19CHILLS, 
+         "c_symptom_congestion" = DOYOUHAVECONGESTIONOR, 
+         "c_symptom_cough" = COHCOV19COUGHTODAY, 
+         "c_symptom_diarrhea" = DOYOUHAVEDIARRHEA, 
+         "c_symptom_fever" = COHCOV19FEVERPASTDAY, 
+         "c_symptom_headache" = COHCOV19HEADACHE, 
+         "c_symptom_lost_taste_smell" = COHCOV19NEWLOSSTASTEA, 
+         "c_symptom_muscle_pain" = COHCOV19MUSCLEPAIN, 
+         "c_symptom_nausea" = DOYOUHAVENAUSEAORVOMI, 
+         "c_symptom_sore_throat" = COHCOV19SORETHROATTOD, #
+         "c_symptom_weak" = AREYOUFEELINGTOOWEAKT) %>%
+  mutate(
+    across(starts_with("c_covid19_risk"), ~case_when(.x == "N" ~ 0, .x == "Y" ~ 1)),
+    across(starts_with("c_symptom"), ~case_when(.x == "N" ~ 0, .x == "Y" ~ 1)),
+    c_covid19_under_investigation = case_when(
+      c_covid19_under_investigation == "N" ~ 0,
+      c_covid19_under_investigation == "Y" ~ 1
+    ),
+    c_covid19_contact_with_investigated = case_when(
+      c_covid19_contact_with_investigated == "N" ~ 0,
+      c_covid19_contact_with_investigated == "Y" ~ 1),
+    c_covid19_contact_with_confirmed = case_when(
+      c_covid19_contact_with_confirmed == "N" ~ 0,
+      c_covid19_contact_with_confirmed == "Y" ~ 1
+    ),
+    c_covid19_test_results = case_when(
+      c_covid19_test_results == "Negative" ~ 0,
+      c_covid19_test_results == "Positive" ~ 1,
+      c_covid19_test_results == "Unknown" ~ 2
+    ),
+    c_covid19_tested = case_when(
+      c_covid19_tested == "N" ~ 0,
+      c_covid19_tested == "Y" ~ 1
+    )
+  )
 
 # Writing it out to csv ---------------------------------------------------
 
-write_csv(spdat_data2, here("data_to_Clarity/Assessment_Custom_spdats.csv"))
+write_csv(covid_data, here("data_to_Clarity/Assessment_Custom_covid.csv"))
 
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
@@ -92,13 +144,19 @@ fix_date_times <- function(file) {
                 col_types = cols())  %>%
     mutate(InformationDate = 
              format.Date(InformationDate, "%Y-%m-%d"),
-           assessment_date = 
-             format.Date(assessment_date, "%Y-%m-%d"))
+           c_covid19_investigated_contact_date = 
+             format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
+           c_covid19_investigation_determination_date = 
+             format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
+           c_covid19_screening_date = 
+             format.Date(c_covid19_screening_date, "%Y-%m-%d"),
+           c_covid19_test_date = 
+             format.Date(c_covid19_test_date, "%Y-%m-%d"))
   
   fwrite(x, 
          here(paste0("data_to_Clarity/", file, ".csv")),
          logical01 = TRUE)
 }
 
-fix_date_times("Assessment_Custom_spdats")
+fix_date_times("Assessment_Custom_covid")
 

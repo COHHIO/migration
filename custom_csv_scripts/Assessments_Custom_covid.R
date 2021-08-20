@@ -150,7 +150,9 @@ fix_date_times <- function(file) {
            c_covid19_screening_date = 
              format.Date(c_covid19_screening_date, "%Y-%m-%d"),
            c_covid19_test_date = 
-             format.Date(c_covid19_test_date, "%Y-%m-%d"))
+             format.Date(c_covid19_test_date, "%Y-%m-%d"),
+           c_covid19_confirmed_contact_date = 
+             format.Date(c_covid19_confirmed_contact_date, "%Y-%m-%d"))
   
   fwrite(x, 
          here(paste0("data_to_Clarity/", file, ".csv")),

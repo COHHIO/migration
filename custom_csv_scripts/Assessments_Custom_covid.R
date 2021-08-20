@@ -25,7 +25,7 @@ source(here("reading_severance.R"))
 covid_data_raw <- da_answer %>%
   filter(
     active == TRUE &
-      question_code %in% c("IFYESDATEOFCONTACTWIT", #c_covid19_investigated_contact_date
+      question_code %in% c("IFYESDATEOFCONTACTWIT", #c_covid19_confirmed_contact_date
                       "COHCOV19CONTACTPERSON_1", #c_covid19_contact_with_confirmed
                       "COHCOV19NONCONFIDENTI", #c_covid19_notes
                       "HASAMEDICALPROFESSION_1", #c_covid19_under_investigation
@@ -60,7 +60,7 @@ covid_data_raw <- da_answer %>%
 covid_data <- covid_data_raw %>%
   mutate(InformationDate = format.Date(date_effective, "%Y-%m-%d")) %>%
   group_by(client_id, InformationDate, provider_id, user_id) %>%
-  slice_max(date_effective) %>%
+  slice_max(date_effective) %>% #taking the most recent answer in a day
   ungroup() %>%
   pivot_wider(id_cols = c(client_id, InformationDate, provider_id, user_id),
               names_from = question_code,
@@ -70,10 +70,7 @@ covid_data <- covid_data_raw %>%
     AssessmentID = 178,
     AssessmentName = "COVID-19 Screening Tool",
     AssessmentCustomID = row_number(),
-    Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID),
-    IFYESDATEOFCONTACTWIT = if_else(
-      is.na(IFYESDATEOFCONTACTWIT_1), IFYESDATEOFCONTACTWIT, IFYESDATEOFCONTACTWIT_1
-    )
+    Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID)
   ) %>% 
   select(AssessmentCustomID,
          AssessmentID,
@@ -81,8 +78,10 @@ covid_data <- covid_data_raw %>%
          "PersonalID" = client_id,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
-         "c_covid19_investigated_contact_date" = IFYESDATEOFCONTACTWIT, 
+         "UserID" = user_id,
+         "c_covid19_investigated_contact_date" = IFYESDATEOFCONTACTWIT_1, 
          "c_covid19_contact_with_confirmed" = COHCOV19CONTACTPERSON_1, 
+         "c_covid19_confirmed_contact_date" = IFYESDATEOFCONTACTWIT,
          "c_covid19_notes" = COHCOV19NONCONFIDENTI, 
          "c_covid19_under_investigation" = HASAMEDICALPROFESSION_1, 
          "c_covid19_contact_with_investigated" = COHCOV19CONTACTPERSON, 

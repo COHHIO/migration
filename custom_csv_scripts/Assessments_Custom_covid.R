@@ -25,7 +25,7 @@ source(here("reading_severance.R"))
 covid_data <- da_answer %>%
   filter(
     active == TRUE &
-      question %in% c("IFYESDATEOFCONTACTWIT", #c_covid19_investigated_contact_date
+      question_code %in% c("IFYESDATEOFCONTACTWIT", #c_covid19_investigated_contact_date
                       "COHCOV19CONTACTPERSON_1", #c_covid19_contact_with_confirmed
                       "COHCOV19NONCONFIDENTI", #c_covid19_notes
                       "HASAMEDICALPROFESSION_1", #c_covid19_under_investigation
@@ -55,12 +55,7 @@ covid_data <- da_answer %>%
                       "COHCOV19SORETHROATTOD", # c_symptom_sore_throat
                       "AREYOUFEELINGTOOWEAKT") & # c_symptom_weak
       client_id %in% c(clients_we_gave_them)
-  ) %>% 
-  rename("subassessment_name" = question,
-         "sub_is_active" = active,
-         "sub_date_added" = date_added,
-         "sub_provider_created" = provider_creating_id,
-         "sub_user_created" = user_creating_id) 
+  ) 
 
 covid_answers <- da_recordset_answer %>%
   filter(active == TRUE & question %in% c("GRAND TOTAL", "Start Date")) %>%

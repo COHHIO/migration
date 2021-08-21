@@ -70,6 +70,7 @@ covid_data <- covid_data_raw %>%
     AssessmentID = 178,
     AssessmentName = "COVID-19 Screening Tool",
     AssessmentCustomID = row_number(),
+    assessment_date = InformationDate,
     Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID)
   ) %>% 
   select(AssessmentCustomID,
@@ -78,6 +79,7 @@ covid_data <- covid_data_raw %>%
          "PersonalID" = client_id,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
+         assessment_date,
          "UserID" = user_id,
          "c_covid19_investigated_contact_date" = IFYESDATEOFCONTACTWIT_1, 
          "c_covid19_contact_with_confirmed" = COHCOV19CONTACTPERSON_1, 
@@ -193,6 +195,7 @@ spdat_data <- deduplicated %>%
     "PersonalID" = client_id,
     "Legacy_ProgramID" = sub_provider_created,
     "InformationDate" = date_effective,
+    "UserID" = sub_user_created,
     "c_vispdat_score" = Score,
     "assessment_date" = date_effective,
     "c_vispdat_type" = subassessment_name,
@@ -229,6 +232,7 @@ spdat_data <- deduplicated %>%
          PersonalID,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
+         UserID,
          assessment_date,
          assessment_type,
          assessment_level,
@@ -253,6 +257,7 @@ spdat_data2 <- deduplicated %>%
     "PersonalID" = client_id,
     "Legacy_ProgramID" = sub_provider_created,
     "InformationDate" = date_effective,
+    "UserID" = sub_user_created,
     "c_vispdat_score" = Score,
     "assessment_date" = date_effective,
     "c_vispdat_type" = subassessment_name,
@@ -281,6 +286,7 @@ spdat_data2 <- deduplicated %>%
   select(AssessmentCustomID,
          AssessmentID,
          AssessmentName,
+         UserID,
          PersonalID,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
@@ -342,6 +348,7 @@ offer_data <- deduplicated %>%
   select("PersonalID" = client_id,
          "Legacy_ProgramID" = sub_provider_created, 
          "InformationDate" = date_effective,
+         "UserID" = sub_user_created,
          offer_accept_decline_date,
          offer_date,
          offer_accepted,
@@ -356,6 +363,7 @@ offer_data <- deduplicated %>%
     AssessmentID = 194,
     AssessmentName = "Offers of Permanent Housing",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
+    assessment_date = format.Date(offer_date, "%Y-%m-%d"),
     offer_accepted = recode(offer_accepted,
                             'N' = 0,
                             'Y' = 1),
@@ -381,7 +389,8 @@ offer_data <- deduplicated %>%
          PersonalID,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
-         "assessment_date" = offer_date,
+         assessment_date,
+         UserID,
          "c_offer_type" = offer_type,
          "c_offer_accepted" = offer_accepted,
          "c_offer_accept_decline_date" = offer_accept_decline_date) 
@@ -437,6 +446,7 @@ dose_data <- deduplicated %>%
   select("PersonalID" = client_id,
          "Legacy_ProgramID" = sub_provider_created, 
          "InformationDate" = date_effective,
+         "UserID" = sub_user_created,
          c_covid19_client_contact_info,
          c_covid19_vaccine_manufacturer,
          c_covid19_date_vaccine_administered,
@@ -448,6 +458,7 @@ dose_data <- deduplicated %>%
     AssessmentID = 195,
     AssessmentName = "COVID-19 Vaccine Doses",
     InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
+    assessment_date = format.Date(c_covid19_date_vaccine_administered, "%Y-%m-%d"),
     c_covid19_vaccine_manufacturer = recode(
       c_covid19_vaccine_manufacturer,
       "Client doesn't know and data could not be obtained from other source" = 4,
@@ -475,22 +486,42 @@ dose_data <- deduplicated %>%
          PersonalID,
          "AgencyID" = Clarity_AgencyID,
          InformationDate,
-         "assessment_date" = c_covid19_date_vaccine_administered,
+         UserID,
+         assessment_date,
          c_covid19_client_contact_info,
          c_covid19_vaccine_manufacturer,
          c_covid19_vaccine_documentation) 
 
 # combined ----------------------------------------------------------------
 
-final_dose_data <- dose_data
-final_covid_data <- covid_data
-final_offer_data <- offer_data
-final_spdat_data <- spdat_data2
+final_dose_data <- dose_data %>% select(-AssessmentCustomID)
+final_covid_data <- covid_data %>% select(-AssessmentCustomID)
+final_offer_data <- offer_data %>% select(-AssessmentCustomID)
+final_spdat_data <- spdat_data2 %>% select(-AssessmentCustomID)
+
+common_columns <- c(
+  "AssessmentID",                                 
+  "AssessmentName",                               
+  "PersonalID",                                   
+  "AgencyID",  
+  "InformationDate",
+  "assessment_date",                              
+  "UserID" 
+)
+
+common_columns %in% colnames(final_covid_data)
+common_columns %in% colnames(final_dose_data)
+common_columns %in% colnames(final_offer_data)
+common_columns %in% colnames(final_spdat_data)
 
 
-
-
-combined <- "what"
+combined <- final_covid_data %>%
+  full_join(final_dose_data, by = c(common_columns)) %>%
+  full_join(final_offer_data, by = c(common_columns)) %>%
+  full_join(final_spdat_data, by = c(common_columns)) %>%
+  mutate(AssessmentCustomID = row_number(),
+         InformationDate = ymd(InformationDate),
+         assessment_date = ymd(assessment_date))
 
 # write it out ------------------------------------------------------------
 
@@ -500,22 +531,24 @@ fix_date_times <- function(file) {
   cat(file, sep = "\n")
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = cols())  %>%
-    mutate(InformationDate = 
-             format.Date(InformationDate, "%Y-%m-%d"),
-           assessment_date = 
-             format.Date(assessment_date, "%Y-%m-%d"),
-           c_covid19_investigated_contact_date = 
-             format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
-           c_covid19_investigation_determination_date = 
-             format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
-           c_covid19_screening_date = 
-             format.Date(c_covid19_screening_date, "%Y-%m-%d"),
-           c_covid19_test_date = 
-             format.Date(c_covid19_test_date, "%Y-%m-%d"),
-           c_covid19_confirmed_contact_date = 
-             format.Date(c_covid19_confirmed_contact_date, "%Y-%m-%d"),
-           c_offer_accept_decline_date = 
-             format.Date(c_offer_accept_decline_date, "%Y-%m-%d"))
+    mutate(
+      InformationDate =
+        format.Date(InformationDate, "%Y-%m-%d"),
+      assessment_date =
+        format.Date(assessment_date, "%Y-%m-%d"),
+      c_covid19_investigated_contact_date =
+        format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
+      c_covid19_investigation_determination_date =
+        format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
+      c_covid19_screening_date =
+        format.Date(c_covid19_screening_date, "%Y-%m-%d"),
+      c_covid19_test_date =
+        format.Date(c_covid19_test_date, "%Y-%m-%d"),
+      c_covid19_confirmed_contact_date =
+        format.Date(c_covid19_confirmed_contact_date, "%Y-%m-%d"),
+      c_offer_accept_decline_date =
+        format.Date(c_offer_accept_decline_date, "%Y-%m-%d")
+    )
   
   fwrite(x, 
          here(paste0("data_to_Clarity/", file, ".csv")),
@@ -524,6 +557,9 @@ fix_date_times <- function(file) {
 
 fix_date_times("Assessment_Custom_combined")
 
+# ^^ this throws a warning but it's ok because it's just upset about the columns
+# that are being assumed to be of type logical because the first however many rows
+# are null. It all starts with column 8, which makes sense and is expected.
 
 
 

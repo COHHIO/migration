@@ -521,7 +521,14 @@ combined <- final_covid_data %>%
   full_join(final_spdat_data, by = c(common_columns)) %>%
   mutate(AssessmentCustomID = row_number(),
          InformationDate = ymd(InformationDate),
-         assessment_date = ymd(assessment_date))
+         assessment_date = ymd(assessment_date),
+         c_covid19_investigated_contact_date = ymd_hms(c_covid19_investigated_contact_date),
+         c_covid19_investigation_determination_date = ymd_hms(c_covid19_investigation_determination_date),
+         c_covid19_screening_date = ymd_hms(c_covid19_screening_date),
+         c_covid19_test_date = ymd_hms(c_covid19_test_date),
+         c_covid19_confirmed_contact_date = ymd_hms(c_covid19_confirmed_contact_date),
+         c_offer_accept_decline_date = ymd_hms(c_offer_accept_decline_date)) %>%
+  filter(PersonalID != 243321)
 
 # write it out ------------------------------------------------------------
 
@@ -530,14 +537,15 @@ write_csv(combined, here("data_to_Clarity/Assessment_Custom_combined.csv"))
 fix_date_times <- function(file) {
   cat(file, sep = "\n")
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
-                col_types = cols())  %>%
+                col_types = 
+                  "ncnnDDnTnTcnnTnnnnnnTnTnnnnnnnnnnnnncnnnnTnnnncnn") %>%
     mutate(
       InformationDate =
         format.Date(InformationDate, "%Y-%m-%d"),
       assessment_date =
         format.Date(assessment_date, "%Y-%m-%d"),
       c_covid19_investigated_contact_date =
-        format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
+        format.Date(ymd_hms(c_covid19_investigated_contact_date), "%Y-%m-%d"),
       c_covid19_investigation_determination_date =
         format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
       c_covid19_screening_date =
@@ -550,7 +558,7 @@ fix_date_times <- function(file) {
         format.Date(c_offer_accept_decline_date, "%Y-%m-%d")
     )
   
-  fwrite(x, 
+  fwrite(x,
          here(paste0("data_to_Clarity/", file, ".csv")),
          logical01 = TRUE)
 }
@@ -562,5 +570,25 @@ fix_date_times("Assessment_Custom_combined")
 # are null. It all starts with column 8, which makes sense and is expected.
 
 
-
+x <- read_csv(here("data_to_Clarity/Assessment_Custom_combined.csv"),
+              col_types = 
+                "ncnnDDnTnTcnnTnnnnnnTnTnnnnnnnnnnnnncnnnnTnnnncnn") %>%
+  mutate(
+    InformationDate =
+      format.Date(InformationDate, "%Y-%m-%d"),
+    assessment_date =
+      format.Date(assessment_date, "%Y-%m-%d"),
+    c_covid19_investigated_contact_date =
+      format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
+    c_covid19_investigation_determination_date =
+      format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
+    c_covid19_screening_date =
+      format.Date(c_covid19_screening_date, "%Y-%m-%d"),
+    c_covid19_test_date =
+      format.Date(c_covid19_test_date, "%Y-%m-%d"),
+    c_covid19_confirmed_contact_date =
+      format.Date(c_covid19_confirmed_contact_date, "%Y-%m-%d"),
+    c_offer_accept_decline_date =
+      format.Date(c_offer_accept_decline_date, "%Y-%m-%d")
+  )
 

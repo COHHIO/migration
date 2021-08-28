@@ -70,7 +70,7 @@ covid_data <- covid_data_raw %>%
     AssessmentID = 178,
     AssessmentName = "COVID-19 Screening Tool",
     AssessmentCustomID = row_number(),
-    assessment_date = InformationDate,
+    assessment_date = format.Date(ymd_hms(COHCOV19ASSESSMENTDATE), "%Y-%m-%d"),
     Clarity_AgencyID = if_else(is.na(Clarity_AgencyID), 299, Clarity_AgencyID)
   ) %>% 
   select(AssessmentCustomID,
@@ -94,7 +94,7 @@ covid_data <- covid_data_raw %>%
          "c_covid19_risk_kidney_disease" = DOYOUHAVECHRONICKIDNE, 
          "c_covid19_risk_over_65" = COHCOV1960OLDER, 
          "c_covid19_risk_smoker" = HAVEYOUSMOKEDTOBACCOI, 
-         "c_covid19_screening_date" = COHCOV19ASSESSMENTDATE, 
+         # "c_covid19_screening_date" = COHCOV19ASSESSMENTDATE, 
          "c_covid19_tested" = HASAMEDICALPROFESSION, 
          "c_covid19_test_date" = DATEOFCOVID19DIAGNOSIS, 
          "c_covid19_test_results" = COVID19TESTRESULTS, 
@@ -521,10 +521,11 @@ combined <- final_covid_data %>%
   full_join(final_spdat_data, by = c(common_columns)) %>%
   mutate(AssessmentCustomID = row_number(),
          InformationDate = ymd(InformationDate),
-         assessment_date = ymd(assessment_date),
+         assessment_date = if_else(is.na(assessment_date), ymd(InformationDate),
+                                   ymd(assessment_date)),
          c_covid19_investigated_contact_date = ymd_hms(c_covid19_investigated_contact_date),
          c_covid19_investigation_determination_date = ymd_hms(c_covid19_investigation_determination_date),
-         c_covid19_screening_date = ymd_hms(c_covid19_screening_date),
+         # c_covid19_screening_date = ymd_hms(c_covid19_screening_date),
          c_covid19_test_date = ymd_hms(c_covid19_test_date),
          c_covid19_confirmed_contact_date = ymd_hms(c_covid19_confirmed_contact_date),
          c_offer_accept_decline_date = ymd_hms(c_offer_accept_decline_date)) %>%
@@ -538,7 +539,7 @@ fix_date_times <- function(file) {
   cat(file, sep = "\n")
   x <- read_csv(here(paste0("data_to_Clarity/", file, ".csv")),
                 col_types = 
-                  "ncnnDDnTnTcnnTnnnnnnTnTnnnnnnnnnnnnncnnnnTnnnncnn") %>%
+                  "ncnnDDnTnTcnnTnnnnnnnTnnnnnnnnnnnnncnnnnTnnnncnn") %>%
     mutate(
       InformationDate =
         format.Date(InformationDate, "%Y-%m-%d"),
@@ -548,8 +549,6 @@ fix_date_times <- function(file) {
         format.Date(ymd_hms(c_covid19_investigated_contact_date), "%Y-%m-%d"),
       c_covid19_investigation_determination_date =
         format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
-      c_covid19_screening_date =
-        format.Date(c_covid19_screening_date, "%Y-%m-%d"),
       c_covid19_test_date =
         format.Date(c_covid19_test_date, "%Y-%m-%d"),
       c_covid19_confirmed_contact_date =
@@ -568,27 +567,4 @@ fix_date_times("Assessment_Custom_combined")
 # ^^ this throws a warning but it's ok because it's just upset about the columns
 # that are being assumed to be of type logical because the first however many rows
 # are null. It all starts with column 8, which makes sense and is expected.
-
-
-x <- read_csv(here("data_to_Clarity/Assessment_Custom_combined.csv"),
-              col_types = 
-                "ncnnDDnTnTcnnTnnnnnnTnTnnnnnnnnnnnnncnnnnTnnnncnn") %>%
-  mutate(
-    InformationDate =
-      format.Date(InformationDate, "%Y-%m-%d"),
-    assessment_date =
-      format.Date(assessment_date, "%Y-%m-%d"),
-    c_covid19_investigated_contact_date =
-      format.Date(c_covid19_investigated_contact_date, "%Y-%m-%d"),
-    c_covid19_investigation_determination_date =
-      format.Date(c_covid19_investigation_determination_date, "%Y-%m-%d"),
-    c_covid19_screening_date =
-      format.Date(c_covid19_screening_date, "%Y-%m-%d"),
-    c_covid19_test_date =
-      format.Date(c_covid19_test_date, "%Y-%m-%d"),
-    c_covid19_confirmed_contact_date =
-      format.Date(c_covid19_confirmed_contact_date, "%Y-%m-%d"),
-    c_offer_accept_decline_date =
-      format.Date(c_offer_accept_decline_date, "%Y-%m-%d")
-  )
 
